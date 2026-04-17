@@ -5,6 +5,7 @@ import com.itesm.domain.repository.UserRepository;
 import com.itesm.infrastructure.mapper.UserMapper;
 import com.itesm.infrastructure.persistence.entity.UserEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.UUID;
 /**
  * UserRepositoryImpl
  */
+@ApplicationScoped
 public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase<UserEntity, UUID> {
     @Override
     @Transactional
