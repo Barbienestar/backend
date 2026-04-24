@@ -45,7 +45,7 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
         String authHeader = requestContext.getHeaders().getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(Map.of("message", "Invalid token"))
+                    .entity(Map.of("message", "Token not found"))
                     .type(MediaType.APPLICATION_JSON)
                     .build());
             return;

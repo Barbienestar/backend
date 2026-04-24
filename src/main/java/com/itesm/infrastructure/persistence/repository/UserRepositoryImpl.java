@@ -29,4 +29,10 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
         UserEntity entity = find("providerUid", providerUid).firstResult();
         return Optional.ofNullable(entity).map(UserMapper::toDomain);
     }
+
+    @Override
+    public Optional<User> find(UUID id) {
+        UserEntity entity = findById(id);
+        return Optional.ofNullable(entity).map(UserMapper::toDomain);
+    }
 }
