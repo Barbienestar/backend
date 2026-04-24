@@ -30,7 +30,7 @@ public class CurrentUser {
     }
 
     public Boolean hasRole(String role) {
-        return this.role.equals(role);
+        return this.role.equalsIgnoreCase(role);
     }
 
     public UUID getId() {

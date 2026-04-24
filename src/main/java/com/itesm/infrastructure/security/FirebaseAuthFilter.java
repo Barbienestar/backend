@@ -12,9 +12,11 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -36,13 +38,17 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String path = requestContext.getUriInfo().getPath();
-        if (path.startsWith("/user") || path.equals("/health")) {
+        if (path.equals("/user") || path.equals("/health")) {
             return;
         }
 
         String authHeader = requestContext.getHeaders().getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Map.of("message", "Invalid token"))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build());
+            return;
         }
 
         try {
@@ -50,13 +56,20 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
             FirebaseToken token = FirebaseAuth.getInstance().verifyIdToken(idToken, true);
             Optional<User> userOptional = userRepository.findByProviderUid(token.getUid());
             if (userOptional.isEmpty()) {
-                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                        .entity(Map.of("message", "User not found"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build());
+                return;
             }
             User user = userOptional.get();
             CurrentUser currentUser = new CurrentUser(user);
             authUserContext.setCurrentUser(currentUser);
         } catch (FirebaseAuthException e) {
-            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Map.of("message", "Invalid token"))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build());
         }
     }
 }
