@@ -29,6 +29,7 @@ public class CreateUserUseCase {
         user.setLastName1(createUserDto.getLastName1());
         user.setLastName2(createUserDto.getLastName2());
         user.setEmail(createUserDto.getEmail());
+        user.setRole(createUserDto.getRole());
         user.setActive(true);
 
         String providerUid =
