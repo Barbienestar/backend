@@ -1,5 +1,6 @@
 package com.itesm.application.security;
 
+import com.itesm.domain.models.User;
 import java.util.UUID;
 
 /**
@@ -11,6 +12,14 @@ public class CurrentUser {
     private final String email;
     private final String role;
     private final String name;
+
+    public CurrentUser(User user) {
+        this.id = user.getId();
+        this.firebaseUid = user.getProviderUid();
+        this.email = user.getEmail();
+        this.role = user.getRole();
+        this.name = user.getName();
+    }
 
     public CurrentUser(UUID id, String firebaseUid, String email, String role, String name) {
         this.id = id;

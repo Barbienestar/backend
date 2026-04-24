@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.Response;
 /**
  * UserResource
  */
-@Path("/users")
+@Path("/user")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
@@ -27,11 +27,7 @@ public class UserResource {
 
     @POST
     public Response createUser(CreateUserDto createUserDto) {
-        try {
-            User user = createUserUseCase.execute(createUserDto);
-            return Response.ok(user).build();
-        } catch (Exception e) {
-            return Response.serverError().build();
-        }
+        User user = createUserUseCase.execute(createUserDto);
+        return Response.ok(user).build();
     }
 }
