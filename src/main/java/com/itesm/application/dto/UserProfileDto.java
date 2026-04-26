@@ -17,18 +17,43 @@ public class UserProfileDto {
         this.email = email;
     }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getLastName1() { return lastName1; }
-    public void setLastName1(String lastName1) { this.lastName1 = lastName1; }
+    public String getLastName1() {
+        return lastName1;
+    }
 
-    public Byte getRole() { return role; }
-    public void setRole(Byte role) { this.role = role; }
+    public Byte getRole() {
+        return role;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLastName1(String lastName1) {
+        this.lastName1 = lastName1;
+    }
+
+    public void setRole(Byte role) {
+        this.role = role;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
