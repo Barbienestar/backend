@@ -4,30 +4,23 @@ public class CreateReportDto {
     private Integer medicineId;
     private Integer hospitalId;
     private String description;
+    private String imageUrl;
+
+    public String getImageUrl() { return imageUrl; }
+
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     public CreateReportDto() {}
 
-    public Integer getMedicineId() {
-        return medicineId;
-    }
+    public Integer getMedicineId() { return medicineId; }
 
-    public Integer getHospitalId() {
-        return hospitalId;
-    }
+    public Integer getHospitalId() { return hospitalId; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
 
-    public void setMedicineId(Integer medicineId) {
-        this.medicineId = medicineId;
-    }
+    public void setMedicineId(Integer medicineId) { this.medicineId = medicineId; }
 
-    public void setHospitalId(Integer hospitalId) {
-        this.hospitalId = hospitalId;
-    }
+    public void setHospitalId(Integer hospitalId) { this.hospitalId = hospitalId; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setDescription(String description) { this.description = description; }
 }

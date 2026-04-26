@@ -13,49 +13,34 @@ import java.time.LocalDateTime;
 
 @ApplicationScoped
 public class CreateReportUseCase {
-
     private final ReportRepository reportRepository;
     private final AuthenticatedUserContext authUserContext;
     private final HospitalRepository hospitalRepository;
     private final MedicineRepository medicineRepository;
 
-
     @Inject
-    public CreateReportUseCase(ReportRepository reportRepository, AuthenticatedUserContext authUserContext, HospitalRepository hospitalRepository, MedicineRepository medicineRepository) {
+    public CreateReportUseCase(ReportRepository reportRepository,
+        AuthenticatedUserContext authUserContext, HospitalRepository hospitalRepository,
+        MedicineRepository medicineRepository) {
         this.reportRepository = reportRepository;
         this.authUserContext = authUserContext;
         this.hospitalRepository = hospitalRepository;
         this.medicineRepository = medicineRepository;
     }
 
-
     public ReportDto execute(CreateReportDto dto) {
         LocalDateTime now = LocalDateTime.now();
 
-        Report report = new Report(
-                null,
-                authUserContext.getCurrentUser().getId(),
-                dto.getMedicineId(),
-                dto.getHospitalId(),
-                null,
-                dto.getDescription(),
-                null,
-                now,
-                now
-        );
+        Report report =
+            new Report(null, authUserContext.getCurrentUser().getId(), dto.getMedicineId(),
+                dto.getHospitalId(), null, dto.getDescription(), dto.getImageUrl(), now, now);
 
         Report saved = reportRepository.save(report);
-        String medicineName = medicineRepository.findMedicineById(saved.getMedicineId()).getGenericName();
+        String medicineName =
+            medicineRepository.findMedicineById(saved.getMedicineId()).getGenericName();
         String hospitalName = hospitalRepository.findHospitalById(saved.getHospitalId()).getName();
 
-
-        return new ReportDto(
-                saved.getId(),
-                medicineName,
-                hospitalName,
-                saved.getStatusId(),
-                saved.getDescription(),
-                saved.getCreatedAt()
-        );
+        return new ReportDto(saved.getId(), medicineName, hospitalName, saved.getStatusId(),
+            saved.getDescription(), saved.getCreatedAt());
     }
 }
