@@ -7,21 +7,21 @@ import java.util.UUID;
  * CurrentUser
  */
 public class CurrentUser {
-    private final UUID id;
+    private final Integer id;
     private final String firebaseUid;
     private final String email;
-    private final String role;
+    private final Byte role;
     private final String name;
 
     public CurrentUser(User user) {
         this.id = user.getId();
-        this.firebaseUid = user.getProviderUid();
+        this.firebaseUid = user.getProviderUuid();
         this.email = user.getEmail();
         this.role = user.getRole();
         this.name = user.getName();
     }
 
-    public CurrentUser(UUID id, String firebaseUid, String email, String role, String name) {
+    public CurrentUser(Integer id, String firebaseUid, String email, Byte role, String name) {
         this.id = id;
         this.firebaseUid = firebaseUid;
         this.email = email;
@@ -29,11 +29,14 @@ public class CurrentUser {
         this.name = name;
     }
 
-    public Boolean hasRole(String role) {
-        return this.role.equalsIgnoreCase(role);
+    public Boolean hasRole(Byte role) {
+        if (role != null) {
+            return true;
+        }
+        return false;
     }
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -45,7 +48,7 @@ public class CurrentUser {
         return email;
     }
 
-    public String getRole() {
+    public Byte getRole() {
         return role;
     }
 

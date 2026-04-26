@@ -35,8 +35,8 @@ public class RoleAuthorizationFilter implements ContainerRequestFilter {
             return;
         }
 
-        String[] allowedRoles = requireRoles.value();
-        for (String role : allowedRoles) {
+        byte[] allowedRoles = requireRoles.value();
+        for (Byte role : allowedRoles) {
             if (currentUser.hasRole(role)) {
                 return;
             }

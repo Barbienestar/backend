@@ -54,7 +54,7 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
         try {
             String idToken = authHeader.replace("Bearer ", "");
             FirebaseToken token = FirebaseAuth.getInstance().verifyIdToken(idToken, true);
-            Optional<User> userOptional = userRepository.findByProviderUid(token.getUid());
+            Optional<User> userOptional = userRepository.findByProviderUuid(token.getUid());
             if (userOptional.isEmpty()) {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
                         .entity(Map.of("message", "User not found"))

@@ -1,95 +1,57 @@
 package com.itesm.domain.models;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * User
- */
 public class User {
-    private UUID id;
+    private Integer id;
     private String name;
     private String lastName1;
     private String lastName2;
+    private Integer age;
     private String email;
-    private String providerUid;
+    private String providerUuid;
     private boolean active;
-    private String role;
+    private Byte role;
+    private Integer suburbId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public User() {
-    }
+    public User() {}
 
-    public User(UUID id, String name, String lastName1, String lastName2, String email,
-        String providerUid, boolean active, String role) {
-        this.name = name;
-        this.lastName1 = lastName1;
-        this.lastName2 = lastName2;
-        this.email = email;
-        this.providerUid = providerUid;
-        this.active = active;
-        this.role = role;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public UUID getId() {
-        return id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public String getLastName1() { return lastName1; }
+    public void setLastName1(String lastName1) { this.lastName1 = lastName1; }
 
-    public String getName() {
-        return name;
-    }
+    public String getLastName2() { return lastName2; }
+    public void setLastName2(String lastName2) { this.lastName2 = lastName2; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
 
-    public String getLastName1() {
-        return lastName1;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setLastName1(String lastName1) {
-        this.lastName1 = lastName1;
-    }
+    public String getProviderUuid() { return providerUuid; }
+    public void setProviderUuid(String providerUuid) { this.providerUuid = providerUuid; }
 
-    public String getLastName2() {
-        return lastName2;
-    }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
-    public void setLastName2(String lastName2) {
-        this.lastName2 = lastName2;
-    }
+    public Byte getRole() { return role; }
+    public void setRole(Byte role) { this.role = role; }
 
-    public String getEmail() {
-        return email;
-    }
+    public Integer getSuburbId() { return suburbId; }
+    public void setSuburbId(Integer suburbId) { this.suburbId = suburbId; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public String getProviderUid() {
-        return providerUid;
-    }
-
-    public void setProviderUid(String providerUid) {
-        this.providerUid = providerUid;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

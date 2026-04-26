@@ -1,21 +1,15 @@
 package com.itesm.application.dto;
 
-import java.util.UUID;
-
-/**
- * UserProfileDto
- */
 public class UserProfileDto {
-    private UUID id;
+    private Integer id;
     private String name;
     private String lastName1;
-    private String role;
+    private Byte role;
     private String email;
 
-    public UserProfileDto() {
-    }
+    public UserProfileDto() {}
 
-    public UserProfileDto(UUID id, String name, String lastName1, String role, String email) {
+    public UserProfileDto(Integer id, String name, String lastName1, Byte role, String email) {
         this.id = id;
         this.name = name;
         this.lastName1 = lastName1;
@@ -23,43 +17,18 @@ public class UserProfileDto {
         this.email = email;
     }
 
-    public UUID getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getLastName1() { return lastName1; }
+    public void setLastName1(String lastName1) { this.lastName1 = lastName1; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public Byte getRole() { return role; }
+    public void setRole(Byte role) { this.role = role; }
 
-    public String getLastName1() {
-        return lastName1;
-    }
-
-    public void setLastName1(String lastName1) {
-        this.lastName1 = lastName1;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }

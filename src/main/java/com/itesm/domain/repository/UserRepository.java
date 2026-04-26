@@ -9,6 +9,6 @@ import java.util.UUID;
  */
 public interface UserRepository {
     User save(User user);
-    Optional<User> findByProviderUid(String providerUid);
-    Optional<User> find(UUID id);
+    Optional<User> findByProviderUuid(String providerUuid);
+    Optional<User> findDomainById(Integer id);
 }

@@ -25,8 +25,8 @@ public class GetUserProfileUseCase {
     }
 
     public UserProfileDto execute() {
-        UUID userId = authUserContext.getCurrentUser().getId();
-        Optional<User> userOptional = userRepository.find(userId);
+        Integer userId = authUserContext.getCurrentUser().getId();
+        Optional<User> userOptional = userRepository.findDomainById(userId);
         if (userOptional.isEmpty()) {
             return null;
         }
