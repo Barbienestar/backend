@@ -18,6 +18,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 public class FirebaseConfig {
     @ConfigProperty(name = "firebase.service-account") String path;
+    @ConfigProperty(name = "firebase.storage-bucket") String bucket;
 
     @PostConstruct
     void init() {
@@ -27,6 +28,7 @@ public class FirebaseConfig {
                 FirebaseOptions options =
                     FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                        .setStorageBucket(bucket)
                         .build();
                 FirebaseApp.initializeApp(options);
             }
