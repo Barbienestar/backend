@@ -1,11 +1,8 @@
 package com.itesm.application.security;
 
 import com.itesm.domain.models.User;
-import java.util.UUID;
 
-/**
- * CurrentUser
- */
+/** CurrentUser */
 public class CurrentUser {
     private final Integer id;
     private final String firebaseUid;
