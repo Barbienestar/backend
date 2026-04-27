@@ -21,7 +21,7 @@ public class UserEntity {
     @Column(name = "last_name_2")
     private String lastName2;
 
-    @Column(name = "age", nullable = false)
+    @Column(columnDefinition = "TINYINT", name = "age", nullable = false)
     private Integer age;
 
     @Column(name = "email", nullable = false, unique = true)
