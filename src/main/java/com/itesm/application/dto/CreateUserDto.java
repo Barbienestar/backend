@@ -1,13 +1,18 @@
 package com.itesm.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CreateUserDto {
     private String name;
+    @JsonProperty("last_name_1")
     private String lastName1;
+    @JsonProperty("last_name_2")
     private String lastName2;
     private Integer age;
     private String email;
     private String password;
     private Byte role;
+    @JsonProperty("suburb_id")
     private Integer suburbId;
 
     public CreateUserDto() {}
