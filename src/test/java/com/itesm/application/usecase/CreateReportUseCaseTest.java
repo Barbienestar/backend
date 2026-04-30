@@ -45,7 +45,7 @@ public class CreateReportUseCaseTest {
                 .thenAnswer(
                         invocation -> {
                             Report report = invocation.getArgument(0);
-                            report.setId(1);
+                            report.setId(1L);
                             return report;
                         });
 

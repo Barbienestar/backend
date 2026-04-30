@@ -4,9 +4,6 @@ import com.itesm.domain.repository.ImageStorageService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-/**
- * UploadReportImageUseCase
- */
 @ApplicationScoped
 public class UploadReportImageUseCase {
     private final ImageStorageService imageStorageService;

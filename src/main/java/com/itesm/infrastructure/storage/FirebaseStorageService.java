@@ -8,9 +8,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-/**
- * FirebaseStorageService
- */
 @ApplicationScoped
 public class FirebaseStorageService implements ImageStorageService {
     @Override

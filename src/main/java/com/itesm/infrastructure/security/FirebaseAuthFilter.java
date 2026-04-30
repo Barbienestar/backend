@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
-/** FirebaseAuthFilter */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 @UnlessBuildProfile("test")

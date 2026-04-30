@@ -1,8 +1,15 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "Medicine")
 public class MedicineEntity {
@@ -28,27 +35,4 @@ public class MedicineEntity {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    public MedicineEntity() {}
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public String getGenericName() { return genericName; }
-    public void setGenericName(String genericName) { this.genericName = genericName; }
-
-    public String getDosageForm() { return dosageForm; }
-    public void setDosageForm(String dosageForm) { this.dosageForm = dosageForm; }
-
-    public String getStrength() { return strength; }
-    public void setStrength(String strength) { this.strength = strength; }
-
-    public String getPresentation() { return presentation; }
-    public void setPresentation(String presentation) { this.presentation = presentation; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

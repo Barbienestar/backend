@@ -10,9 +10,7 @@ public class MedicineMapper {
                 entity.getGenericName(),
                 entity.getDosageForm(),
                 entity.getStrength(),
-                entity.getPresentation(),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getPresentation()
         );
     }
 
@@ -23,8 +21,6 @@ public class MedicineMapper {
         entity.setDosageForm(domain.getDosageForm());
         entity.setStrength(domain.getStrength());
         entity.setPresentation(domain.getPresentation());
-        entity.setCreatedAt(domain.getCreatedAt());
-        entity.setUpdatedAt(domain.getUpdatedAt());
         return entity;
     }
 }
