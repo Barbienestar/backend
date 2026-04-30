@@ -1,8 +1,11 @@
 package com.itesm.application.security;
 
 import com.itesm.domain.models.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/** CurrentUser */
+@Data
 public class CurrentUser {
     private final Integer id;
     private final String firebaseUid;
@@ -31,25 +34,5 @@ public class CurrentUser {
             return true;
         }
         return false;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getFirebaseUid() {
-        return firebaseUid;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Byte getRole() {
-        return role;
-    }
-
-    public String getName() {
-        return name;
     }
 }

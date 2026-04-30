@@ -9,9 +9,6 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * GetUserProfileUseCase
- */
 @ApplicationScoped
 public class GetUserProfileUseCase {
     private UserRepository userRepository;

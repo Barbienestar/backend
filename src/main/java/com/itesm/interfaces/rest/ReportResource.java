@@ -23,7 +23,6 @@ public class ReportResource {
     }
 
     @POST
-    @Path("create")
     public Response createReport(@Valid CreateReportDto dto) {
         ReportDto report = createReportUseCase.execute(dto);
         return Response.status(Response.Status.CREATED).entity(report).build();
