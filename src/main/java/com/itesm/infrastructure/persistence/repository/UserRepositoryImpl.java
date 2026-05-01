@@ -6,30 +6,35 @@ import com.itesm.infrastructure.mapper.UserMapper;
 import com.itesm.infrastructure.persistence.entity.RoleEntity;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
 import com.itesm.infrastructure.persistence.entity.UserEntity;
+
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @ApplicationScoped
-public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase<UserEntity, Integer> {
+public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase<UserEntity, Long> {
+
+    private final EntityManager em;
 
     @Inject
-    RoleRepositoryImpl roleRepository;
-
-    @Inject
-    EntityManager em;
+    public UserRepositoryImpl(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
     @Transactional
     public User save(User user) {
         UserEntity entity = UserMapper.toEntity(user);
-
-        entity.setRole(em.getReference(RoleEntity.class, user.getRole()));
-        entity.setSuburb(em.getReference(SuburbEntity.class, user.getSuburbId()));
-
+        entity.setRole(em.getReference(RoleEntity.class, user.getRole().getId()));
+        entity.setSuburb(em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
+        entity.setCreatedAt(LocalDateTime.now());
+        entity.setUpdatedAt(LocalDateTime.now());
         persist(entity);
         return UserMapper.toDomain(entity);
     }
@@ -42,7 +47,8 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
     }
 
     @Override
-    public Optional<User> findDomainById(Integer id) {
+    @Transactional
+    public Optional<User> findDomainById(Long id) {
         UserEntity entity = findById(id);
         return Optional.ofNullable(entity).map(UserMapper::toDomain);
     }

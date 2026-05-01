@@ -1,5 +1,7 @@
 package com.itesm.infrastructure.mapper;
 
+import com.itesm.domain.models.Address;
+import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.infrastructure.persistence.entity.RoleEntity;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
@@ -16,16 +18,6 @@ public class UserMapper {
         entity.setEmail(user.getEmail());
         entity.setProviderUuid(user.getProviderUuid());
         entity.setActive(user.isActive());
-        entity.setCreatedAt(user.getCreatedAt());
-        entity.setUpdatedAt(user.getUpdatedAt());
-
-        if (entity.getRole() != null) {
-            user.setRole(entity.getRole().getId());
-        }
-        if (entity.getSuburb() != null) {
-            user.setSuburbId(entity.getSuburb().getId());
-        }
-
         return entity;
     }
 
@@ -39,10 +31,15 @@ public class UserMapper {
         user.setEmail(entity.getEmail());
         user.setProviderUuid(entity.getProviderUuid());
         user.setActive(entity.isActive());
-        user.setRole(entity.getRole() != null ? entity.getRole().getId() : null);
-        user.setSuburbId(entity.getSuburb() != null ? entity.getSuburb().getId() : null);
-        user.setCreatedAt(entity.getCreatedAt());
-        user.setUpdatedAt(entity.getUpdatedAt());
+        RoleEntity roleEntity = entity.getRole();
+        user.setRole(
+                roleEntity != null ? new Role(roleEntity.getId(), roleEntity.getName()) : null);
+        SuburbEntity suburbEntity = entity.getSuburb();
+        // TODO: Join all address fields to create a complete address string
+        user.setAddress(
+                suburbEntity != null
+                        ? new Address(suburbEntity.getName(), suburbEntity.getId())
+                        : null);
         return user;
     }
 }
