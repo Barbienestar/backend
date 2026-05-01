@@ -3,7 +3,7 @@ package com.itesm.infrastructure.persistence.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Role")
+@Table(name = "Roles")
 public class RoleEntity {
 
     @Id

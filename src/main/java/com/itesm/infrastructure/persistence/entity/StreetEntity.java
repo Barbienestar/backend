@@ -3,7 +3,7 @@ package com.itesm.infrastructure.persistence.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Street")
+@Table(name = "Streets")
 public class StreetEntity {
 
     @Id
