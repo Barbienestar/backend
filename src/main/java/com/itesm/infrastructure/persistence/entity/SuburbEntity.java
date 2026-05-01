@@ -1,6 +1,7 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Suburb")
+@Table(name = "Suburbs")
 public class SuburbEntity {
 
     @Id
@@ -22,3 +23,4 @@ public class SuburbEntity {
     @Column(name = "zip_code", nullable = false)
     private String zipCode;
 }
+
