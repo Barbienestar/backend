@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Report {
     private Long id;
 
-    private Integer userId;
+    private Long userId;
 
     private Integer medicineId;
 
