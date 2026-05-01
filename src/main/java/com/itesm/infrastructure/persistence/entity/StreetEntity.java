@@ -1,6 +1,7 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Street")
+@Table(name = "Streets")
 public class StreetEntity {
 
     @Id
@@ -19,3 +20,4 @@ public class StreetEntity {
     @Column(name = "name", nullable = false)
     private String name;
 }
+

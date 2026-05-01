@@ -1,6 +1,7 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Report")
+@Table(name = "Reports")
 public class ReportEntity {
 
     @Id
@@ -46,3 +47,4 @@ public class ReportEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }
+
