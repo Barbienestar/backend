@@ -5,9 +5,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
 import com.itesm.domain.repository.UserTokenService;
 import jakarta.enterprise.context.ApplicationScoped;
-/**
- * FirebaseUserAuthService
- */
+
 @ApplicationScoped
 public class FirebaseUserAuthService implements UserTokenService {
     @Override

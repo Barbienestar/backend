@@ -8,9 +8,7 @@ public class HospitalMapper {
         return new Hospital(
                 entity.getId(),
                 entity.getName(),
-                entity.getMapsUrl(),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getMapsUrl()
         );
     }
 }

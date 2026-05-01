@@ -15,7 +15,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-/** FirebaseConfig */
+
 @Startup
 @ApplicationScoped
 @UnlessBuildProfile("test")
