@@ -11,6 +11,7 @@ import jakarta.ws.rs.ext.Provider;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 @Provider
 @Priority(Priorities.AUTHORIZATION)
@@ -38,10 +39,8 @@ public class RoleAuthorizationFilter implements ContainerRequestFilter {
         }
 
         String[] allowedRoles = requireRoles.value();
-        for (String role : allowedRoles) {
-            if (currentUser.hasRole(role)) {
-                return;
-            }
+        if (Arrays.stream(allowedRoles).anyMatch(currentUser::hasRole)) {
+            return;
         }
         requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
     }
