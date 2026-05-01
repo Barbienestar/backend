@@ -8,10 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Users")
-<<<<<<< HEAD
-=======
 @Data
->>>>>>> c1203613c14bc6e2ac8cf48b1e5e1643b7c0f408
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

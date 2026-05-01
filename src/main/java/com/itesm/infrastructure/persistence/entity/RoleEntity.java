@@ -15,12 +15,12 @@ public class RoleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Byte id;
 
     @Column(nullable = false, unique = true)
     private String name;
 
-    public RoleEntity(Integer id) {
+    public RoleEntity(Byte id) {
         this.id = id;
     }
 }
