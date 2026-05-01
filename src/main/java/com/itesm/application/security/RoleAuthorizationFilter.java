@@ -8,7 +8,9 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.ResourceInfo;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
+
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 @Provider
 @Priority(Priorities.AUTHORIZATION)
@@ -19,7 +21,7 @@ public class RoleAuthorizationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        java.lang.reflect.Method method = resourceInfo.getResourceMethod();
+        Method method = resourceInfo.getResourceMethod();
         if (method == null) {
             return;
         }
@@ -35,13 +37,12 @@ public class RoleAuthorizationFilter implements ContainerRequestFilter {
             return;
         }
 
-        byte[] allowedRoles = requireRoles.value();
-        for (Byte role : allowedRoles) {
+        String[] allowedRoles = requireRoles.value();
+        for (String role : allowedRoles) {
             if (currentUser.hasRole(role)) {
                 return;
             }
         }
-
         requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
     }
 }

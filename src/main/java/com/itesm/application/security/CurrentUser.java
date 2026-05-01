@@ -20,4 +20,8 @@ public class CurrentUser {
         this.role = user.getRole().getName();
         this.name = user.getName();
     }
+
+    public boolean hasRole(String role) {
+        return this.role.equals(role);
+    }
 }
