@@ -1,6 +1,7 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,21 +30,52 @@ public class HospitalEntity {
 
     public HospitalEntity() {}
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getMapsUrl() { return mapsUrl; }
-    public void setMapsUrl(String mapsUrl) { this.mapsUrl = mapsUrl; }
+    public String getName() {
+        return name;
+    }
 
-    public StreetEntity getStreet() { return street; }
-    public void setStreet(StreetEntity street) { this.street = street; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public String getMapsUrl() {
+        return mapsUrl;
+    }
 
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setMapsUrl(String mapsUrl) {
+        this.mapsUrl = mapsUrl;
+    }
+
+    public StreetEntity getStreet() {
+        return street;
+    }
+
+    public void setStreet(StreetEntity street) {
+        this.street = street;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
+
