@@ -6,9 +6,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "States")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class StateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,28 +22,4 @@ public class StateEntity {
 
     @Column(nullable = false, unique = true)
     private String name;
-
-    public StateEntity() {
-    }
-
-    public StateEntity(Byte id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Byte getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setId(Byte id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
