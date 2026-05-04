@@ -46,7 +46,8 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
                 || path.startsWith("/medicines")
                 || path.startsWith("/hospitals")
                 || path.startsWith("/image")
-                || path.startsWith("/states")) {
+                || path.startsWith("/states")
+                || path.startsWith("/cities")) {
             return;
         }
 
