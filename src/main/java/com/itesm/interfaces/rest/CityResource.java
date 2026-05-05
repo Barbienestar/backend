@@ -5,7 +5,6 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestQuery;
 
 import com.itesm.application.dto.CityDto;
-import com.itesm.application.dto.GetCitiesByStateDto;
 import com.itesm.application.usecase.GetCitiesByStateUseCase;
 
 import jakarta.inject.Inject;
