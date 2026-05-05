@@ -2,8 +2,9 @@ package com.itesm.interfaces.rest;
 
 import java.util.List;
 
+import org.jboss.resteasy.reactive.RestQuery;
+
 import com.itesm.application.dto.CityDto;
-import com.itesm.application.dto.GetCitiesByStateDto;
 import com.itesm.application.usecase.GetCitiesByStateUseCase;
 
 import jakarta.inject.Inject;
@@ -26,8 +27,8 @@ public class CityResource {
     }
 
     @GET
-    public Response getCitiesByState(GetCitiesByStateDto getCitiesByStateDto) {
-        List<CityDto> cities = getCitiesByStateUseCase.execute(getCitiesByStateDto);
+    public Response getCitiesByState(@RestQuery Byte id_state) {
+        List<CityDto> cities = getCitiesByStateUseCase.execute(id_state);
         return Response.ok(cities).build();
     }
 }

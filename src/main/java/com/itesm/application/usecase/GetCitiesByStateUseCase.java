@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.itesm.application.dto.CityDto;
-import com.itesm.application.dto.GetCitiesByStateDto;
 import com.itesm.domain.repository.CityRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,8 +18,8 @@ public class GetCitiesByStateUseCase {
         this.cityRepository = cityRepository;
     }
 
-    public List<CityDto> execute(GetCitiesByStateDto dto) {
-        return cityRepository.getCitiesByState(dto.getIdState())
+    public List<CityDto> execute(Byte id_state) {
+        return cityRepository.getCitiesByState(id_state)
                 .stream()
                 .map(m -> new CityDto(
                     m.getId(),
