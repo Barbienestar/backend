@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.itesm.application.dto.CityDto;
-import com.itesm.application.dto.GetCitiesByStateDto;
 import com.itesm.domain.repository.CityRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
