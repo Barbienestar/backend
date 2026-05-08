@@ -67,8 +67,9 @@ void setup() {
 
 ## Auth & Roles
 
-- Firebase AuthFilter validates Bearer tokens
-- RoleAuthorizationFilter checks @RequireRoles annotations
+- Firebase AuthFilter validates Bearer tokens — endpoints marked `@PermitPublic` bypass this filter entirely (no token required)
+- RoleAuthorizationFilter checks `@RequireRoles` annotations on resource methods
+- `@PermitPublic` annotation marks endpoints or entire resource classes as public — placed in `application/security/PermitPublic.java`
 - CurrentUser injected via AuthenticatedUserContext
 
 ## DB
