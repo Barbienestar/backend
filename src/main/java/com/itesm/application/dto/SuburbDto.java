@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetCitiesByStateDto {
-    @JsonProperty("id_state")
-    private Byte idState;
+public class SuburbDto {
+    private Integer id;
+    private String name;
+    @JsonProperty("zip_code")
+    private String zipCode;
 }

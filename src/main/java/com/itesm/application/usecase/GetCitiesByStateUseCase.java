@@ -18,8 +18,8 @@ public class GetCitiesByStateUseCase {
         this.cityRepository = cityRepository;
     }
 
-    public List<CityDto> execute(Byte id_state) {
-        return cityRepository.getCitiesByState(id_state)
+    public List<CityDto> execute(Byte idState) {
+        return cityRepository.getCitiesByState(idState)
                 .stream()
                 .map(m -> new CityDto(
                     m.getId(),
