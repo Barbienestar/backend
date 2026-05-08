@@ -2,6 +2,7 @@ package com.itesm.infrastructure.security;
 
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.application.security.CurrentUser;
+import com.itesm.domain.models.User;
 
 import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
@@ -32,8 +33,13 @@ public class MockFirebaseAuthFilter implements ContainerRequestFilter {
             return;
         }
 
-        CurrentUser currentUser =
-                new CurrentUser(1, "firebaseUid", "email@example.com", Byte.parseByte("1"), "John");
+        User user = new User();
+        user.setId(1L);
+        user.setName("John");
+        user.setLastName1("Pork");
+        user.setEmail("john@itesm.com");
+        user.setProviderUuid("1234567890");
+        CurrentUser currentUser = new CurrentUser(user);
         authUserContext.setCurrentUser(currentUser);
     }
 }
