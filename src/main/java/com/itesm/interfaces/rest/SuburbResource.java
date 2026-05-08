@@ -5,6 +5,7 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestQuery;
 
 import com.itesm.application.dto.SuburbDto;
+import com.itesm.application.security.PermitPublic;
 import com.itesm.application.usecase.GetSuburbsByCityUseCase;
 
 import jakarta.inject.Inject;
@@ -27,6 +28,7 @@ public class SuburbResource {
     }
 
     @GET
+    @PermitPublic
     public Response getSuburbsByState(@RestQuery Integer id_city) {
         List<SuburbDto> suburbs = getSuburbsByCityUseCase.execute(id_city);
         return Response.ok(suburbs).build();
