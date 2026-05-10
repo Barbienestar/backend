@@ -36,7 +36,7 @@ public class CreateReportUseCaseTest {
         medicineRepository = mock(MedicineRepository.class);
 
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         user.setName("John");
         user.setLastName1("Pork");
         CurrentUser currentUser = new CurrentUser(user);
