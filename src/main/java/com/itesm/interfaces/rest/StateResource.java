@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.itesm.application.usecase.GetAllStatesUseCase;
 import com.itesm.application.dto.StateDto;
+import com.itesm.application.security.PermitPublic;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -25,6 +26,7 @@ public class StateResource {
     }
 
     @GET
+    @PermitPublic
     public Response getAll() {
         List<StateDto> states = getAllStatesUseCase.execute();
         return Response.ok(states).build();
