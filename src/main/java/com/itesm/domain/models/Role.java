@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
-    private Integer id;
+    private Byte id;
     private String name;
 
-    public Role(Integer id) {
+    public Role(Byte id) {
         this.id = id;
     }
 }
