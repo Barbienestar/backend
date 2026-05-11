@@ -1,6 +1,7 @@
 package com.itesm.application.usecase;
 
 import com.itesm.application.dto.CreateUserDto;
+import com.itesm.application.dto.UserProfileDto;
 import com.itesm.domain.models.Address;
 import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
@@ -22,7 +23,7 @@ public class CreateUserUseCase {
         this.userTokenService = userTokenService;
     }
 
-    public User execute(CreateUserDto dto) {
+    public UserProfileDto execute(CreateUserDto dto) {
         String providerUuid = userTokenService.createUser(dto.getEmail(), dto.getPassword());
 
         User user = new User();
@@ -35,7 +36,18 @@ public class CreateUserUseCase {
         user.setActive(true);
         user.setRole(new Role(dto.getRoleId()));
         user.setAddress(new Address(dto.getSuburbId()));
-        return userRepository.save(user);
+
+        User savedUser = userRepository.save(user);
+
+        UserProfileDto userProfile = new UserProfileDto(
+            savedUser.getId(),
+            savedUser.getName(),
+            savedUser.getLastName1(),
+            savedUser.getRole().getName(),
+            savedUser.getEmail()
+        );
+
+        return userProfile;
     }
 }
 

@@ -21,7 +21,7 @@ public class CreateUserDto {
     private String password;
 
     @JsonProperty("role_id")
-    private Integer roleId;
+    private Byte roleId;
 
     @JsonProperty("suburb_id")
     private Integer suburbId;
