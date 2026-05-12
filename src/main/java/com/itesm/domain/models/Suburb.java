@@ -4,15 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** Role */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Role {
-    private Byte id;
+@AllArgsConstructor
+public class Suburb {
+    private Integer id;
     private String name;
-
-    public Role(Byte id) {
-        this.id = id;
-    }
+    private String zipCode;
+    private Integer idState;
 }

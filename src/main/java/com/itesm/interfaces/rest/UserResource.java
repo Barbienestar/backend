@@ -1,8 +1,9 @@
 package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.CreateUserDto;
+import com.itesm.application.dto.UserProfileDto;
+import com.itesm.application.security.PermitPublic;
 import com.itesm.application.usecase.CreateUserUseCase;
-import com.itesm.domain.models.User;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -25,8 +26,9 @@ public class UserResource {
     }
 
     @POST
+    @PermitPublic
     public Response createUser(CreateUserDto createUserDto) {
-        User user = createUserUseCase.execute(createUserDto);
+        UserProfileDto user = createUserUseCase.execute(createUserDto);
         return Response.ok(user).build();
     }
 }

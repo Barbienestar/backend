@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.application.security.CurrentUser;
+import com.itesm.application.security.PermitPublic;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
 
@@ -15,11 +16,13 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.ResourceInfo;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,25 +32,25 @@ import java.util.Optional;
 public class FirebaseAuthFilter implements ContainerRequestFilter {
     private final UserRepository userRepository;
     private final AuthenticatedUserContext authUserContext;
+    private final ResourceInfo resourceInfo;
 
     @Inject
     public FirebaseAuthFilter(
-            UserRepository userRepository, AuthenticatedUserContext authUserContext) {
+            UserRepository userRepository,
+            AuthenticatedUserContext authUserContext,
+            ResourceInfo resourceInfo) {
         this.userRepository = userRepository;
         this.authUserContext = authUserContext;
+        this.resourceInfo = resourceInfo;
     }
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        String path = requestContext.getUriInfo().getPath();
-        // NOTE: Aqui podemos poner un .contains("public")
-        if (path.equals("/user")
-                || path.equals("/health")
-                || path.startsWith("/medicines")
-                || path.startsWith("/hospitals")
-                || path.startsWith("/image")
-                || path.startsWith("/states")
-                || path.startsWith("/cities")) {
+        Method method = resourceInfo.getResourceMethod();
+        Class<?> resourceClass = resourceInfo.getResourceClass();
+        if (method != null && method.isAnnotationPresent(PermitPublic.class)
+                || (resourceClass != null
+                        && resourceClass.isAnnotationPresent(PermitPublic.class))) {
             return;
         }
 
