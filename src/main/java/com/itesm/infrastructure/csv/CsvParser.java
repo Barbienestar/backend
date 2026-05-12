@@ -32,8 +32,8 @@ public class CsvParser {
                 rows.add(new MedicineRowDto(
                         line[0].trim(), // nombre_generico
                         line[1].trim(), // forma_dosis
-                        line[2].trim(), // potencia
-                        line[3].trim(), // presentacion
+                        nullIfEmpty(line[2]), // potencia
+                        nullIfEmpty(line[3]), // presentacion
                         Integer.parseInt(line[4].trim()) // stock
                 ));
             }
@@ -43,5 +43,9 @@ public class CsvParser {
         }
 
         return rows;
+    }
+
+    private static String nullIfEmpty(String value) {
+        return (value == null || value.trim().isEmpty()) ? null : value.trim();
     }
 }
