@@ -1,5 +1,7 @@
 package com.itesm.interfaces.rest;
 
+import com.itesm.application.security.PermitPublic;
+
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -14,6 +16,7 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public class HealthResource {
     @GET
+    @PermitPublic
     public Response status() {
         return Response.ok(
                         Map.of(
