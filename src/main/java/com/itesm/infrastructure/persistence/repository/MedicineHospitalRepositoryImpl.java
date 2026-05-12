@@ -7,8 +7,10 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import com.itesm.domain.repository.MedicineHospitalRepository;
+import jakarta.enterprise.context.ApplicationScoped;
 
 
+@ApplicationScoped
 public class MedicineHospitalRepositoryImpl implements MedicineHospitalRepository, PanacheRepositoryBase<MedicineHospitalEntity, Integer> {
 
 
