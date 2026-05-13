@@ -35,7 +35,7 @@ public class ReportEntity {
     @JoinColumn(name = "id_status", nullable = false)
     private StatusEntity statusId;
 
-    @Column(name = "decription", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "image_url", nullable = false)

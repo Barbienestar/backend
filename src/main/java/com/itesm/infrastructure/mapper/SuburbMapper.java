@@ -9,7 +9,7 @@ public class SuburbMapper {
             entity.getId(),
             entity.getName(),
             entity.getZipCode(),
-            entity.getIdCity()
+            entity.getIdCity().getId()
         );
     }
     
