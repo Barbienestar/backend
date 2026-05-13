@@ -4,7 +4,7 @@ import com.itesm.application.dto.CreateReportDto;
 import com.itesm.application.dto.FullReportResponse;
 import com.itesm.application.dto.PagedResult;
 import com.itesm.application.dto.ReportDto;
-import com.itesm.application.security.PermitPublic;
+import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.CreateReportUseCase;
 import com.itesm.application.usecase.GetReportsByStatusUseCase;
 
@@ -38,7 +38,7 @@ public class ReportResource {
 
     @GET
     @Path("/status/{statusId}")
-    @PermitPublic
+    @RequireRoles({"admin"})
     public Response getReportsByStatus(
             @PathParam("statusId") Integer statusId,
             @QueryParam("page") Integer page,
