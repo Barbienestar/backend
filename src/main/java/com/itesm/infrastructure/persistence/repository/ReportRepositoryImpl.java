@@ -38,7 +38,7 @@ public class ReportRepositoryImpl implements ReportRepository, PanacheRepository
         hospital.setId(report.getHospitalId());
         entity.setHospital(hospital);
 
-        Status status = statusRepository.findStatusByName("Pendiente");
+        Status status = statusRepository.findStatusByName("reviewing");
         entity.setStatusId(new StatusEntity(status.getId()));
 
         entity.setDescription(report.getDescription());
@@ -51,7 +51,7 @@ public class ReportRepositoryImpl implements ReportRepository, PanacheRepository
     }
 
     @Override
-    public List<Report> findByUserId(Integer userId) {
+    public List<Report> findByUserId(Long userId) {
         return find("user.id", userId).stream()
                 .map(ReportMapper::toDomain)
                 .collect(Collectors.toList());
