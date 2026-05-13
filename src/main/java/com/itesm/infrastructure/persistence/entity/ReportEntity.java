@@ -11,6 +11,14 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(
+        name = "Report.withData",
+        attributeNodes = {
+            @NamedAttributeNode("user"),
+            @NamedAttributeNode("medicine"),
+            @NamedAttributeNode("hospital"),
+            @NamedAttributeNode("statusId")
+        })
 @Entity
 @Table(name = "Reports")
 public class ReportEntity {

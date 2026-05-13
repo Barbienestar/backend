@@ -2,24 +2,32 @@ package com.itesm.infrastructure.persistence.repository;
 
 import com.itesm.domain.models.Report;
 import com.itesm.domain.models.Status;
-import com.itesm.domain.repository.HospitalRepository;
-import com.itesm.domain.repository.MedicineRepository;
 import com.itesm.domain.repository.ReportRepository;
 import com.itesm.infrastructure.mapper.ReportMapper;
 import com.itesm.infrastructure.persistence.entity.*;
+
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class ReportRepositoryImpl implements ReportRepository, PanacheRepositoryBase<ReportEntity, Integer> {
+public class ReportRepositoryImpl
+        implements ReportRepository, PanacheRepositoryBase<ReportEntity, Integer> {
+
+    private final StatusRepositoryImpl statusRepository;
+    private final EntityManager em;
 
     @Inject
-    StatusRepositoryImpl statusRepository;
+    public ReportRepositoryImpl(StatusRepositoryImpl statusRepository, EntityManager em) {
+        this.statusRepository = statusRepository;
+        this.em = em;
+    }
 
     @Override
     @Transactional
@@ -55,5 +63,35 @@ public class ReportRepositoryImpl implements ReportRepository, PanacheRepository
         return find("user.id", userId).stream()
                 .map(ReportMapper::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Report> findByStatusId(Integer statusId, Integer page, Integer pageSize) {
+        List<ReportEntity> entities =
+                em.createQuery(
+                                "SELECT r FROM ReportEntity r "
+                                        + "JOIN FETCH r.user u "
+                                        + "JOIN FETCH u.role "
+                                        + "JOIN FETCH u.suburb "
+                                        + "WHERE r.statusId.id = :statusId",
+                                ReportEntity.class)
+                        .setParameter("statusId", statusId)
+                        .setHint(
+                                "jakarta.persistence.loadgraph",
+                                em.getEntityGraph("Report.withData"))
+                        .setFirstResult(page * pageSize) // offset
+                        .setMaxResults(pageSize)
+                        .getResultList();
+
+        return entities.stream().map(ReportMapper::toDomainFull).collect(Collectors.toList());
+    }
+
+    @Override
+    public long countByStatusId(Integer statusId) {
+        return em.createQuery(
+                        "SELECT COUNT(r) FROM ReportEntity r WHERE r.statusId.id = :statusId",
+                        Long.class)
+                .setParameter("statusId", statusId)
+                .getSingleResult();
     }
 }
