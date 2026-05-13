@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface MedicineRepository {
     List<Medicine> findAllMedicines();
     Medicine findMedicineById(Integer id);
+    List<Medicine> searchMedicines(String query);
 }
