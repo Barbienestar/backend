@@ -1,12 +1,12 @@
 package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.CreateReportDto;
+import com.itesm.application.dto.FullReportResponse;
 import com.itesm.application.dto.PagedResult;
 import com.itesm.application.dto.ReportDto;
-import com.itesm.application.security.PermitPublic;
+import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.CreateReportUseCase;
 import com.itesm.application.usecase.GetReportsByStatusUseCase;
-import com.itesm.domain.models.Report;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -38,12 +38,17 @@ public class ReportResource {
 
     @GET
     @Path("/status/{statusId}")
-    @PermitPublic
+    @RequireRoles({"admin"})
     public Response getReportsByStatus(
             @PathParam("statusId") Integer statusId,
             @QueryParam("page") Integer page,
             @QueryParam("size") Integer size) {
-        PagedResult<Report> result = getReportsByStatusUseCase.execute(statusId, page, size);
-        return Response.ok(result).build();
+        try {
+            PagedResult<FullReportResponse> result =
+                    getReportsByStatusUseCase.execute(statusId, page, size);
+            return Response.ok(result).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
