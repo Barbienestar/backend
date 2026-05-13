@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface StatusRepository {
     Status findStatusByName(String name);
+    Status findStatusById(Byte id);
 }

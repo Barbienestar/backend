@@ -18,4 +18,13 @@ public class StatusRepositoryImpl implements StatusRepository, PanacheRepository
         }
         return StatusMapper.toDomain(entity);
     }
+
+    @Override
+    public Status findStatusById(Byte id) {
+        StatusEntity entity = findById(id);
+        if (entity == null) {
+            return null;
+        }
+        return StatusMapper.toDomain(entity);
+    }
 }

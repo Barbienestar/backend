@@ -7,7 +7,7 @@ import java.util.List;
 public interface ReportRepository {
     Report save(Report report);
 
-    List<Report> findByUserId(Integer userId);
+    List<Report> findByUserId(Long userId);
 
     List<Report> findByStatusId(Integer statusId, Integer page, Integer pageSize);
 
