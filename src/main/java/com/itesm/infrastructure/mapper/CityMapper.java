@@ -8,7 +8,7 @@ public class CityMapper {
         return new City(
             entity.getId(),
             entity.getName(),
-            entity.getIdState()
+            entity.getIdState().getId()
         );
     }
 }

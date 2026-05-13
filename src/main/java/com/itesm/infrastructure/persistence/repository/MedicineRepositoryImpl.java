@@ -28,4 +28,17 @@ public class MedicineRepositoryImpl implements MedicineRepository, PanacheReposi
         }
         return MedicineMapper.toDomain(entity);
     }
+
+    @Override
+    public List<Medicine> searchMedicines(String query) {
+        return find("""
+            SELECT m FROM MedicineEntity m
+            WHERE LOWER(CONCAT(m.genericName, ' ', m.dosageForm, ' ', COALESCE(m.strength, '')))
+                  LIKE LOWER(CONCAT('%', ?1, '%'))
+            ORDER BY m.genericName ASC
+            """, query)
+                .stream()
+                .map(MedicineMapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }
