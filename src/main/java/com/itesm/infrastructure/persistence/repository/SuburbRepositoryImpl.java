@@ -22,7 +22,7 @@ public class SuburbRepositoryImpl implements SuburbRepository, PanacheRepository
     @Override
     public List<Suburb> getSuburbsByCity(Integer idCity) {
         TypedQuery<SuburbEntity> query = em.createQuery(
-            "SELECT s FROM SuburbEntity s WHERE s.idCity = :idCity",
+            "SELECT s FROM SuburbEntity s WHERE s.idCity.id = :idCity",
             SuburbEntity.class
         );
         query.setParameter("idCity", idCity);
