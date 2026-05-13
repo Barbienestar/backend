@@ -43,6 +43,7 @@ public class GetReportsByStatusUseCase {
                 imageRepository.generateSignedUrl(report.getImageUrl(), 30, TimeUnit.MINUTES);
         FullReportResponse response =
                 new FullReportResponse(
+                        report.getId(),
                         report.getDescription(),
                         signedUrl,
                         report.getUser().getName()
@@ -53,7 +54,8 @@ public class GetReportsByStatusUseCase {
                         report.getMedicine().getGenericName(),
                         report.getMedicine().getPresentation(),
                         report.getMedicine().getDosageForm(),
-                        report.getHospital().getName());
+                        report.getHospital().getName(),
+                        report.getCreatedAt());
         return response;
     }
 }
