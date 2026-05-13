@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Report {
+    // CORE
     private Long id;
 
     private Long userId;
@@ -28,4 +28,9 @@ public class Report {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    // EXTRA
+    private User user;
+    private Medicine medicine;
+    private Hospital hospital;
 }
