@@ -1,15 +1,16 @@
 package com.itesm.application.usecase;
 
-import com.itesm.domain.repository.ImageStorageService;
+import com.itesm.domain.repository.ImageRepository;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class UploadReportImageUseCase {
-    private final ImageStorageService imageStorageService;
+    private final ImageRepository imageStorageService;
 
     @Inject
-    public UploadReportImageUseCase(ImageStorageService imageStorageService) {
+    public UploadReportImageUseCase(ImageRepository imageStorageService) {
         this.imageStorageService = imageStorageService;
     }
 
