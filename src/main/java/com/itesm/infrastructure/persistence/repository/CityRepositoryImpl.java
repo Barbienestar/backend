@@ -26,6 +26,9 @@ public class CityRepositoryImpl implements CityRepository, PanacheRepositoryBase
             CityEntity.class
         );
         query.setParameter("idState", idState);
+        for (CityEntity city : query.getResultList()) {
+            System.out.println(city.getName());
+        }
         return query.getResultList()
                 .stream()
                 .map(CityMapper::toDomain)
