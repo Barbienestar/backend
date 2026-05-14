@@ -47,3 +47,5 @@ nb-configuration.xml
 
 # Claude context (local only)
 CLAUDE.md
+# Superpowers docs
+docs/

@@ -11,6 +11,7 @@ import com.itesm.application.security.CurrentUser;
 import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.Medicine;
 import com.itesm.domain.models.Report;
+import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.HospitalRepository;
 import com.itesm.domain.repository.MedicineRepository;
@@ -38,6 +39,7 @@ public class CreateReportUseCaseTest {
         User user = new User();
         user.setId(1L);
         user.setName("John");
+        user.setRole(new Role((byte) 1, "citizen"));
         user.setLastName1("Pork");
         CurrentUser currentUser = new CurrentUser(user);
         when(authUserContext.getCurrentUser()).thenReturn(currentUser);
