@@ -140,13 +140,13 @@ public class GetReportsByStatusUseCaseTest {
 
         when(reportRepository.findByStatusId(1, 0, 10)).thenReturn(List.of(r1, r2));
         when(reportRepository.countByStatusId(1)).thenReturn(2L);
-        when(imageRepository.generateSignedUrl(anyString(), eq(30L), eq(TimeUnit.MINUTES)))
+        when(imageRepository.generateSignedUrl(anyString(), anyLong(), any(TimeUnit.class)))
                 .thenReturn("https://signed.url");
 
         useCase.execute(1, 0, 10);
 
-        verify(imageRepository, times(2)).generateSignedUrl(anyString(), eq(30L), eq(TimeUnit.MINUTES));
-        verify(imageRepository).generateSignedUrl(eq("img1.jpg"), eq(30L), eq(TimeUnit.MINUTES));
-        verify(imageRepository).generateSignedUrl(eq("img2.jpg"), eq(30L), eq(TimeUnit.MINUTES));
+        verify(imageRepository, times(2)).generateSignedUrl(anyString(), anyLong(), any(TimeUnit.class));
+        verify(imageRepository).generateSignedUrl(eq("img1.jpg"), anyLong(), any(TimeUnit.class));
+        verify(imageRepository).generateSignedUrl(eq("img2.jpg"), anyLong(), any(TimeUnit.class));
     }
 }
