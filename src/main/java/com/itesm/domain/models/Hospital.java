@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +13,9 @@ public class Hospital {
     private String name;
 
     private String mapsUrl;
+
+    public Hospital(Integer id) {
+        this.id = id;
+    }
 }
+

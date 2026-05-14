@@ -18,7 +18,7 @@ class ReportResourceTest {
     @Inject CreateReportUseCase createReportUseCase;
 
     @Test
-    void registerUser_shouldReturn200WithValidUser() throws Exception {
+    void createReport_shouldReturn201WithValidData() throws Exception {
         given().contentType("application/json")
                 .header("Authorization", "Bearer 1289319831928")
                 .body(
@@ -36,7 +36,7 @@ class ReportResourceTest {
     }
 
     @Test
-    void registerUser_shouldReturn401WithNoToken() throws Exception {
+    void createReport_shouldReturn401WithNoToken() throws Exception {
         given().contentType("application/json")
                 .body(
                         "{\"description\":\"Test"
@@ -48,7 +48,7 @@ class ReportResourceTest {
     }
 
     @Test
-    void registerUser_shouldReturn400WithIncompleteBody() throws Exception {
+    void createReport_shouldReturn400WithIncompleteBody() throws Exception {
         given().contentType("application/json")
                 .header("Authorization", "Bearer 1289319831928")
                 .body(
