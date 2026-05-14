@@ -51,7 +51,6 @@ public class MedicinesHospitalsResource {
 
     @Path("/average-stock")
     @GET
-    @PermitPublic
     public Response getAvgStock(@RestQuery Integer id_hospital) {
         if (id_hospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)

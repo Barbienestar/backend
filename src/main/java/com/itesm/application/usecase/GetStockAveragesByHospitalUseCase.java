@@ -3,7 +3,6 @@ package com.itesm.application.usecase;
 import java.util.Optional;
 
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
-import com.itesm.domain.repository.MedicineHospitalStockAvgRepository;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
