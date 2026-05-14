@@ -19,5 +19,9 @@ public class StreetEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suburb", nullable = false)
+    private SuburbEntity idSuburb;
 }
 

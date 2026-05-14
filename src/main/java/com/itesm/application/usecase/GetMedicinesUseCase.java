@@ -28,4 +28,20 @@ public class GetMedicinesUseCase {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public List<MedicineDto> search(String query) {
+        return medicineRepository.searchMedicines(query).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private MedicineDto toDto(com.itesm.domain.models.Medicine m) {
+        return new MedicineDto(
+                m.getId(),
+                m.getGenericName(),
+                m.getDosageForm(),
+                m.getStrength(),
+                m.getPresentation()
+        );
+    }
 }

@@ -4,6 +4,7 @@ import com.itesm.application.dto.MedicineDto;
 import com.itesm.application.dto.MedicineRowDto;
 import com.itesm.application.dto.MedicineStockInputDto;
 import com.itesm.application.dto.MedicineStockResultDto;
+import com.itesm.application.security.PermitPublic;
 import com.itesm.application.usecase.GetMedicinesUseCase;
 import com.itesm.application.usecase.UploadMedicineStockUseCase;
 import com.itesm.infrastructure.csv.CsvParser;
@@ -34,8 +35,11 @@ public class MedicineResource {
     }
 
     @GET
-    public Response getAll() {
-        List<MedicineDto> medicines = getMedicinesUseCase.execute();
+    @PermitPublic
+    public Response getAll(@QueryParam("q") String q) {
+        List<MedicineDto> medicines = (q != null && !q.isBlank())
+                ? getMedicinesUseCase.search(q)
+                : getMedicinesUseCase.execute();
         return Response.ok(medicines).build();
     }
 

@@ -9,4 +9,5 @@ public interface MedicineRepository {
     Medicine findMedicineById(Integer id);
    List<Medicine> findByNames(List<String> genericNames);
    List<Medicine> saveAll(List<Medicine> medicines);
+    List<Medicine> searchMedicines(String query);
 }

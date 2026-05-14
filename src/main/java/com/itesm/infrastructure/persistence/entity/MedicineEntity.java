@@ -28,7 +28,7 @@ public class MedicineEntity {
     @Column(name = "strength")
     private String strength;
 
-    @Column(name = "presentation")
+    @Column(name = "presentation", length = 512)
     private String presentation;
 
     @Column(name = "created_at", nullable = false)

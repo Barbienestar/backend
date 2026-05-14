@@ -35,17 +35,14 @@ public class CreateReportUseCase {
     public ReportDto execute(CreateReportDto dto) {
         LocalDateTime now = LocalDateTime.now();
 
-        Report report =
-                new Report(
-                        null,
-                        authUserContext.getCurrentUser().getId(),
-                        dto.getMedicineId(),
-                        dto.getHospitalId(),
-                        null,
-                        dto.getDescription(),
-                        dto.getImageUrl(),
-                        now,
-                        now);
+        Report report = new Report();
+        report.setUserId(authUserContext.getCurrentUser().getId());
+        report.setMedicineId(dto.getMedicineId());
+        report.setHospitalId(dto.getHospitalId());
+        report.setDescription(dto.getDescription());
+        report.setImageUrl(dto.getImageUrl());
+        report.setCreatedAt(now);
+        report.setUpdatedAt(now);
 
         Report saved = reportRepository.save(report);
         String medicineName =
