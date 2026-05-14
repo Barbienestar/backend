@@ -4,12 +4,16 @@ import com.itesm.domain.models.Status;
 import com.itesm.domain.repository.StatusRepository;
 import com.itesm.infrastructure.mapper.StatusMapper;
 import com.itesm.infrastructure.persistence.entity.StatusEntity;
+
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+
 import jakarta.enterprise.context.ApplicationScoped;
-import java.util.Optional;
+
+import java.util.List;
 
 @ApplicationScoped
-public class StatusRepositoryImpl implements StatusRepository, PanacheRepositoryBase<StatusEntity, Byte> {
+public class StatusRepositoryImpl
+        implements StatusRepository, PanacheRepositoryBase<StatusEntity, Byte> {
     @Override
     public Status findStatusByName(String name) {
         StatusEntity entity = find("name", name).firstResult();
@@ -26,5 +30,11 @@ public class StatusRepositoryImpl implements StatusRepository, PanacheRepository
             return null;
         }
         return StatusMapper.toDomain(entity);
+    }
+
+    @Override
+    public List<Status> getAll() {
+        List<StatusEntity> entities = findAll().list();
+        return entities.stream().map(StatusMapper::toDomain).toList();
     }
 }

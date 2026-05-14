@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /** FullReportResponse */
 @Data
 @AllArgsConstructor
 public class FullReportResponse {
+    private Long id;
     private String description;
 
     @JsonProperty("image_url")
@@ -28,4 +31,7 @@ public class FullReportResponse {
 
     @JsonProperty("hospital_name")
     private String hospitalName;
+
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
 }
