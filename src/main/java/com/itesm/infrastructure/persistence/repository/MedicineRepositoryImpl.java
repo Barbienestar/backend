@@ -6,13 +6,23 @@ import com.itesm.infrastructure.mapper.MedicineMapper;
 import com.itesm.infrastructure.persistence.entity.MedicineEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class MedicineRepositoryImpl implements MedicineRepository, PanacheRepositoryBase<MedicineEntity, Integer> {
 
+    @Override
+    public List<Medicine> findByNames(List<String> genericNames) {
+        return list("genericName in ?1", genericNames)
+                .stream()
+                .map(MedicineMapper::toDomain)
+                .toList();
+    }
+
+    
     @Override
     public List<Medicine> findAllMedicines() {
         return listAll().stream()
@@ -30,6 +40,17 @@ public class MedicineRepositoryImpl implements MedicineRepository, PanacheReposi
     }
 
     @Override
+    @Transactional
+    public List<Medicine> saveAll(List<Medicine> medicines) {
+    List<MedicineEntity> entities = medicines.stream()
+            .map(MedicineMapper::toEntity)
+            .toList();
+    entities.forEach(this::persist);
+    return entities.stream()
+            .map(MedicineMapper::toDomain)
+            .toList();
+    }
+
     public List<Medicine> searchMedicines(String query) {
         return find("""
             SELECT m FROM MedicineEntity m

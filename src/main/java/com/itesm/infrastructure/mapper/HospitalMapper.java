@@ -11,4 +11,12 @@ public class HospitalMapper {
                 entity.getMapsUrl()
         );
     }
+
+    public static HospitalEntity toEntity(Hospital domain) {
+        HospitalEntity entity = new HospitalEntity();
+        entity.setId(domain.getId());
+        entity.setName(domain.getName());
+        entity.setMapsUrl(domain.getMapsUrl());
+        return entity;
+    }
 }
