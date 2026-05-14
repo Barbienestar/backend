@@ -122,6 +122,77 @@ public class CreateUserUseCaseTest {
         assertTrue(saved.getHospitals().stream().anyMatch(h -> h.getId() == 2));
     }
 
+    @Test
+    public void execute_shouldThrowForbiddenWhenNonAdminCreatesPrivilegedUser() {
+        CreateUserDto dto = new CreateUserDto(
+                "Hacker", "Malicious", "", 20,
+                "hacker@test.com", "hack123", (byte) 1,
+                null, null);
+
+        when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createCitizenUser()));
+        doThrow(new ForbiddenException("Only admins can create privileged users"))
+                .when(validationStrategy).validate(any(CreateUserDto.class), any(CurrentUser.class));
+
+        assertThrows(ForbiddenException.class, () -> useCase.execute(dto));
+
+        verify(validationStrategy).setValidator(any(PrivilegedCreationValidator.class));
+        verify(validationStrategy).validate(any(CreateUserDto.class), any(CurrentUser.class));
+        verifyNoInteractions(userTokenService);
+        verifyNoInteractions(userRepository);
+    }
+
+    @Test
+    public void execute_shouldSetAddressWhenSuburbIdProvided() {
+        CreateUserDto dto = new CreateUserDto(
+                "Juan", "Perez", "Lopez", 30,
+                "juan@test.com", "password123", (byte) 3,
+                5, null);
+
+        when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
+        when(userTokenService.createUser(anyString(), anyString()))
+                .thenReturn("provider-uuid-789");
+        when(userRepository.save(any(User.class)))
+                .thenAnswer(invocation -> {
+                    User user = invocation.getArgument(0);
+                    user.setId(3L);
+                    return user;
+                });
+
+        useCase.execute(dto);
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        User saved = captor.getValue();
+        assertNotNull(saved.getAddress());
+        assertEquals(Integer.valueOf(5), saved.getAddress().getSuburbId());
+    }
+
+    @Test
+    public void execute_shouldSetHospitalsWhenHospitalIdsProvided() {
+        CreateUserDto dto = new CreateUserDto(
+                "Juan", "Perez", "Lopez", 30,
+                "juan@test.com", "password123", (byte) 3,
+                null, List.of(3, 4, 5));
+
+        when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
+        when(userTokenService.createUser(anyString(), anyString()))
+                .thenReturn("provider-uuid-101");
+        when(userRepository.save(any(User.class)))
+                .thenAnswer(invocation -> {
+                    User user = invocation.getArgument(0);
+                    user.setId(4L);
+                    return user;
+                });
+
+        useCase.execute(dto);
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        User saved = captor.getValue();
+        assertNotNull(saved.getHospitals());
+        assertEquals(3, saved.getHospitals().size());
+    }
+
     private User createAdminUser() {
         User user = new User();
         user.setId(1L);
@@ -129,6 +200,16 @@ public class CreateUserUseCaseTest {
         user.setLastName1("User");
         user.setRole(new Role((byte) 1, "admin"));
         user.setEmail("admin@test.com");
+        return user;
+    }
+
+    private User createCitizenUser() {
+        User user = new User();
+        user.setId(2L);
+        user.setName("Citizen");
+        user.setLastName1("User");
+        user.setRole(new Role((byte) 3, "citizen"));
+        user.setEmail("citizen@test.com");
         return user;
     }
 }
