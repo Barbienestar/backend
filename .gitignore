@@ -43,4 +43,7 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
-/**/resources/*
+/**/resources/*.json
+
+# Claude context (local only)
+CLAUDE.md
