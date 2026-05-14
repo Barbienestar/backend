@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MedicineHospitalStock {
+public class MedicinesHospitalsStock {
     private Integer hospitalId;
     private String hospitalName;
     private String address;
