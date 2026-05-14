@@ -94,4 +94,12 @@ public class ReportRepositoryImpl
                 .setParameter("statusId", statusId)
                 .getSingleResult();
     }
+
+    @Override
+    @Transactional
+    public void changeStatus(Integer reportId, Integer statusId) {
+        em.getReference(ReportEntity.class, reportId)
+                .setStatusId(em.getReference(StatusEntity.class, statusId));
+        em.flush();
+    }
 }
