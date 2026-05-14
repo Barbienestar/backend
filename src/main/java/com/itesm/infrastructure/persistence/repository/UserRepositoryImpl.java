@@ -1,8 +1,10 @@
 package com.itesm.infrastructure.persistence.repository;
 
+import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
 import com.itesm.infrastructure.mapper.UserMapper;
+import com.itesm.infrastructure.persistence.entity.HospitalEntity;
 import com.itesm.infrastructure.persistence.entity.RoleEntity;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
 import com.itesm.infrastructure.persistence.entity.UserEntity;
@@ -33,6 +35,11 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
         UserEntity entity = UserMapper.toEntity(user);
         entity.setRole(em.getReference(RoleEntity.class, user.getRole().getId()));
         entity.setSuburb(em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
+        if (user.getHospitals() != null) {
+            for (Hospital hospital : user.getHospitals()) {
+                entity.getHospitals().add(em.getReference(HospitalEntity.class, hospital.getId()));
+            }
+        }
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
         persist(entity);

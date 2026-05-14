@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class CreateUserDto {
@@ -25,5 +27,7 @@ public class CreateUserDto {
 
     @JsonProperty("suburb_id")
     private Integer suburbId;
-}
 
+    @JsonProperty("hospital_ids")
+    private List<Integer> hospitalIds;
+}
