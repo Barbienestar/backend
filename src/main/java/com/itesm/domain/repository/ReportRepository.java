@@ -12,4 +12,6 @@ public interface ReportRepository {
     List<Report> findByStatusId(Integer statusId, Integer page, Integer pageSize);
 
     long countByStatusId(Integer statusId);
+
+    void changeStatus(Integer reportId, Integer statusId);
 }
