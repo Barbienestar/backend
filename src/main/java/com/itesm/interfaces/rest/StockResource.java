@@ -24,7 +24,7 @@ public class StockResource {
 
     @GET
     @PermitPublic
-    public Response getByMedicine(@QueryParam("medicineName") String medicineName) {
+    public Response getByMedicine(@QueryParam("medicine_name") String medicineName) {
         if (medicineName == null || medicineName.isBlank()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"medicineName is required\"}")
