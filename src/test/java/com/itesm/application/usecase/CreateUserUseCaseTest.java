@@ -17,10 +17,13 @@ import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
 import com.itesm.domain.repository.UserTokenService;
 
+import java.util.List;
+
 import jakarta.ws.rs.ForbiddenException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 public class CreateUserUseCaseTest {
 
@@ -70,7 +73,53 @@ public class CreateUserUseCaseTest {
         verify(validationStrategy).setValidator(any(CitizenCreationValidator.class));
         verify(validationStrategy).validate(any(CreateUserDto.class), any(CurrentUser.class));
         verify(userTokenService).createUser("juan@test.com", "password123");
-        verify(userRepository).save(any(User.class));
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+        User savedUser = userCaptor.getValue();
+        assertEquals("Juan", savedUser.getName());
+        assertEquals("Perez", savedUser.getLastName1());
+        assertEquals("Lopez", savedUser.getLastName2());
+        assertEquals(30, savedUser.getAge());
+        assertEquals("juan@test.com", savedUser.getEmail());
+        assertEquals("provider-uuid-123", savedUser.getProviderUuid());
+        assertTrue(savedUser.isActive());
+        assertEquals(Byte.valueOf((byte) 3), savedUser.getRole().getId());
+        assertNotNull(savedUser.getAddress());
+        assertNull(savedUser.getAddress().getAddress());
+        assertNull(savedUser.getAddress().getSuburbId());
+        assertNull(savedUser.getHospitals());
+    }
+
+    @Test
+    public void execute_shouldCreatePrivilegedUserWhenCurrentUserIsAdmin() {
+        CreateUserDto dto = new CreateUserDto(
+                "AdminCreated", "User", "", 25,
+                "newadmin@test.com", "pass123", (byte) 1,
+                null, List.of(1, 2));
+
+        when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
+        when(userTokenService.createUser(dto.getEmail(), dto.getPassword()))
+                .thenReturn("provider-uuid-456");
+        when(userRepository.save(any(User.class)))
+                .thenAnswer(invocation -> {
+                    User user = invocation.getArgument(0);
+                    user.setId(2L);
+                    return user;
+                });
+
+        UserProfileDto result = useCase.execute(dto);
+
+        assertNotNull(result);
+        assertEquals(2L, result.getId());
+
+        verify(validationStrategy).setValidator(any(PrivilegedCreationValidator.class));
+        verify(validationStrategy).validate(any(CreateUserDto.class), any(CurrentUser.class));
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+        User saved = userCaptor.getValue();
+        assertEquals(2, saved.getHospitals().size());
+        assertTrue(saved.getHospitals().stream().anyMatch(h -> h.getId() == 1));
+        assertTrue(saved.getHospitals().stream().anyMatch(h -> h.getId() == 2));
     }
 
     private User createAdminUser() {
