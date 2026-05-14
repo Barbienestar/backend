@@ -87,4 +87,66 @@ public class GetReportsByStatusUseCaseTest {
         assertEquals("Hospital General", response.getHospitalName());
         assertEquals(LocalDateTime.of(2025, 1, 15, 10, 30), response.getCreatedAt());
     }
+
+    @Test
+    public void execute_shouldReturnEmptyPageWhenNoReports() {
+        Integer statusId = 99;
+        Integer page = 0;
+        Integer pageSize = 10;
+
+        when(reportRepository.findByStatusId(statusId, page, pageSize)).thenReturn(List.of());
+        when(reportRepository.countByStatusId(statusId)).thenReturn(0L);
+
+        PagedResult<FullReportResponse> result = useCase.execute(statusId, page, pageSize);
+
+        assertNotNull(result);
+        assertTrue(result.items().isEmpty());
+        assertEquals(0, result.totalItems());
+        assertEquals(0, result.totalPages());
+    }
+
+    @Test
+    public void execute_shouldGenerateSignedUrlForEachReport() {
+        User user = new User();
+        user.setName("A");
+        user.setLastName1("B");
+        user.setLastName2("C");
+
+        Medicine medicine = new Medicine();
+        medicine.setGenericName("M");
+        medicine.setPresentation("P");
+        medicine.setDosageForm("D");
+
+        Hospital hospital = new Hospital();
+        hospital.setName("H");
+
+        Report r1 = new Report();
+        r1.setId(1L);
+        r1.setDescription("d1");
+        r1.setImageUrl("img1.jpg");
+        r1.setUser(user);
+        r1.setMedicine(medicine);
+        r1.setHospital(hospital);
+        r1.setCreatedAt(LocalDateTime.now());
+
+        Report r2 = new Report();
+        r2.setId(2L);
+        r2.setDescription("d2");
+        r2.setImageUrl("img2.jpg");
+        r2.setUser(user);
+        r2.setMedicine(medicine);
+        r2.setHospital(hospital);
+        r2.setCreatedAt(LocalDateTime.now());
+
+        when(reportRepository.findByStatusId(1, 0, 10)).thenReturn(List.of(r1, r2));
+        when(reportRepository.countByStatusId(1)).thenReturn(2L);
+        when(imageRepository.generateSignedUrl(anyString(), eq(30L), eq(TimeUnit.MINUTES)))
+                .thenReturn("https://signed.url");
+
+        useCase.execute(1, 0, 10);
+
+        verify(imageRepository, times(2)).generateSignedUrl(anyString(), eq(30L), eq(TimeUnit.MINUTES));
+        verify(imageRepository).generateSignedUrl(eq("img1.jpg"), eq(30L), eq(TimeUnit.MINUTES));
+        verify(imageRepository).generateSignedUrl(eq("img2.jpg"), eq(30L), eq(TimeUnit.MINUTES));
+    }
 }
