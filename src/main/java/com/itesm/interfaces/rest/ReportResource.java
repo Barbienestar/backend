@@ -18,6 +18,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
+import java.util.Map;
 
 @Path("/reports")
 @Produces(MediaType.APPLICATION_JSON)
@@ -77,7 +78,7 @@ public class ReportResource {
     public Response getReportsByStatusCount(@PathParam("statusId") Integer statusId) {
         try {
             long count = getReportCountByStatusUseCase.execute(statusId);
-            return Response.ok(count).build();
+            return Response.ok(Map.of("count", count)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
