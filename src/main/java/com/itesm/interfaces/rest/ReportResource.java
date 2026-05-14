@@ -6,6 +6,7 @@ import com.itesm.application.dto.PagedResult;
 import com.itesm.application.dto.ReportDto;
 import com.itesm.application.dto.ReportSummaryDto;
 import com.itesm.application.security.RequireRoles;
+import com.itesm.application.usecase.ChangeReportStatusUseCase;
 import com.itesm.application.usecase.CreateReportUseCase;
 import com.itesm.application.usecase.GetMyReportsUseCase;
 import com.itesm.application.usecase.GetReportCountByStatusUseCase;
@@ -29,17 +30,20 @@ public class ReportResource {
     private final GetMyReportsUseCase getMyReportsUseCase;
     private final GetReportsByStatusUseCase getReportsByStatusUseCase;
     private final GetReportCountByStatusUseCase getReportCountByStatusUseCase;
+    private final ChangeReportStatusUseCase changeReportStatusUseCase;
 
     @Inject
     public ReportResource(
             CreateReportUseCase createReportUseCase,
             GetMyReportsUseCase getMyReportsUseCase,
             GetReportsByStatusUseCase getReportsByStatusUseCase,
-            GetReportCountByStatusUseCase getReportCountByStatusUseCase) {
+            GetReportCountByStatusUseCase getReportCountByStatusUseCase,
+            ChangeReportStatusUseCase changeReportStatusUseCase) {
         this.createReportUseCase = createReportUseCase;
         this.getMyReportsUseCase = getMyReportsUseCase;
         this.getReportsByStatusUseCase = getReportsByStatusUseCase;
         this.getReportCountByStatusUseCase = getReportCountByStatusUseCase;
+        this.changeReportStatusUseCase = changeReportStatusUseCase;
     }
 
     @POST
@@ -70,6 +74,15 @@ public class ReportResource {
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PUT
+    @Path("/{reportId}/status/{statusId}")
+    @RequireRoles({"admin"})
+    public Response changeReportStatus(
+            @PathParam("reportId") Integer reportId, @PathParam("statusId") Integer statusId) {
+        changeReportStatusUseCase.execute(reportId, statusId);
+        return Response.ok().build();
     }
 
     @GET
