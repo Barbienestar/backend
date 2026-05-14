@@ -1,8 +1,9 @@
 package com.itesm.application.usecase;
 
 import com.itesm.application.dto.MedicineHospitalStockDto;
-import com.itesm.domain.models.MedicineHospitalStock;
-import com.itesm.domain.repository.MedicineHospitalStockRepository;
+import com.itesm.domain.models.MedicinesHospitalsStock;
+import com.itesm.domain.repository.MedicinesHospitalsRepository;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -12,10 +13,10 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class GetStockByMedicineUseCase {
 
-    private final MedicineHospitalStockRepository repository;
+    private final MedicinesHospitalsRepository repository;
 
     @Inject
-    public GetStockByMedicineUseCase(MedicineHospitalStockRepository repository) {
+    public GetStockByMedicineUseCase(MedicinesHospitalsRepository repository) {
         this.repository = repository;
     }
 
@@ -25,7 +26,7 @@ public class GetStockByMedicineUseCase {
                 .collect(Collectors.toList());
     }
 
-    private MedicineHospitalStockDto toDto(MedicineHospitalStock item) {
+    private MedicineHospitalStockDto toDto(MedicinesHospitalsStock item) {
         return new MedicineHospitalStockDto(
                 item.getHospitalId(),
                 item.getHospitalName(),
