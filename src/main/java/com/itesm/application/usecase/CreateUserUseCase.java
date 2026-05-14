@@ -7,6 +7,7 @@ import com.itesm.application.validation.CitizenCreationValidator;
 import com.itesm.application.validation.CreationValidationStrategy;
 import com.itesm.application.validation.PrivilegedCreationValidator;
 import com.itesm.domain.models.Address;
+import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
@@ -54,6 +55,9 @@ public class CreateUserUseCase {
         user.setActive(true);
         user.setRole(new Role(dto.getRoleId()));
         user.setAddress(new Address(dto.getSuburbId()));
+        if (dto.getHospitalIds() != null) {
+            user.setHospitals(dto.getHospitalIds().stream().map(id -> new Hospital(id)).toList());
+        }
 
         User savedUser = userRepository.save(user);
 
