@@ -48,9 +48,13 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         Method method = resourceInfo.getResourceMethod();
         Class<?> resourceClass = resourceInfo.getResourceClass();
-        if (method != null && method.isAnnotationPresent(PermitPublic.class)
-                || (resourceClass != null
-                        && resourceClass.isAnnotationPresent(PermitPublic.class))) {
+        boolean isPublic =
+                method != null && method.isAnnotationPresent(PermitPublic.class)
+                        || (resourceClass != null
+                                && resourceClass.isAnnotationPresent(PermitPublic.class));
+
+        if (isPublic) {
+            tryOptionalAuth(requestContext);
             return;
         }
 
@@ -85,6 +89,26 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
                             .entity(Map.of("message", "Invalid token"))
                             .type(MediaType.APPLICATION_JSON)
                             .build());
+        }
+    }
+
+    private void tryOptionalAuth(ContainerRequestContext requestContext) {
+        String authHeader = requestContext.getHeaders().getFirst("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return;
+        }
+
+        try {
+            String idToken = authHeader.replace("Bearer ", "");
+            FirebaseToken token = FirebaseAuth.getInstance().verifyIdToken(idToken, true);
+            Optional<User> userOptional = userRepository.findByProviderUuid(token.getUid());
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                CurrentUser currentUser = new CurrentUser(user);
+                authUserContext.setCurrentUser(currentUser);
+            }
+        } catch (FirebaseAuthException e) {
+            // Invalid token on a public endpoint — proceed without auth
         }
     }
 }
