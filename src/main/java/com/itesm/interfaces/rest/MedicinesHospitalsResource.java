@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.jboss.resteasy.reactive.RestQuery;
 
-import com.itesm.application.dto.MedicineHospitalStockDto;
+import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
@@ -51,7 +51,7 @@ public class MedicinesHospitalsResource {
                     .entity("{\"error\": \"medicine_name is required\"}")
                     .build();
         }
-        List<MedicineHospitalStockDto> result = getStockByMedicineUseCase.execute(medicineName);
+        List<MedicinesHospitalsStockDto> result = getStockByMedicineUseCase.execute(medicineName);
         return Response.ok(result).build();
     }
 
