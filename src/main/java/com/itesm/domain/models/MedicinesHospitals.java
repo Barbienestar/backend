@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MedicineHospital {
-    private Integer id;
+public class MedicinesHospitals {
+    private Long id;
     private Medicine medicine;
     private Hospital hospital;
     private int stock;
     private LocalDateTime entryDate;
 
-    public MedicineHospital(Medicine medicine, Hospital hospital, int stock, LocalDateTime entryDate) {
+    public MedicinesHospitals(Medicine medicine, Hospital hospital, int stock, LocalDateTime entryDate) {
         this.medicine = medicine;
         this.hospital = hospital;
         this.stock = stock;
