@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
+import com.itesm.domain.models.MedicinesHospitalsStockReport;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import com.itesm.infrastructure.mapper.MedicinesHospitalsStockMapper;
 import com.itesm.infrastructure.persistence.entity.MedicinesHospitalsEntity;
@@ -41,13 +42,34 @@ public class MedicinesHospitalsRepositoryImpl implements MedicinesHospitalsRepos
 
     @Override
     public Optional<MedicinesHospitalsStockAverages> getStockAvg(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL GetHospitalStockAverages(:idHospital)")
+        Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:idHospital)")
                 .setParameter("idHospital", idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
         return Optional.of(new MedicinesHospitalsStockAverages(
             (BigDecimal) row[0],
             (BigDecimal) row[1]
+        ));
+    }
+
+    @Override
+    public Optional<MedicinesHospitalsStockReport> getStockReport(Integer idHospital) {
+        Query query = em.createNativeQuery("CALL get_hospital_stock_report(:idHospital)")
+                .setParameter("idHospital", idHospital);
+        Object[] row = (Object[]) query.getSingleResult();
+
+        if (row == null) return Optional.empty();
+
+        Integer count = ((Number) row[0]).intValue();
+
+        String medicinesString = (String) row[1];
+        List<String> medicinesList = (medicinesString != null && !medicinesString.isEmpty()) 
+        ? java.util.Arrays.asList(medicinesString.split(", ")) 
+        : java.util.Collections.emptyList();
+
+        return Optional.of(new MedicinesHospitalsStockReport(
+            count,
+            medicinesList
         ));
     }
 }
