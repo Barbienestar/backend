@@ -34,7 +34,9 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
     public User save(User user) {
         UserEntity entity = UserMapper.toEntity(user);
         entity.setRole(em.getReference(RoleEntity.class, user.getRole().getId()));
-        entity.setSuburb(em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
+        if (user.getAddress() != null && user.getAddress().getSuburbId() != null) {
+            entity.setSuburb(em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
+        }
         if (user.getHospitals() != null) {
             for (Hospital hospital : user.getHospitals()) {
                 entity.getHospitals().add(em.getReference(HospitalEntity.class, hospital.getId()));
