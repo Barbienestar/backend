@@ -10,7 +10,9 @@ import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
 import com.itesm.application.usecase.GetStockByMedicineUseCase;
+import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
+import com.itesm.domain.models.MedicinesHospitalsStockReport;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -27,14 +29,17 @@ import jakarta.ws.rs.core.Response;
 public class MedicinesHospitalsResource {
     private final GetStockByMedicineUseCase getStockByMedicineUseCase;
     private final GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase;
+    private final GetStockReportByHospitalUseCase getStockReportByHospitalUseCase;
 
     @Inject
     public MedicinesHospitalsResource(
         GetStockByMedicineUseCase getStockByMedicineUseCase, 
-        GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase
+        GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase,
+        GetStockReportByHospitalUseCase getStockReportByHospitalUseCase
     ) {
         this.getStockByMedicineUseCase = getStockByMedicineUseCase;
         this.getStockAveragesByHospitalUseCase = getStockAveragesByHospitalUseCase;
+        this.getStockReportByHospitalUseCase = getStockReportByHospitalUseCase;
     }
 
     @Path("/stock")
@@ -62,5 +67,19 @@ public class MedicinesHospitalsResource {
 
         Optional<MedicinesHospitalsStockAverages> averages = getStockAveragesByHospitalUseCase.execute(id_hospital);
         return Response.ok(averages).build();
+    }
+
+    @Path("/stock-report")
+    @GET
+    @RequireRoles({"health"})
+    public Response getStockReport(@RestQuery Integer id_hospital) {
+        if (id_hospital == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity("{\"error\": \"id_hospital is required\"}")
+                .build();
+        }
+
+        Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(id_hospital);
+        return Response.ok(stockReport).build();
     }
 }
