@@ -7,6 +7,7 @@ import org.jboss.resteasy.reactive.RestQuery;
 
 import com.itesm.application.dto.MedicineHospitalStockDto;
 import com.itesm.application.security.PermitPublic;
+import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
 import com.itesm.application.usecase.GetStockByMedicineUseCase;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
@@ -51,6 +52,7 @@ public class MedicinesHospitalsResource {
 
     @Path("/average-stock")
     @GET
+    @RequireRoles({"health"})
     public Response getAvgStock(@RestQuery Integer id_hospital) {
         if (id_hospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
