@@ -1,12 +1,12 @@
 package com.itesm.infrastructure.mapper;
 
-import com.itesm.domain.models.MedicineHospital;
-import com.itesm.infrastructure.persistence.entity.MedicineHospitalEntity;
+import com.itesm.domain.models.MedicinesHospitals;
+import com.itesm.infrastructure.persistence.entity.MedicinesHospitalsEntity;
 
-public class MedicineHospitalMapper {
+public class MedicinesHospitalsMapper {
 
-    public static MedicineHospital toDomain(MedicineHospitalEntity entity) {
-        return new MedicineHospital(
+    public static MedicinesHospitals toDomain(MedicinesHospitalsEntity entity) {
+        return new MedicinesHospitals(
                 entity.getId(),
                 MedicineMapper.toDomain(entity.getMedicine()),
                 HospitalMapper.toDomain(entity.getHospital()),
@@ -15,8 +15,8 @@ public class MedicineHospitalMapper {
         );
     }
 
-    public static MedicineHospitalEntity toEntity(MedicineHospital domain) {
-        MedicineHospitalEntity entity = new MedicineHospitalEntity();
+    public static MedicinesHospitalsEntity toEntity(MedicinesHospitals domain) {
+        MedicinesHospitalsEntity entity = new MedicinesHospitalsEntity();
         entity.setId(domain.getId());
         entity.setMedicine(MedicineMapper.toEntity(domain.getMedicine()));
         entity.setHospital(HospitalMapper.toEntity(domain.getHospital()));

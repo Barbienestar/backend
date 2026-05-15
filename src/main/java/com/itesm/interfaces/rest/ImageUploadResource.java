@@ -29,7 +29,7 @@ public class ImageUploadResource {
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @RequireRoles({"admin"})
+    @RequireRoles({"citizen"})
     public Response upload(@RestForm("image") FileUpload file) {
         if (file == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("No file uploaded").build();
