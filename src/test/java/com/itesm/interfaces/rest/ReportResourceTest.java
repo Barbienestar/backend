@@ -20,19 +20,19 @@ class ReportResourceTest {
     @Test
     void createReport_shouldReturn201WithValidData() throws Exception {
         given().contentType("application/json")
-                .header("Authorization", "Bearer 1289319831928")
+                .header("Authorization", "Bearer citizen-token")
                 .body(
                         "{\"description\":\"Test"
-                            + " description\",\"imageUrl\":\"https://example.com/image.png\",\"medicineId\":1,\"hospitalId\":1}")
+                            + " description\",\"image_url\":\"https://example.com/image.png\",\"medicine_id\":1,\"hospital_id\":1}")
                 .when()
-                .post("/reports/create")
+                .post("/reports")
                 .then()
                 .statusCode(201)
                 .body("id", greaterThan(0))
                 .body("description", equalTo("Test description"))
-                .body("medicineName", equalTo("Paracetamol"))
-                .body("hospitalName", equalTo("Hospital name"))
-                .body("createdAt", notNullValue());
+                .body("medicine_name", equalTo("Paracetamol"))
+                .body("hospital_name", equalTo("Hospital name"))
+                .body("created_at", notNullValue());
     }
 
     @Test
@@ -42,7 +42,7 @@ class ReportResourceTest {
                         "{\"description\":\"Test"
                             + " description\",\"imageUrl\":\"https://example.com/image.png\",\"medicineId\":1,\"hospitalId\":1}")
                 .when()
-                .post("/reports/create")
+                .post("/reports")
                 .then()
                 .statusCode(401);
     }
@@ -50,11 +50,11 @@ class ReportResourceTest {
     @Test
     void createReport_shouldReturn400WithIncompleteBody() throws Exception {
         given().contentType("application/json")
-                .header("Authorization", "Bearer 1289319831928")
+                .header("Authorization", "Bearer citizen-token")
                 .body(
                         "{ \"description\",\"imageUrl\":\"https://example.com/image.png\",\"medicineId\":1,\"hospitalId\":1}")
                 .when()
-                .post("/reports/create")
+                .post("/reports")
                 .then()
                 .statusCode(400);
     }
