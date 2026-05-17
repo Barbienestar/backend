@@ -1,7 +1,6 @@
 package com.itesm.infrastructure.persistence.repository;
 
 import com.itesm.domain.models.Hospital;
-import com.itesm.domain.models.Medicine;
 import com.itesm.domain.repository.HospitalRepository;
 import com.itesm.infrastructure.mapper.HospitalMapper;
 import com.itesm.infrastructure.mapper.UserHospitalMapper;
@@ -11,7 +10,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped

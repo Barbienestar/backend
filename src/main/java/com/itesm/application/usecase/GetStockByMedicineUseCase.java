@@ -1,6 +1,6 @@
 package com.itesm.application.usecase;
 
-import com.itesm.application.dto.MedicineHospitalStockDto;
+import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 
@@ -20,14 +20,14 @@ public class GetStockByMedicineUseCase {
         this.repository = repository;
     }
 
-    public List<MedicineHospitalStockDto> execute(String medicineName) {
+    public List<MedicinesHospitalsStockDto> execute(String medicineName) {
         return repository.findByMedicineName(medicineName).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    private MedicineHospitalStockDto toDto(MedicinesHospitalsStock item) {
-        return new MedicineHospitalStockDto(
+    private MedicinesHospitalsStockDto toDto(MedicinesHospitalsStock item) {
+        return new MedicinesHospitalsStockDto(
                 item.getHospitalId(),
                 item.getHospitalName(),
                 item.getAddress(),

@@ -3,12 +3,16 @@ package com.itesm.infrastructure.persistence.entity;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -28,6 +32,9 @@ public class HospitalEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_street", nullable = false)
     private StreetEntity street;
+
+    @ManyToMany(mappedBy = "hospitals", fetch = FetchType.LAZY)
+    private Set<UserEntity> users = new HashSet<>();
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

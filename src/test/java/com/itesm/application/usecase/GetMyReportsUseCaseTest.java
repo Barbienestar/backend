@@ -51,8 +51,8 @@ class GetMyReportsUseCaseTest {
         Status status = new Status((byte) 2, "reviewing");
         when(statusRepository.findStatusById((byte) 2)).thenReturn(status);
 
-        Report report = new Report(100L, 1L, 1, 1, (byte) 2, "Descripción test", null, LocalDateTime.now(), LocalDateTime.now());
-        when(reportRepository.findByUserId(1)).thenReturn(List.of(report));
+        Report report = new Report(100L, 1L, 1, 1, (byte) 2, "Descripción test", null, LocalDateTime.now(), LocalDateTime.now(), null, medicine, hospital);
+        when(reportRepository.findByUserId(1L)).thenReturn(List.of(report));
 
         useCase = new GetMyReportsUseCase(reportRepository, medicineRepository, hospitalRepository, statusRepository, authUserContext);
     }
@@ -72,7 +72,7 @@ class GetMyReportsUseCaseTest {
 
     @Test
     void execute_shouldReturnEmptyListWhenNoReports() {
-        when(reportRepository.findByUserId(1)).thenReturn(List.of());
+        when(reportRepository.findByUserId(1L)).thenReturn(List.of());
 
         List<ReportSummaryDto> result = useCase.execute();
 

@@ -13,7 +13,7 @@ class GetMyReportsResourceTest {
     @Test
     void getMyReports_shouldReturn200WithValidToken() {
         given()
-                .header("Authorization", "Bearer test-token")
+                .header("Authorization", "Bearer citizen-token")
                 .when()
                 .get("/reports/me")
                 .then()

@@ -10,9 +10,9 @@ import com.itesm.application.dto.MedicineStockInputDto;
 import com.itesm.application.dto.MedicineStockResultDto;
 import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.Medicine;
-import com.itesm.domain.models.MedicineHospital;
 import com.itesm.domain.repository.HospitalRepository;
-import com.itesm.domain.repository.MedicineHospitalRepository;
+import com.itesm.domain.models.MedicinesHospitals;
+import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import com.itesm.domain.repository.MedicineRepository;
 
 @ApplicationScoped
@@ -22,7 +22,7 @@ public class UploadMedicineStockUseCase {
     MedicineRepository medicineRepository;
 
     @Inject
-    MedicineHospitalRepository medicineHospitalRepository;
+    MedicinesHospitalsRepository medicinesHospitalsRepository;
 
     @Inject
     HospitalRepository hospitalRepository;
@@ -44,7 +44,8 @@ public class UploadMedicineStockUseCase {
         List<Medicine> existingMedicines = medicineRepository.findByNames(genericNames);
 
         List<Medicine> medicinesToSave = new ArrayList<>();
-        List<MedicineHospital> relationsToSave = new ArrayList<>();
+
+        List<MedicinesHospitals> relationsToSave = new ArrayList<>();
 
         for (MedicineRowDto row : input.getRows()) {
             try {
@@ -62,7 +63,8 @@ public class UploadMedicineStockUseCase {
                             return newMedicine;
                         });
 
-                relationsToSave.add(new MedicineHospital(medicine, hospital, row.getStock(), LocalDateTime.now()));
+
+                relationsToSave.add(new MedicinesHospitals(medicine, hospital, row.getStock(), LocalDateTime.now()));
                 inserted++;
 
             } catch (Exception e) {
@@ -73,14 +75,15 @@ public class UploadMedicineStockUseCase {
         List<Medicine> savedMedicines = medicineRepository.saveAll(medicinesToSave);
             
         for (Medicine saved : savedMedicines) {
-            for (MedicineHospital relation : relationsToSave) {
+
+            for (MedicinesHospitals relation : relationsToSave) {
                 if (relation.getMedicine().getGenericName().equalsIgnoreCase(saved.getGenericName())) {
                     relation.getMedicine().setId(saved.getId());
                 }
             }
         }
         
-        medicineHospitalRepository.saveAll(relationsToSave);
+        medicinesHospitalsRepository.saveAll(relationsToSave);
 
         return new MedicineStockResultDto(inserted, errors);
     }
