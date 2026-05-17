@@ -2,9 +2,9 @@ INSERT INTO States (id, name) VALUES (1, 'Test State');
 
 INSERT INTO Cities (id, name, id_state) VALUES (1, 'Test City', 1);
 
-INSERT INTO Roles (id, name) VALUES (1, 'User');
-INSERT INTO Roles (id, name) VALUES (2, 'citizen');
-INSERT INTO Roles (id, name) VALUES (3, 'admin');
+INSERT INTO Roles (id, name) VALUES (1, 'admin');
+INSERT INTO Roles (id, name) VALUES (2, 'health');
+INSERT INTO Roles (id, name) VALUES (3, 'citizen');
 
 INSERT INTO Suburbs (id, name, zip_code, id_city) VALUES (1, 'Test Suburb', '12345', 1);
 
@@ -12,10 +12,13 @@ INSERT INTO Users (id, name, last_name_1, last_name_2, age, email, provider_uuid
 VALUES (1, 'John', 'Pork', NULL, 30, 'john@test.com', 'test-uuid-123', true, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO Users (id, name, last_name_1, email, provider_uuid, active, id_role, id_suburb, created_at, updated_at)
-VALUES (2, 'Citizen', 'User', 'citizen@test.com', 'citizen-token', true, 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (1, 'Admin', 'User', 'admin@test.com', 'admin-token', true, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO Users (id, name, last_name_1, email, provider_uuid, active, id_role, id_suburb, created_at, updated_at)
-VALUES (3, 'Admin', 'User', 'admin@test.com', 'admin-token', true, 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (2, 'Health', 'Health', 'health@test.com', 'health-token', true, 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO Users (id, name, last_name_1, email, provider_uuid, active, id_role, id_suburb, created_at, updated_at)
+VALUES (3, 'Citizen', 'User', 'citizen@test.com', 'citizen-token', true, 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO Streets (id, name, id_suburb) VALUES (1, 'Test Street', 1);
 
