@@ -9,6 +9,16 @@
 ./mvnw package               # Build JAR
 ```
 
+## Test Database
+
+Test users are seeded via `src/test/resources/import.sql`. Each user's `provider_uuid` doubles as the Bearer token value in tests:
+
+| Token | Role |
+|---|---|
+| `admin-token` | admin |
+| `health-token` | health |
+| `citizen-token` | citizen |
+
 ## Architecture
 
 Layered architecture following clean architecture principles:
@@ -65,12 +75,36 @@ void setup() {
 }
 ```
 
+Integration test auth — use Bearer token matching the seeded `provider_uuid`:
+```java
+given()
+    .header("Authorization", "Bearer citizen-token")
+    .when().get("/reports/me")
+    .then().statusCode(200);
+
+// No token → 401
+given().when().get("/reports/me").then().statusCode(401);
+
+// Wrong role → 403
+given()
+    .header("Authorization", "Bearer admin-token")
+    .when().post("/reports")
+    .then().statusCode(403);
+```
+
 ## Auth & Roles
 
-- Firebase AuthFilter validates Bearer tokens — endpoints marked `@PermitPublic` bypass this filter entirely (no token required)
-- RoleAuthorizationFilter checks `@RequireRoles` annotations on resource methods
-- `@PermitPublic` annotation marks endpoints or entire resource classes as public — placed in `application/security/PermitPublic.java`
-- CurrentUser injected via AuthenticatedUserContext
+- `@PermitPublic` — marks endpoints/classes as public (no token required). Placed in `application/security/PermitPublic.java`
+- `@RequireRoles({"admin"})` — restricts to specific roles. Placed in `application/security/RequireRoles.java`
+- Endpoints with **neither** annotation require a valid token but accept any role (pass-through)
+- `MockFirebaseAuthFilter` replaces `FirebaseAuthFilter` in tests (`@UnlessBuildProfile("test")`) — validates tokens by looking up `provider_uuid` in DB instead of Firebase
+- `RoleAuthorizationFilter` checks `@RequireRoles` at `Priorities.AUTHORIZATION` — returns 401 if no `CurrentUser`, 403 if role mismatch
+- `CurrentUser` is injected via `AuthenticatedUserContext` (`@RequestScoped`)
+
+Request flow (test profile):
+```
+MockFirebaseAuthFilter → RoleAuthorizationFilter → Resource method
+```
 
 ## DB
 
