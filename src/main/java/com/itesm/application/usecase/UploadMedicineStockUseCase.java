@@ -18,14 +18,16 @@ import com.itesm.domain.repository.MedicineRepository;
 @ApplicationScoped
 public class UploadMedicineStockUseCase {
 
-    @Inject
-    MedicineRepository medicineRepository;
+    private final MedicineRepository medicineRepository;
+    private final MedicinesHospitalsRepository medicinesHospitalsRepository;
+    private final HospitalRepository hospitalRepository;
 
     @Inject
-    MedicinesHospitalsRepository medicinesHospitalsRepository;
-
-    @Inject
-    HospitalRepository hospitalRepository;
+    public UploadMedicineStockUseCase(MedicineRepository medicineRepository, MedicinesHospitalsRepository medicinesHospitalsRepository, HospitalRepository hospitalRepository) {
+        this.medicineRepository = medicineRepository;
+        this.medicinesHospitalsRepository = medicinesHospitalsRepository;
+        this.hospitalRepository = hospitalRepository;
+    }
 
     public MedicineStockResultDto execute(MedicineStockInputDto input) {
 
@@ -49,6 +51,13 @@ public class UploadMedicineStockUseCase {
 
         for (MedicineRowDto row : input.getRows()) {
             try {
+                if (row.getGenericName() == null || row.getGenericName().isBlank()) {
+                    throw new IllegalArgumentException("el nombre genérico no puede estar vacío");
+                }
+                if (row.getStock() < 0) {
+                    throw new IllegalArgumentException("el stock no puede ser negativo");
+                }
+
                 Medicine medicine = existingMedicines.stream()
                         .filter(m -> m.getGenericName().equalsIgnoreCase(row.getGenericName()))
                         .findFirst()
