@@ -58,4 +58,61 @@ class ReportResourceTest {
                 .then()
                 .statusCode(400);
     }
+
+    @Test
+    void changeReportStatus_shouldReturn200WithValidData() throws Exception {
+        given().contentType("application/json")
+                .header("Authorization", "Bearer admin-token")
+                .when()
+                .put("reports/1/status/2")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void changeReportStatus_shouldReturn403WithCitizenUser() throws Exception {
+        given().contentType("application/json")
+                .header("Authorization", "Bearer citizen-token")
+                .when()
+                .put("reports/1/status/2")
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
+    void changeReportStatus_shouldReturn404WithInvalidReport() throws Exception {
+        given().contentType("application/json")
+                .header("Authorization", "Bearer admin-token")
+                .when()
+                .put("reports/1982128182918293128/status/2")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    void getReportsByStatus_shouldReturnPagedReportResult() throws Exception {
+        given()
+                .header("Authorization", "Bearer admin-token")
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .when()
+                .get("/reports/status/1")
+                .then()
+                .statusCode(200)
+                .body("items", notNullValue())
+                .body("page", equalTo(0))
+                .body("page_size", equalTo(10))
+                .body("total_items", equalTo(0))
+                .body("total_pages", equalTo(0));
+    }
+
+    @Test
+    void getReportsByStatus_shouldThrowWithUnauthorizedUser() throws Exception {
+        given()
+                .header("Authorization", "Bearer citizen-token")
+                .when()
+                .get("/reports/status/1")
+                .then()
+                .statusCode(403);
+    }
 }
