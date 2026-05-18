@@ -32,3 +32,5 @@ ALTER TABLE Medicines ALTER COLUMN id RESTART WITH 2;
 INSERT INTO Hospitals (id, name, maps_url, id_street, created_at, updated_at)
 VALUES (1, 'Hospital name', 'https://maps.test.com', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 ALTER TABLE Hospitals ALTER COLUMN id RESTART WITH 2;
+
+INSERT INTO Users_Hospitals (id_user, id_hospital) VALUES (2, 1);
