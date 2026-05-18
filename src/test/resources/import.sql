@@ -8,9 +8,6 @@ INSERT INTO Roles (id, name) VALUES (3, 'citizen');
 
 INSERT INTO Suburbs (id, name, zip_code, id_city) VALUES (1, 'Test Suburb', '12345', 1);
 
-INSERT INTO Users (id, name, last_name_1, last_name_2, age, email, provider_uuid, active, id_role, id_suburb, created_at, updated_at)
-VALUES (1, 'John', 'Pork', NULL, 30, 'john@test.com', 'test-uuid-123', true, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
 INSERT INTO Users (id, name, last_name_1, email, provider_uuid, active, id_role, id_suburb, created_at, updated_at)
 VALUES (1, 'Admin', 'User', 'admin@test.com', 'admin-token', true, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
