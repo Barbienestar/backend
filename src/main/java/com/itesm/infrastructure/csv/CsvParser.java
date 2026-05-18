@@ -29,13 +29,17 @@ public class CsvParser {
                     throw new RuntimeException("Fila " + rowNumber + " incompleta: se esperaban 5 columnas");
                 }
 
-                rows.add(new MedicineRowDto(
-                        line[0].trim(), // nombre_generico
-                        line[1].trim(), // forma_dosis
-                        nullIfEmpty(line[2]), // potencia
-                        nullIfEmpty(line[3]), // presentacion
-                        Integer.parseInt(line[4].trim()) // stock
-                ));
+                try {
+                    rows.add(new MedicineRowDto(
+                            line[0].trim(),// nombre_generico
+                            line[1].trim(),// forma_dosis
+                            nullIfEmpty(line[2]),// dosis
+                            nullIfEmpty(line[3]),// presentacion
+                            Integer.parseInt(line[4].trim())// stock
+                    ));
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Fila " + rowNumber + ": el campo 'stock' no es un número válido: '" + line[4].trim() + "'");
+                }
             }
 
         } catch (CsvValidationException | IOException e) {

@@ -11,11 +11,14 @@ import java.util.List;
 @ApplicationScoped
 public class GetMyHospitalsUseCase {
 
-    @Inject
-    HospitalRepository hospitalRepository;
+    private final HospitalRepository hospitalRepository;
+    private final AuthenticatedUserContext authUserContext;
 
     @Inject
-    AuthenticatedUserContext authUserContext;
+    public GetMyHospitalsUseCase(HospitalRepository hospitalRepository, AuthenticatedUserContext authUserContext) {
+        this.hospitalRepository = hospitalRepository;
+        this.authUserContext = authUserContext;
+    }
 
     public List<HospitalDto> execute() {
         Long userId = authUserContext.getCurrentUser().getId();

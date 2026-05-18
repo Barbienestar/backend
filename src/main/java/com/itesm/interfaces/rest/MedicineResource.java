@@ -14,10 +14,13 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @Path("/medicines")
 @Produces(MediaType.APPLICATION_JSON)
@@ -48,12 +51,26 @@ public class MedicineResource {
     @Path("/upload-stock/{idHospital}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadStock(@PathParam("idHospital") Integer idHospital,
-                                @RestForm("file") InputStream file) {
+                                @RestForm("file") FileUpload file) throws IOException {
 
-        List<MedicineRowDto> rows = CsvParser.parse(file);
-        MedicineStockInputDto input = new MedicineStockInputDto(idHospital, rows);
-        MedicineStockResultDto result = uploadMedicineStockUseCase.execute(input);
+        if (file == null || file.size() == 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("El archivo está vacío o no fue enviado").build();
+        }
 
-        return Response.ok(result).build();
+        String contentType = file.contentType();
+        if (contentType == null || (!contentType.equals("text/csv")
+                && !contentType.equals("application/csv")
+                && !contentType.equals("text/plain"))) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("El archivo debe ser un CSV (text/csv)").build();
+        }
+
+        try (InputStream inputStream = Files.newInputStream(file.uploadedFile())) {
+            List<MedicineRowDto> rows = CsvParser.parse(inputStream);
+            MedicineStockInputDto input = new MedicineStockInputDto(idHospital, rows);
+            MedicineStockResultDto result = uploadMedicineStockUseCase.execute(input);
+            return Response.ok(result).build();
+        }
     }
 }

@@ -24,6 +24,10 @@ INSERT INTO Statuses (id, name) VALUES (2, 'reviewing');
 
 INSERT INTO Medicines (id, generic_name, dosage_form, strength, presentation, created_at, updated_at)
 VALUES (1, 'Paracetamol', 'Tablet', '500mg', 'Box', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+ALTER TABLE Medicines ALTER COLUMN id RESTART WITH 2;
 
 INSERT INTO Hospitals (id, name, maps_url, id_street, created_at, updated_at)
 VALUES (1, 'Hospital name', 'https://maps.test.com', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+ALTER TABLE Hospitals ALTER COLUMN id RESTART WITH 2;
+
+INSERT INTO Users_Hospitals (id_user, id_hospital) VALUES (2, 1);
