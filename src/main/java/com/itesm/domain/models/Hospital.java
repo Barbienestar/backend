@@ -18,4 +18,3 @@ public class Hospital {
         this.id = id;
     }
 }
-
