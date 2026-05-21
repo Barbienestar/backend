@@ -26,31 +26,35 @@ public class MedicinesHospitalsRepositoryImpl implements MedicinesHospitalsRepos
 
     @Override
     public List<MedicinesHospitalsStock> findByMedicineName(String query) {
-        List<Object[]> rows = em.createQuery("""
-                SELECT mh FROM MedicinesHospitalsEntity mh
-                JOIN FETCH mh.medicine m
-                JOIN FETCH mh.hospital h
-                JOIN FETCH h.street s
-                JOIN FETCH s.idSuburb sub
-                JOIN FETCH sub.idCity c
-                WHERE LOWER(CONCAT(m.genericName, ' ', m.dosageForm, ' ', COALESCE(m.strength, '')))
-                      LIKE LOWER(CONCAT('%', ?1, '%'))
-                ORDER BY mh.stock DESC
-                """,
-                Object[].class
-        )
-        .setParameter("query", query)
-        .getResultList();
+        List<Object[]> rows =
+                em.createQuery(
+                                """
+                                SELECT h.id, h.name,
+                                       CONCAT(s.name, ', ', sub.name, ', ', c.name),
+                                       mh.stock, h.mapsUrl
+                                FROM MedicinesHospitalsEntity mh
+                                JOIN mh.medicine m
+                                JOIN mh.hospital h
+                                JOIN h.street s
+                                JOIN s.idSuburb sub
+                                JOIN sub.idCity c
+                                WHERE LOWER(CONCAT(m.genericName, ' ', m.dosageForm, ' ', COALESCE(m.strength, '')))
+                                      LIKE LOWER(CONCAT('%', :query, '%'))
+                                ORDER BY mh.stock DESC
+                                """,
+                                Object[].class)
+                        .setParameter("query", query)
+                        .getResultList();
 
         List<MedicinesHospitalsStock> out = new ArrayList<MedicinesHospitalsStock>();
         for (Object[] r : rows) {
-            out.add(new MedicinesHospitalsStock(
-                (Integer) r[0],
-                (String) r[1],
-                (String) r[2],
-                (Integer) r[3],
-                (String) r[4]
-            ));
+            out.add(
+                    new MedicinesHospitalsStock(
+                            (Integer) r[0],
+                            (String) r[1],
+                            (String) r[2],
+                            (Integer) r[3],
+                            (String) r[4]));
         }
 
         return out;
