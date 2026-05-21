@@ -35,7 +35,9 @@ class GetMyReportsUseCaseTest {
         User user = new User();
         user.setId(1L);
         user.setName("John");
-        user.setLastName1("Doe");
+        user.setLastName1("Pork");
+        Role role = new Role((byte) 3, "citizen");
+        user.setRole(role);
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(user));
 
         Medicine medicine = new Medicine();
@@ -51,10 +53,29 @@ class GetMyReportsUseCaseTest {
         Status status = new Status((byte) 2, "reviewing");
         when(statusRepository.findStatusById((byte) 2)).thenReturn(status);
 
-        Report report = new Report(100L, 1L, 1, 1, (byte) 2, "Descripción test", null, LocalDateTime.now(), LocalDateTime.now(), null, medicine, hospital);
+        Report report =
+                new Report(
+                        100L,
+                        1L,
+                        1,
+                        1,
+                        (byte) 2,
+                        "Descripción test",
+                        null,
+                        LocalDateTime.now(),
+                        LocalDateTime.now(),
+                        null,
+                        medicine,
+                        hospital);
         when(reportRepository.findByUserId(1L)).thenReturn(List.of(report));
 
-        useCase = new GetMyReportsUseCase(reportRepository, medicineRepository, hospitalRepository, statusRepository, authUserContext);
+        useCase =
+                new GetMyReportsUseCase(
+                        reportRepository,
+                        medicineRepository,
+                        hospitalRepository,
+                        statusRepository,
+                        authUserContext);
     }
 
     @Test
