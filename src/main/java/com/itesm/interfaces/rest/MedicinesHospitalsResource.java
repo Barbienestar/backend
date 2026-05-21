@@ -18,6 +18,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
@@ -55,31 +56,31 @@ public class MedicinesHospitalsResource {
         return Response.ok(result).build();
     }
 
-    @Path("/average-stock")
+    @Path("/average-stock/{idHospital}")
     @GET
     @RequireRoles({"health"})
-    public Response getAvgStock(@RestQuery Integer id_hospital) {
-        if (id_hospital == null) {
+    public Response getAvgStock(@PathParam("idHospital") Integer idHospital) {
+        if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"id_hospital is required\"}")
+                    .entity("{\"error\": \"idHospital is required\"}")
                     .build();
         }
 
-        Optional<MedicinesHospitalsStockAverages> averages = getStockAveragesByHospitalUseCase.execute(id_hospital);
+        Optional<MedicinesHospitalsStockAverages> averages = getStockAveragesByHospitalUseCase.execute(idHospital);
         return Response.ok(averages).build();
     }
 
-    @Path("/stock-report")
+    @Path("/stock-report/{idHospital}")
     @GET
     @RequireRoles({"health"})
-    public Response getStockReport(@RestQuery Integer id_hospital) {
-        if (id_hospital == null) {
+    public Response getStockReport(@PathParam("idHospital") Integer idHospital) {
+        if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                .entity("{\"error\": \"id_hospital is required\"}")
+                .entity("{\"error\": \"idHospital is required\"}")
                 .build();
         }
 
-        Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(id_hospital);
+        Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(idHospital);
         return Response.ok(stockReport).build();
     }
 }
