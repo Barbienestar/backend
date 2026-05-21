@@ -3,8 +3,6 @@ package com.itesm.interfaces.rest;
 import java.util.List;
 import java.util.Optional;
 
-import org.jboss.resteasy.reactive.RestQuery;
-
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
