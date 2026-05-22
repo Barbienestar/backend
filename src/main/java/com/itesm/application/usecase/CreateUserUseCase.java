@@ -12,7 +12,6 @@ import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
 import com.itesm.domain.repository.UserTokenService;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -56,18 +55,18 @@ public class CreateUserUseCase {
         user.setRole(new Role(dto.getRoleId()));
         user.setAddress(new Address(dto.getSuburbId()));
         if (dto.getHospitalIds() != null) {
-            user.setHospitals(dto.getHospitalIds().stream().map(id -> new Hospital(id)).toList());
+            user.setHospitals(
+                    dto.getHospitalIds().stream().map(id -> new Hospital(id)).toList());
         }
 
         User savedUser = userRepository.save(user);
 
-        UserProfileDto userProfile =
-                new UserProfileDto(
-                        savedUser.getId(),
-                        savedUser.getName(),
-                        savedUser.getLastName1(),
-                        savedUser.getRole().getName(),
-                        savedUser.getEmail());
+        UserProfileDto userProfile = new UserProfileDto(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getLastName1(),
+                savedUser.getRole().getName(),
+                savedUser.getEmail());
 
         return userProfile;
     }

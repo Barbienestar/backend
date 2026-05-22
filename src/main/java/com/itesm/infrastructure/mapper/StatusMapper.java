@@ -5,9 +5,6 @@ import com.itesm.infrastructure.persistence.entity.StatusEntity;
 
 public class StatusMapper {
     public static Status toDomain(StatusEntity entity) {
-        return new Status(
-                entity.getId(),
-                entity.getName()
-        );
+        return new Status(entity.getId(), entity.getName());
     }
 }

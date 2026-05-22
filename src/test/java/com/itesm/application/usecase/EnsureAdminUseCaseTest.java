@@ -8,12 +8,10 @@ import com.itesm.domain.models.User;
 import com.itesm.domain.repository.RoleRepository;
 import com.itesm.domain.repository.UserRepository;
 import com.itesm.domain.repository.UserTokenService;
-
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-
-import java.util.Optional;
 
 class EnsureAdminUseCaseTest {
 
@@ -27,8 +25,8 @@ class EnsureAdminUseCaseTest {
         userRepository = mock(UserRepository.class);
         userTokenService = mock(UserTokenService.class);
         roleRepository = mock(RoleRepository.class);
-        useCase = new EnsureAdminUseCase(userRepository, userTokenService, roleRepository,
-                "admin@test.com", "password123", "Admin", "User");
+        useCase = new EnsureAdminUseCase(
+                userRepository, userTokenService, roleRepository, "admin@test.com", "password123", "Admin", "User");
     }
 
     @Test
@@ -59,14 +57,12 @@ class EnsureAdminUseCaseTest {
         Role adminRole = new Role((byte) 1, "admin");
         when(roleRepository.findByName("admin")).thenReturn(Optional.of(adminRole));
         when(userRepository.countByRoleId((byte) 1)).thenReturn(0L);
-        when(userTokenService.createUser("admin@test.com", "password123"))
-                .thenReturn("firebase-uid-abc");
-        when(userRepository.save(any(User.class)))
-                .thenAnswer(invocation -> {
-                    User user = invocation.getArgument(0);
-                    user.setId(1L);
-                    return user;
-                });
+        when(userTokenService.createUser("admin@test.com", "password123")).thenReturn("firebase-uid-abc");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User user = invocation.getArgument(0);
+            user.setId(1L);
+            return user;
+        });
 
         useCase.execute();
 

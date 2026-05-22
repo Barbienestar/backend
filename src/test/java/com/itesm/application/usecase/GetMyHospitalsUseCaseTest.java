@@ -17,12 +17,10 @@ import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.HospitalRepository;
-
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-
-import java.util.List;
 
 /** GetMyHospitalsUseCaseTest */
 public class GetMyHospitalsUseCaseTest {
@@ -51,8 +49,7 @@ public class GetMyHospitalsUseCaseTest {
     public void execute_shouldReturnMappedHospitalsForCurrentUser() {
         Hospital hospitalA = new Hospital(1, "Hospital General", "https://maps/A");
         Hospital hospitalB = new Hospital(2, "Hospital del Norte", "https://maps/B");
-        when(hospitalRepository.findHospitalsByUserId(1L))
-                .thenReturn(List.of(hospitalA, hospitalB));
+        when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospitalA, hospitalB));
 
         List<HospitalDto> result = getMyHospitalsUseCase.execute();
 

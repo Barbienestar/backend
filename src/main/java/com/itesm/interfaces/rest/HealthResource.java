@@ -5,7 +5,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import java.time.Instant;
 import java.util.Map;
 
@@ -15,14 +14,13 @@ import java.util.Map;
 public class HealthResource {
     @GET
     public Response status() {
-        return Response.ok(
-                        Map.of(
-                                "status",
-                                "UP",
-                                "name",
-                                "version",
-                                "timestamp",
-                                Instant.now().toString()))
+        return Response.ok(Map.of(
+                        "status",
+                        "UP",
+                        "name",
+                        "version",
+                        "timestamp",
+                        Instant.now().toString()))
                 .build();
     }
 }

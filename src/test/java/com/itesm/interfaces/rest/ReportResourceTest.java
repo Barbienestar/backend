@@ -1,21 +1,18 @@
 package com.itesm.interfaces.rest;
 
 import static io.restassured.RestAssured.given;
-
 import static org.hamcrest.Matchers.*;
 
 import com.itesm.application.usecase.CreateReportUseCase;
-
 import io.quarkus.test.junit.QuarkusTest;
-
 import jakarta.inject.Inject;
-
 import org.junit.jupiter.api.Test;
 
 /** ReportResourceTest */
 @QuarkusTest
 class ReportResourceTest {
-    @Inject CreateReportUseCase createReportUseCase;
+    @Inject
+    CreateReportUseCase createReportUseCase;
 
     @Test
     void createReport_shouldReturn201WithValidData() throws Exception {
@@ -23,7 +20,7 @@ class ReportResourceTest {
                 .header("Authorization", "Bearer citizen-token")
                 .body(
                         "{\"description\":\"Test"
-                            + " description\",\"image_url\":\"https://example.com/image.png\",\"medicine_id\":1,\"hospital_id\":1}")
+                                + " description\",\"image_url\":\"https://example.com/image.png\",\"medicine_id\":1,\"hospital_id\":1}")
                 .when()
                 .post("/reports")
                 .then()
@@ -40,7 +37,7 @@ class ReportResourceTest {
         given().contentType("application/json")
                 .body(
                         "{\"description\":\"Test"
-                            + " description\",\"imageUrl\":\"https://example.com/image.png\",\"medicineId\":1,\"hospitalId\":1}")
+                                + " description\",\"imageUrl\":\"https://example.com/image.png\",\"medicineId\":1,\"hospitalId\":1}")
                 .when()
                 .post("/reports")
                 .then()
@@ -91,8 +88,7 @@ class ReportResourceTest {
 
     @Test
     void getReportsByStatus_shouldReturnPagedReportResult() throws Exception {
-        given()
-                .header("Authorization", "Bearer admin-token")
+        given().header("Authorization", "Bearer admin-token")
                 .queryParam("page", 0)
                 .queryParam("size", 10)
                 .when()
@@ -108,8 +104,7 @@ class ReportResourceTest {
 
     @Test
     void getReportsByStatus_shouldThrowWithUnauthorizedUser() throws Exception {
-        given()
-                .header("Authorization", "Bearer citizen-token")
+        given().header("Authorization", "Bearer citizen-token")
                 .when()
                 .get("/reports/status/1")
                 .then()

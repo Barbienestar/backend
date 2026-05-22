@@ -4,10 +4,8 @@ import com.itesm.domain.models.User;
 import com.itesm.domain.repository.RoleRepository;
 import com.itesm.domain.repository.UserRepository;
 import com.itesm.domain.repository.UserTokenService;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped

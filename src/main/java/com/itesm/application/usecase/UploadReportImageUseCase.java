@@ -1,7 +1,6 @@
 package com.itesm.application.usecase;
 
 import com.itesm.domain.repository.ImageRepository;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

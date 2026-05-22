@@ -3,7 +3,6 @@ package com.itesm.infrastructure.csv;
 import com.itesm.application.dto.MedicineRowDto;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,14 +30,15 @@ public class CsvParser {
 
                 try {
                     rows.add(new MedicineRowDto(
-                            line[0].trim(),// nombre_generico
-                            line[1].trim(),// forma_dosis
-                            nullIfEmpty(line[2]),// dosis
-                            nullIfEmpty(line[3]),// presentacion
-                            Integer.parseInt(line[4].trim())// stock
-                    ));
+                            line[0].trim(), // nombre_generico
+                            line[1].trim(), // forma_dosis
+                            nullIfEmpty(line[2]), // dosis
+                            nullIfEmpty(line[3]), // presentacion
+                            Integer.parseInt(line[4].trim()) // stock
+                            ));
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException("Fila " + rowNumber + ": el campo 'stock' no es un número válido: '" + line[4].trim() + "'");
+                    throw new RuntimeException("Fila " + rowNumber + ": el campo 'stock' no es un número válido: '"
+                            + line[4].trim() + "'");
                 }
             }
 

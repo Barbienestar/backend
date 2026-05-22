@@ -11,13 +11,11 @@ import com.itesm.application.usecase.CreateReportUseCase;
 import com.itesm.application.usecase.GetMyReportsUseCase;
 import com.itesm.application.usecase.GetReportCountByStatusUseCase;
 import com.itesm.application.usecase.GetReportsByStatusUseCase;
-
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import java.util.List;
 import java.util.Map;
 
@@ -68,8 +66,7 @@ public class ReportResource {
             @QueryParam("page") Integer page,
             @QueryParam("size") Integer size) {
         try {
-            PagedResult<FullReportResponse> result =
-                    getReportsByStatusUseCase.execute(statusId, page, size);
+            PagedResult<FullReportResponse> result = getReportsByStatusUseCase.execute(statusId, page, size);
             return Response.ok(result).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

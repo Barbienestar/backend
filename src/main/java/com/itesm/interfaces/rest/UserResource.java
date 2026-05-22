@@ -4,7 +4,6 @@ import com.itesm.application.dto.CreateUserDto;
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.usecase.CreateUserUseCase;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;

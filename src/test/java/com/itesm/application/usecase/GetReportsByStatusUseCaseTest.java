@@ -11,13 +11,11 @@ import com.itesm.domain.models.Report;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.ImageRepository;
 import com.itesm.domain.repository.ReportRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GetReportsByStatusUseCaseTest {
 

@@ -7,7 +7,6 @@ import com.itesm.infrastructure.persistence.entity.MedicineEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,18 +15,14 @@ public class MedicineRepositoryImpl implements MedicineRepository, PanacheReposi
 
     @Override
     public List<Medicine> findByNames(List<String> genericNames) {
-        return list("genericName in ?1", genericNames)
-                .stream()
+        return list("genericName in ?1", genericNames).stream()
                 .map(MedicineMapper::toDomain)
                 .toList();
     }
 
-    
     @Override
     public List<Medicine> findAllMedicines() {
-        return listAll().stream()
-                .map(MedicineMapper::toDomain)
-                .collect(Collectors.toList());
+        return listAll().stream().map(MedicineMapper::toDomain).collect(Collectors.toList());
     }
 
     @Override
@@ -42,22 +37,21 @@ public class MedicineRepositoryImpl implements MedicineRepository, PanacheReposi
     @Override
     @Transactional
     public List<Medicine> saveAll(List<Medicine> medicines) {
-    List<MedicineEntity> entities = medicines.stream()
-            .map(MedicineMapper::toEntity)
-            .toList();
-    entities.forEach(this::persist);
-    return entities.stream()
-            .map(MedicineMapper::toDomain)
-            .toList();
+        List<MedicineEntity> entities =
+                medicines.stream().map(MedicineMapper::toEntity).toList();
+        entities.forEach(this::persist);
+        return entities.stream().map(MedicineMapper::toDomain).toList();
     }
 
     public List<Medicine> searchMedicines(String query) {
-        return find("""
+        return find(
+                        """
             SELECT m FROM MedicineEntity m
             WHERE LOWER(CONCAT(m.genericName, ' ', m.dosageForm, ' ', COALESCE(m.strength, '')))
                   LIKE LOWER(CONCAT('%', ?1, '%'))
             ORDER BY m.genericName ASC
-            """, query)
+            """,
+                        query)
                 .stream()
                 .map(MedicineMapper::toDomain)
                 .collect(Collectors.toList());

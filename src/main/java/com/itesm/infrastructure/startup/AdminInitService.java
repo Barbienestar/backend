@@ -1,14 +1,11 @@
 package com.itesm.infrastructure.startup;
 
 import com.itesm.application.usecase.EnsureAdminUseCase;
-
-import io.quarkus.runtime.Startup;
 import io.quarkus.arc.profile.UnlessBuildProfile;
-
+import io.quarkus.runtime.Startup;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
