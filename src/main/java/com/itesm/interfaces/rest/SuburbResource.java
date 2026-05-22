@@ -1,13 +1,8 @@
 package com.itesm.interfaces.rest;
 
-import java.util.List;
-
-import org.jboss.resteasy.reactive.RestQuery;
-
 import com.itesm.application.dto.SuburbDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.usecase.GetSuburbsByCityUseCase;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -15,6 +10,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
+import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/suburbs")
 @Consumes(MediaType.APPLICATION_JSON)

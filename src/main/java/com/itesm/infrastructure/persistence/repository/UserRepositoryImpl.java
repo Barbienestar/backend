@@ -8,14 +8,11 @@ import com.itesm.infrastructure.persistence.entity.HospitalEntity;
 import com.itesm.infrastructure.persistence.entity.RoleEntity;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
 import com.itesm.infrastructure.persistence.entity.UserEntity;
-
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -35,7 +32,8 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
         UserEntity entity = UserMapper.toEntity(user);
         entity.setRole(em.getReference(RoleEntity.class, user.getRole().getId()));
         if (user.getAddress() != null && user.getAddress().getSuburbId() != null) {
-            entity.setSuburb(em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
+            entity.setSuburb(
+                    em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
         }
         if (user.getHospitals() != null) {
             for (Hospital hospital : user.getHospitals()) {

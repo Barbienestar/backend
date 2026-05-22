@@ -1,8 +1,5 @@
 package com.itesm.interfaces.rest;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
@@ -11,7 +8,6 @@ import com.itesm.application.usecase.GetStockByMedicineUseCase;
 import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -21,6 +17,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
+import java.util.Optional;
 
 @Path("/medicines-hospitals")
 @Produces(MediaType.APPLICATION_JSON)
@@ -32,10 +30,9 @@ public class MedicinesHospitalsResource {
 
     @Inject
     public MedicinesHospitalsResource(
-        GetStockByMedicineUseCase getStockByMedicineUseCase, 
-        GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase,
-        GetStockReportByHospitalUseCase getStockReportByHospitalUseCase
-    ) {
+            GetStockByMedicineUseCase getStockByMedicineUseCase,
+            GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase,
+            GetStockReportByHospitalUseCase getStockReportByHospitalUseCase) {
         this.getStockByMedicineUseCase = getStockByMedicineUseCase;
         this.getStockAveragesByHospitalUseCase = getStockAveragesByHospitalUseCase;
         this.getStockReportByHospitalUseCase = getStockReportByHospitalUseCase;
@@ -74,8 +71,8 @@ public class MedicinesHospitalsResource {
     public Response getStockReport(@PathParam("idHospital") Integer idHospital) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                .entity("{\"error\": \"idHospital is required\"}")
-                .build();
+                    .entity("{\"error\": \"idHospital is required\"}")
+                    .build();
         }
 
         Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(idHospital);

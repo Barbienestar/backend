@@ -2,7 +2,6 @@ package com.itesm.interfaces.rest;
 
 import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.ListStatusUseCase;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;

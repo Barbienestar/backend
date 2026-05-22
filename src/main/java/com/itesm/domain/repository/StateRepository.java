@@ -1,8 +1,7 @@
 package com.itesm.domain.repository;
 
-import java.util.List;
-
 import com.itesm.domain.models.State;
+import java.util.List;
 
 public interface StateRepository {
     List<State> selectAll();
