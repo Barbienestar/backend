@@ -50,7 +50,7 @@ public class CreateUserUseCaseTest {
                         "Juan",
                         "Perez",
                         "Lopez",
-                        30,
+                        (byte) 30,
                         "juan@test.com",
                         "password123",
                         (byte) 3,
@@ -86,7 +86,7 @@ public class CreateUserUseCaseTest {
         assertEquals("Juan", savedUser.getName());
         assertEquals("Perez", savedUser.getLastName1());
         assertEquals("Lopez", savedUser.getLastName2());
-        assertEquals(30, savedUser.getAge());
+        assertEquals((byte) 30, savedUser.getAge());
         assertEquals("juan@test.com", savedUser.getEmail());
         assertEquals("provider-uuid-123", savedUser.getProviderUuid());
         assertTrue(savedUser.isActive());
@@ -104,7 +104,7 @@ public class CreateUserUseCaseTest {
                         "AdminCreated",
                         "User",
                         "",
-                        25,
+                        (byte) 25,
                         "newadmin@test.com",
                         "pass123",
                         (byte) 1,
@@ -144,7 +144,7 @@ public class CreateUserUseCaseTest {
                         "Hacker",
                         "Malicious",
                         "",
-                        20,
+                        (byte) 20,
                         "hacker@test.com",
                         "hack123",
                         (byte) 1,
@@ -171,7 +171,7 @@ public class CreateUserUseCaseTest {
                         "Juan",
                         "Perez",
                         "Lopez",
-                        30,
+                        (byte) 30,
                         "juan@test.com",
                         "password123",
                         (byte) 3,
@@ -204,7 +204,7 @@ public class CreateUserUseCaseTest {
                         "Juan",
                         "Perez",
                         "Lopez",
-                        30,
+                        (byte) 30,
                         "juan@test.com",
                         "password123",
                         (byte) 3,

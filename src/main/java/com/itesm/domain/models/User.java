@@ -14,7 +14,7 @@ public class User {
     private String name;
     private String lastName1;
     private String lastName2;
-    private Integer age;
+    private Byte age;
     private String email;
     private String providerUuid;
     private boolean active;
