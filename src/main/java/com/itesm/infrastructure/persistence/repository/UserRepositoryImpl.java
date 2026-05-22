@@ -61,6 +61,25 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
     }
 
     @Override
+    @Transactional
+    public User update(User user) {
+        UserEntity entity = findById(user.getId());
+        if (entity == null) return null;
+
+        if (user.getName() != null) entity.setName(user.getName());
+        if (user.getLastName1() != null) entity.setLastName1(user.getLastName1());
+        if (user.getLastName2() != null) entity.setLastName2(user.getLastName2());
+        if (user.getAge() != null) entity.setAge(user.getAge());
+        if (user.getAddress() != null && user.getAddress().getSuburbId() != null) {
+            entity.setSuburb(em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
+        }
+
+        entity.setUpdatedAt(LocalDateTime.now());
+        em.merge(entity);
+        return UserMapper.toDomain(entity);
+    }
+
+    @Override
     public long countByRoleId(byte roleId) {
         return count("role.id", roleId);
     }
