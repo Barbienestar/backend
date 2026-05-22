@@ -13,6 +13,13 @@ public class UserProfileDto {
     @JsonProperty("last_name_1")
     private String lastName1;
 
+    @JsonProperty("last_name_2")
+    private String lastName2;
+
+    private Integer age;
+
+    private SuburbDto suburb;
+
     private String role;
     private String email;
 }
