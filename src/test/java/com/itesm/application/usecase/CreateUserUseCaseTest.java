@@ -40,21 +40,8 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldCreateCitizenUser() {
-        CreateUserDto dto =
-<<<<<<< HEAD
-                new CreateUserDto(
-                        "Juan",
-                        "Perez",
-                        "Lopez",
-                        (byte) 30,
-                        "juan@test.com",
-                        "password123",
-                        (byte) 3,
-                        null,
-                        null);
-=======
-                new CreateUserDto("Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, null, null);
->>>>>>> 449f1db177cd5764b87563459b2bfed3d23b24c2
+        CreateUserDto dto = new CreateUserDto(
+                "Juan", "Perez", "Lopez", (byte) 30, "juan@test.com", "password123", (byte) 3, null, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(dto.getEmail(), dto.getPassword())).thenReturn("provider-uuid-123");
@@ -95,22 +82,8 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldCreatePrivilegedUserWhenCurrentUserIsAdmin() {
-<<<<<<< HEAD
-        CreateUserDto dto =
-                new CreateUserDto(
-                        "AdminCreated",
-                        "User",
-                        "",
-                        (byte) 25,
-                        "newadmin@test.com",
-                        "pass123",
-                        (byte) 1,
-                        null,
-                        List.of(1, 2));
-=======
         CreateUserDto dto = new CreateUserDto(
-                "AdminCreated", "User", "", 25, "newadmin@test.com", "pass123", (byte) 1, null, List.of(1, 2));
->>>>>>> 449f1db177cd5764b87563459b2bfed3d23b24c2
+                "AdminCreated", "User", "", (byte) 25, "newadmin@test.com", "pass123", (byte) 1, null, List.of(1, 2));
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(dto.getEmail(), dto.getPassword())).thenReturn("provider-uuid-456");
@@ -137,21 +110,8 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldThrowForbiddenWhenNonAdminCreatesPrivilegedUser() {
-        CreateUserDto dto =
-<<<<<<< HEAD
-                new CreateUserDto(
-                        "Hacker",
-                        "Malicious",
-                        "",
-                        (byte) 20,
-                        "hacker@test.com",
-                        "hack123",
-                        (byte) 1,
-                        null,
-                        null);
-=======
-                new CreateUserDto("Hacker", "Malicious", "", 20, "hacker@test.com", "hack123", (byte) 1, null, null);
->>>>>>> 449f1db177cd5764b87563459b2bfed3d23b24c2
+        CreateUserDto dto = new CreateUserDto(
+                "Hacker", "Malicious", "", (byte) 20, "hacker@test.com", "hack123", (byte) 1, null, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createCitizenUser()));
         doThrow(new ForbiddenException("Only admins can create privileged users"))
@@ -168,21 +128,8 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldSetAddressWhenSuburbIdProvided() {
-        CreateUserDto dto =
-<<<<<<< HEAD
-                new CreateUserDto(
-                        "Juan",
-                        "Perez",
-                        "Lopez",
-                        (byte) 30,
-                        "juan@test.com",
-                        "password123",
-                        (byte) 3,
-                        5,
-                        null);
-=======
-                new CreateUserDto("Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, 5, null);
->>>>>>> 449f1db177cd5764b87563459b2bfed3d23b24c2
+        CreateUserDto dto = new CreateUserDto(
+                "Juan", "Perez", "Lopez", (byte) 30, "juan@test.com", "password123", (byte) 3, 5, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(anyString(), anyString())).thenReturn("provider-uuid-789");
@@ -203,22 +150,8 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldSetHospitalsWhenHospitalIdsProvided() {
-<<<<<<< HEAD
-        CreateUserDto dto =
-                new CreateUserDto(
-                        "Juan",
-                        "Perez",
-                        "Lopez",
-                        (byte) 30,
-                        "juan@test.com",
-                        "password123",
-                        (byte) 3,
-                        null,
-                        List.of(3, 4, 5));
-=======
         CreateUserDto dto = new CreateUserDto(
-                "Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, null, List.of(3, 4, 5));
->>>>>>> 449f1db177cd5764b87563459b2bfed3d23b24c2
+                "Juan", "Perez", "Lopez", (byte) 30, "juan@test.com", "password123", (byte) 3, null, List.of(3, 4, 5));
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(anyString(), anyString())).thenReturn("provider-uuid-101");

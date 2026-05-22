@@ -46,7 +46,7 @@ public class UpdateUserProfileUseCaseTest {
         dto.setName("NewName");
         dto.setLastName1("NewLastName1");
         dto.setLastName2("NewLastName2");
-        dto.setAge(35);
+        dto.setAge((byte) 35);
         dto.setSuburbId(2);
 
         User updatedUser = new User();
@@ -54,7 +54,7 @@ public class UpdateUserProfileUseCaseTest {
         updatedUser.setName("NewName");
         updatedUser.setLastName1("NewLastName1");
         updatedUser.setLastName2("NewLastName2");
-        updatedUser.setAge(35);
+        updatedUser.setAge((byte) 35);
         updatedUser.setEmail("citizen@test.com");
         updatedUser.setRole(new Role((byte) 3, "citizen"));
         updatedUser.setActive(true);
@@ -75,7 +75,7 @@ public class UpdateUserProfileUseCaseTest {
         assertEquals("NewName", passed.getName());
         assertEquals("NewLastName1", passed.getLastName1());
         assertEquals("NewLastName2", passed.getLastName2());
-        assertEquals(35, passed.getAge());
+        assertEquals((byte) 35, passed.getAge());
         assertEquals(Integer.valueOf(2), passed.getAddress().getSuburbId());
     }
 
@@ -92,7 +92,7 @@ public class UpdateUserProfileUseCaseTest {
         updatedUser.setName("OnlyName");
         updatedUser.setLastName1("Existing1");
         updatedUser.setLastName2("Existing2");
-        updatedUser.setAge(30);
+        updatedUser.setAge((byte) 30);
         updatedUser.setEmail("citizen@test.com");
         updatedUser.setRole(new Role((byte) 3, "citizen"));
         updatedUser.setActive(true);
@@ -109,7 +109,7 @@ public class UpdateUserProfileUseCaseTest {
         assertEquals("OnlyName", passed.getName());
         assertEquals("Existing1", passed.getLastName1());
         assertEquals("Existing2", passed.getLastName2());
-        assertEquals(30, passed.getAge());
+        assertEquals((byte) 30, passed.getAge());
         assertNull(passed.getAddress());
     }
 
@@ -151,7 +151,7 @@ public class UpdateUserProfileUseCaseTest {
         user.setName("Citizen");
         user.setLastName1("Existing1");
         user.setLastName2("Existing2");
-        user.setAge(30);
+        user.setAge((byte) 30);
         user.setEmail("citizen@test.com");
         user.setProviderUuid("citizen-token");
         user.setActive(true);
