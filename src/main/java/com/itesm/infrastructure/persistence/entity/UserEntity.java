@@ -44,7 +44,7 @@ public class UserEntity {
     private RoleEntity role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_suburb", nullable = false)
+    @JoinColumn(name = "id_suburb", nullable = true)
     private SuburbEntity suburb;
 
     @ManyToMany(fetch = FetchType.LAZY)
