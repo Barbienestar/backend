@@ -31,7 +31,8 @@ public class GetUserProfileUseCase {
         User user = userOptional.get();
         SuburbDto suburb = null;
         if (user.getAddress() != null && user.getAddress().getSuburbId() != null) {
-            suburb = new SuburbDto(user.getAddress().getSuburbId(), user.getAddress().getAddress(), null);
+            suburb = new SuburbDto(
+                    user.getAddress().getSuburbId(), user.getAddress().getAddress(), null);
         }
         return new UserProfileDto(
                 user.getId(),

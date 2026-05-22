@@ -64,7 +64,8 @@ public class CreateUserUseCase {
 
         SuburbDto suburb = null;
         if (savedUser.getAddress() != null && savedUser.getAddress().getSuburbId() != null) {
-            suburb = new SuburbDto(savedUser.getAddress().getSuburbId(), savedUser.getAddress().getAddress(), null);
+            suburb = new SuburbDto(
+                    savedUser.getAddress().getSuburbId(), savedUser.getAddress().getAddress(), null);
         }
         UserProfileDto userProfile = new UserProfileDto(
                 savedUser.getId(),
