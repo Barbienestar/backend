@@ -15,18 +15,12 @@ class MedicineResourceTest {
 
     @Test
     void getAll_shouldReturn200WithoutToken() {
-        given()
-                .when()
-                .get("/medicines")
-                .then()
-                .statusCode(200)
-                .body("$", instanceOf(java.util.List.class));
+        given().when().get("/medicines").then().statusCode(200).body("$", instanceOf(java.util.List.class));
     }
 
     @Test
     void getAll_shouldReturn200WithQueryParam() {
-        given()
-                .queryParam("q", "Paracetamol")
+        given().queryParam("q", "Paracetamol")
                 .when()
                 .get("/medicines")
                 .then()
@@ -36,8 +30,7 @@ class MedicineResourceTest {
 
     @Test
     void getAll_shouldReturn200WithBlankQueryParam() {
-        given()
-                .queryParam("q", "   ")
+        given().queryParam("q", "   ")
                 .when()
                 .get("/medicines")
                 .then()
@@ -47,8 +40,7 @@ class MedicineResourceTest {
 
     @Test
     void getAll_shouldReturn200WithAdminToken() {
-        given()
-                .header("Authorization", "Bearer admin-token")
+        given().header("Authorization", "Bearer admin-token")
                 .when()
                 .get("/medicines")
                 .then()
@@ -62,8 +54,7 @@ class MedicineResourceTest {
     void uploadStock_shouldReturn200_withNewMedicine() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet,400mg,Box,50\n";
 
-        given()
-                .header("Authorization", "Bearer health-token")
+        given().header("Authorization", "Bearer health-token")
                 .multiPart("file", "stock.csv", csv.getBytes(), "text/csv")
                 .when()
                 .post("/medicines/upload-stock/1")
@@ -78,8 +69,7 @@ class MedicineResourceTest {
     void uploadStock_shouldReturn200_withExistingMedicine() {
         String csv = CSV_HEADER + "Paracetamol,Tablet,500mg,Box,20\n";
 
-        given()
-                .header("Authorization", "Bearer health-token")
+        given().header("Authorization", "Bearer health-token")
                 .multiPart("file", "stock.csv", csv.getBytes(), "text/csv")
                 .when()
                 .post("/medicines/upload-stock/1")
@@ -93,8 +83,7 @@ class MedicineResourceTest {
     void uploadStock_shouldReturn200_withNegativeStock_andErrorInList() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet,400mg,Box,-5\n";
 
-        given()
-                .header("Authorization", "Bearer health-token")
+        given().header("Authorization", "Bearer health-token")
                 .multiPart("file", "stock.csv", csv.getBytes(), "text/csv")
                 .when()
                 .post("/medicines/upload-stock/1")
@@ -108,18 +97,17 @@ class MedicineResourceTest {
     void uploadStock_shouldReturn400_whenContentTypeIsInvalid() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet,400mg,Box,50\n";
 
-        given()
-                .header("Authorization", "Bearer health-token")
+        given().header("Authorization", "Bearer health-token")
                 .multiPart("file", "stock.pdf", csv.getBytes(), "application/pdf")
                 .when()
                 .post("/medicines/upload-stock/1")
                 .then()
                 .statusCode(400);
     }
+
     @Test
     void uploadStock_shouldReturn400_whenNoFileProvided() {
-        given()
-                .header("Authorization", "Bearer health-token")
+        given().header("Authorization", "Bearer health-token")
                 .contentType("multipart/form-data")
                 .when()
                 .post("/medicines/upload-stock/1")
@@ -131,8 +119,7 @@ class MedicineResourceTest {
     void uploadStock_shouldReturn500_whenRowIsIncomplete() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet\n";
 
-        given()
-                .header("Authorization", "Bearer health-token")
+        given().header("Authorization", "Bearer health-token")
                 .multiPart("file", "stock.csv", csv.getBytes(), "text/csv")
                 .when()
                 .post("/medicines/upload-stock/1")
@@ -144,8 +131,7 @@ class MedicineResourceTest {
     void uploadStock_shouldReturn500_whenStockIsNotNumeric() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet,400mg,Box,abc\n";
 
-        given()
-                .header("Authorization", "Bearer health-token")
+        given().header("Authorization", "Bearer health-token")
                 .multiPart("file", "stock.csv", csv.getBytes(), "text/csv")
                 .when()
                 .post("/medicines/upload-stock/1")
@@ -157,8 +143,7 @@ class MedicineResourceTest {
     void uploadStock_shouldReturn401_whenNoToken() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet,400mg,Box,50\n";
 
-        given()
-                .multiPart("file", "stock.csv", csv.getBytes(), "text/csv")
+        given().multiPart("file", "stock.csv", csv.getBytes(), "text/csv")
                 .when()
                 .post("/medicines/upload-stock/1")
                 .then()
