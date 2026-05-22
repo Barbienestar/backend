@@ -7,6 +7,8 @@ import java.util.Optional;
 public interface UserRepository {
     User save(User user);
 
+    User update(User user);
+
     Optional<User> findByProviderUuid(String providerUuid);
 
     Optional<User> findDomainById(Long id);
