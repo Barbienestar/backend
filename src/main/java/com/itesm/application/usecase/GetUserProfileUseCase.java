@@ -1,5 +1,6 @@
 package com.itesm.application.usecase;
 
+import com.itesm.application.dto.SuburbDto;
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.domain.models.User;
@@ -28,10 +29,17 @@ public class GetUserProfileUseCase {
         }
 
         User user = userOptional.get();
+        SuburbDto suburb = null;
+        if (user.getAddress() != null && user.getAddress().getSuburbId() != null) {
+            suburb = new SuburbDto(user.getAddress().getSuburbId(), user.getAddress().getAddress(), null);
+        }
         return new UserProfileDto(
                 user.getId(),
                 user.getName(),
                 user.getLastName1(),
+                user.getLastName2(),
+                user.getAge(),
+                suburb,
                 user.getRole().getName(),
                 user.getEmail());
     }
