@@ -28,7 +28,7 @@ public class AdminInitService {
 
     @PostConstruct
     void init() {
-        log.info("Checking for admin user..");
+        log.info("Checking for admin user...");
         ensureAdminUseCase.execute();
         log.info("Admin user check complete");
     }
