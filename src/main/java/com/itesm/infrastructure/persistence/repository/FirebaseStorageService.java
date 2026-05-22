@@ -4,9 +4,7 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.StorageClient;
 import com.itesm.domain.repository.ImageRepository;
-
 import jakarta.enterprise.context.ApplicationScoped;
-
 import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped

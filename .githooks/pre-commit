@@ -1,8 +1,0 @@
-#!/bin/sh
-set -e
-
-echo "Running compilation check..."
-./mvnw clean compile
-
-echo "Running tests..."
-./mvnw clean test

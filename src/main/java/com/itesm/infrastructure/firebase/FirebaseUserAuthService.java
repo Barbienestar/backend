@@ -12,7 +12,7 @@ public class FirebaseUserAuthService implements UserTokenService {
     public String createUser(String email, String password) {
         try {
             UserRecord.CreateRequest createRequest =
-                new UserRecord.CreateRequest().setEmail(email).setPassword(password);
+                    new UserRecord.CreateRequest().setEmail(email).setPassword(password);
             UserRecord userRecord = FirebaseAuth.getInstance().createUser(createRequest);
             return userRecord.getUid();
         } catch (FirebaseException e) {

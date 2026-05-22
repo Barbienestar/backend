@@ -7,11 +7,9 @@ import static org.mockito.Mockito.*;
 import com.itesm.application.dto.HospitalDto;
 import com.itesm.domain.models.Hospital;
 import com.itesm.domain.repository.HospitalRepository;
-
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class GetHospitalsUseCaseTest {
 

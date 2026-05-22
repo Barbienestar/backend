@@ -12,12 +12,10 @@ import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.repository.HospitalRepository;
 import com.itesm.domain.repository.MedicineRepository;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
-
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-
-import java.util.List;
 
 /** UploadMedicineStockUseCaseTest */
 public class UploadMedicineStockUseCaseTest {
@@ -40,8 +38,8 @@ public class UploadMedicineStockUseCaseTest {
         when(medicineRepository.findByNames(anyList())).thenReturn(List.of());
         when(medicineRepository.saveAll(anyList())).thenReturn(List.of());
 
-        uploadMedicineStockUseCase = new UploadMedicineStockUseCase(
-                medicineRepository, medicinesHospitalsRepository, hospitalRepository);
+        uploadMedicineStockUseCase =
+                new UploadMedicineStockUseCase(medicineRepository, medicinesHospitalsRepository, hospitalRepository);
     }
 
     // Happy path: todas las filas son medicamentos nuevos, deben insertarse y guardarse las relaciones
@@ -108,8 +106,8 @@ public class UploadMedicineStockUseCaseTest {
         MedicineRowDto row = new MedicineRowDto("Paracetamol", "Tableta", "500mg", "Caja 20", 100);
         MedicineStockInputDto input = new MedicineStockInputDto(99, List.of(row));
 
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> uploadMedicineStockUseCase.execute(input));
+        RuntimeException exception =
+                assertThrows(RuntimeException.class, () -> uploadMedicineStockUseCase.execute(input));
         assertEquals("Hospital no encontrado", exception.getMessage());
     }
 
@@ -119,7 +117,9 @@ public class UploadMedicineStockUseCaseTest {
         MedicineRowDto row = new MedicineRowDto("Paracetamol", "Tableta", "500mg", "Caja 20", 100);
         MedicineStockInputDto input = new MedicineStockInputDto(1, List.of(row));
 
-        doThrow(new RuntimeException("DB error")).when(medicinesHospitalsRepository).saveAll(anyList());
+        doThrow(new RuntimeException("DB error"))
+                .when(medicinesHospitalsRepository)
+                .saveAll(anyList());
 
         assertThrows(RuntimeException.class, () -> uploadMedicineStockUseCase.execute(input));
     }

@@ -11,8 +11,7 @@ public class MedicinesHospitalsMapper {
                 MedicineMapper.toDomain(entity.getMedicine()),
                 HospitalMapper.toDomain(entity.getHospital()),
                 entity.getStock(),
-                entity.getEntryDate()
-        );
+                entity.getEntryDate());
     }
 
     public static MedicinesHospitalsEntity toEntity(MedicinesHospitals domain) {

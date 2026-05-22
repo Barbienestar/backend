@@ -1,13 +1,11 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Users")
@@ -44,7 +42,7 @@ public class UserEntity {
     private RoleEntity role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_suburb", nullable = false)
+    @JoinColumn(name = "id_suburb", nullable = true)
     private SuburbEntity suburb;
 
     @ManyToMany(fetch = FetchType.LAZY)

@@ -3,10 +3,8 @@ package com.itesm.application.usecase;
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,18 +31,17 @@ public class GetStockByMedicineUseCase {
                 item.getAddress(),
                 resolveStockLabel(item.getStock()),
                 resolveStatus(item.getStock()),
-                item.getMapsUrl()
-        );
+                item.getMapsUrl());
     }
 
     private String resolveStockLabel(int stock) {
-        if (stock == 0)  return "No disponible";
+        if (stock == 0) return "No disponible";
         if (stock <= 10) return stock + " piezas restantes";
         return "Stock Alto";
     }
 
     private String resolveStatus(int stock) {
-        if (stock == 0)  return "Agotado";
+        if (stock == 0) return "Agotado";
         if (stock <= 10) return "Limitado";
         return "Disponible";
     }

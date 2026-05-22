@@ -1,4 +1,5 @@
 package com.itesm.infrastructure.mapper;
+
 import com.itesm.domain.models.Hospital;
 import com.itesm.infrastructure.persistence.entity.UserHospitalEntity;
 
