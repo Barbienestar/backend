@@ -11,4 +11,6 @@ public interface UserRepository {
     Optional<User> findByProviderUuid(String providerUuid);
 
     Optional<User> findDomainById(Long id);
+
+    long countByRoleId(byte roleId);
 }

@@ -61,4 +61,9 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
         UserEntity entity = findById(id);
         return Optional.ofNullable(entity).map(UserMapper::toDomain);
     }
+
+    @Override
+    public long countByRoleId(byte roleId) {
+        return count("role.id", roleId);
+    }
 }
