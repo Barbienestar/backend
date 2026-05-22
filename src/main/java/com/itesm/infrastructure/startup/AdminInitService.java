@@ -29,11 +29,7 @@ public class AdminInitService {
     @PostConstruct
     void init() {
         log.info("Checking for admin user...");
-        try {
-            ensureAdminUseCase.execute();
-            log.info("Admin user check complete");
-        } catch (Exception e) {
-            log.error("Failed to initialize admin user", e);
-        }
+        ensureAdminUseCase.execute();
+        log.info("Admin user check complete");
     }
 }
