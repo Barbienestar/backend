@@ -71,7 +71,8 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
         if (user.getLastName2() != null) entity.setLastName2(user.getLastName2());
         if (user.getAge() != null) entity.setAge(user.getAge());
         if (user.getAddress() != null && user.getAddress().getSuburbId() != null) {
-            entity.setSuburb(em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
+            entity.setSuburb(
+                    em.getReference(SuburbEntity.class, user.getAddress().getSuburbId()));
         }
 
         entity.setUpdatedAt(LocalDateTime.now());
