@@ -20,8 +20,8 @@ class UserResourceTest {
                 .statusCode(200)
                 .body("id", equalTo(3))
                 .body("name", equalTo("NewName"))
-                .body("last_name_1", equalTo("NewLast1"))
-                .body("last_name_2", equalTo("NewLast2"))
+                .body("last_name1", equalTo("NewLast1"))
+                .body("last_name2", equalTo("NewLast2"))
                 .body("age", equalTo(35))
                 .body("email", equalTo("citizen@test.com"));
     }
