@@ -1,11 +1,9 @@
 package com.itesm.application.dto;
 
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 @Data

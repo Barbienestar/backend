@@ -1,17 +1,5 @@
 package com.itesm.interfaces.rest;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
-import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
@@ -29,6 +17,16 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
+import java.util.Optional;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @Tag(name = "Medicines", description = "Medicine catalog and hospital stock management")
 @Path("/medicines-hospitals")
@@ -54,30 +52,28 @@ public class MedicinesHospitalsResource {
     @GET
     @PermitPublic
     @Operation(
-        summary = "Get hospital stock by medicine name",
-        description = "Returns stock availability of a medicine across all hospitals. No authentication required."
-    )
+            summary = "Get hospital stock by medicine name",
+            description = "Returns stock availability of a medicine across all hospitals. No authentication required.")
     @Parameter(name = "medicine_name", description = "Generic name of the medicine to look up", required = true)
     @APIResponse(
-        responseCode = "200",
-        description = "List of hospitals with stock information for the requested medicine",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            schema = @Schema(implementation = MedicinesHospitalsStockDto.class),
-            examples = @ExampleObject(
-                name = "sample",
-                value = "[{\"hospitalId\": 1, \"hospitalName\": \"Hospital Civil\", \"address\": \"Calle 5 #10\", \"stockLabel\": \"Alto\", \"status\": \"Disponible\", \"mapsUrl\": \"https://maps.google.com/?q=...\"}]"
-            )
-        )
-    )
+            responseCode = "200",
+            description = "List of hospitals with stock information for the requested medicine",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = MedicinesHospitalsStockDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value =
+                                                    "[{\"hospitalId\": 1, \"hospitalName\": \"Hospital Civil\", \"address\": \"Calle 5 #10\", \"stockLabel\": \"Alto\", \"status\": \"Disponible\", \"mapsUrl\": \"https://maps.google.com/?q=...\"}]")))
     @APIResponse(
-        responseCode = "400",
-        description = "medicine_name query parameter is missing or blank",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            examples = @ExampleObject(value = "{\"error\": \"medicine_name is required\"}")
-        )
-    )
+            responseCode = "400",
+            description = "medicine_name query parameter is missing or blank",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            examples = @ExampleObject(value = "{\"error\": \"medicine_name is required\"}")))
     public Response getByMedicine(@QueryParam("medicine_name") String medicineName) {
         if (medicineName == null || medicineName.isBlank()) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -93,29 +89,27 @@ public class MedicinesHospitalsResource {
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
-        summary = "Get average stock by hospital",
-        description = "Returns the average medicine stock for the last month and the current month for a given hospital. Requires health role."
-    )
+            summary = "Get average stock by hospital",
+            description =
+                    "Returns the average medicine stock for the last month and the current month for a given hospital. Requires health role.")
     @Parameter(name = "idHospital", description = "Hospital identifier", required = true)
     @APIResponse(
-        responseCode = "200",
-        description = "Average stock figures for the hospital",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            examples = @ExampleObject(
-                name = "sample",
-                value = "{\"last_month_avg\": 142.50, \"current_month_avg\": 98.75}"
-            )
-        )
-    )
+            responseCode = "200",
+            description = "Average stock figures for the hospital",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value = "{\"last_month_avg\": 142.50, \"current_month_avg\": 98.75}")))
     @APIResponse(
-        responseCode = "400",
-        description = "idHospital path parameter is missing",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")
-        )
-    )
+            responseCode = "400",
+            description = "idHospital path parameter is missing",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
     public Response getAvgStock(@PathParam("idHospital") Integer idHospital) {
@@ -134,29 +128,28 @@ public class MedicinesHospitalsResource {
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
-        summary = "Get stock report by hospital",
-        description = "Returns the number of medicines with low stock and the names of the most critical ones for a given hospital. Requires health role."
-    )
+            summary = "Get stock report by hospital",
+            description =
+                    "Returns the number of medicines with low stock and the names of the most critical ones for a given hospital. Requires health role.")
     @Parameter(name = "idHospital", description = "Hospital identifier", required = true)
     @APIResponse(
-        responseCode = "200",
-        description = "Stock report for the hospital",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            examples = @ExampleObject(
-                name = "sample",
-                value = "{\"low_stock_count\": 5, \"bottom_medicines\": [\"Paracetamol\", \"Ibuprofeno\", \"Amoxicilina\"]}"
-            )
-        )
-    )
+            responseCode = "200",
+            description = "Stock report for the hospital",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value =
+                                                    "{\"low_stock_count\": 5, \"bottom_medicines\": [\"Paracetamol\", \"Ibuprofeno\", \"Amoxicilina\"]}")))
     @APIResponse(
-        responseCode = "400",
-        description = "idHospital path parameter is missing",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")
-        )
-    )
+            responseCode = "400",
+            description = "idHospital path parameter is missing",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
     public Response getStockReport(@PathParam("idHospital") Integer idHospital) {

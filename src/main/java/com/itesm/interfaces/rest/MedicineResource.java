@@ -13,7 +13,10 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.List;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
@@ -25,11 +28,6 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.util.List;
 
 @Tag(name = "Medicines", description = "Medicine catalog and hospital stock management")
 @Path("/medicines")
@@ -50,22 +48,22 @@ public class MedicineResource {
     @GET
     @PermitPublic
     @Operation(
-        summary = "List or search medicines",
-        description = "Returns all medicines in the catalog. Pass the optional `q` query parameter to filter by name. No authentication required."
-    )
+            summary = "List or search medicines",
+            description =
+                    "Returns all medicines in the catalog. Pass the optional `q` query parameter to filter by name. No authentication required.")
     @Parameter(name = "q", description = "Search term to filter medicines by generic name (optional)")
     @APIResponse(
-        responseCode = "200",
-        description = "List of medicines",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            schema = @Schema(implementation = MedicineDto.class),
-            examples = @ExampleObject(
-                name = "sample",
-                value = "[{\"id\": 1, \"generic_name\": \"Paracetamol\", \"dosage_form\": \"Tablet\", \"strength\": \"500 mg\", \"presentation\": \"20 tablets\"}]"
-            )
-        )
-    )
+            responseCode = "200",
+            description = "List of medicines",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = MedicineDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value =
+                                                    "[{\"id\": 1, \"generic_name\": \"Paracetamol\", \"dosage_form\": \"Tablet\", \"strength\": \"500 mg\", \"presentation\": \"20 tablets\"}]")))
     public Response getAll(@QueryParam("q") String q) {
         List<MedicineDto> medicines =
                 (q != null && !q.isBlank()) ? getMedicinesUseCase.search(q) : getMedicinesUseCase.execute();
@@ -78,28 +76,27 @@ public class MedicineResource {
     @RequireRoles("health")
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
-        summary = "Upload medicine stock from CSV",
-        description = "Processes a CSV file to update medicine stock levels for a given hospital. " +
-                      "The file must have content-type text/csv and be sent in a field named `file`. Requires health role."
-    )
+            summary = "Upload medicine stock from CSV",
+            description =
+                    "Processes a CSV file to update medicine stock levels for a given hospital. "
+                            + "The file must have content-type text/csv and be sent in a field named `file`. Requires health role.")
     @Parameter(name = "idHospital", description = "Hospital identifier to update stock for", required = true)
     @RequestBody(
-        description = "CSV file with medicine stock rows",
-        required = true,
-        content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)
-    )
+            description = "CSV file with medicine stock rows",
+            required = true,
+            content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA))
     @APIResponse(
-        responseCode = "200",
-        description = "CSV processed — returns inserted count and any row-level errors",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            schema = @Schema(implementation = MedicineStockResultDto.class),
-            examples = @ExampleObject(
-                name = "partial",
-                value = "{\"inserted\": 18, \"errors\": [\"Row 5: unknown medicine 'Aspirina X'\"]}"
-            )
-        )
-    )
+            responseCode = "200",
+            description = "CSV processed — returns inserted count and any row-level errors",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = MedicineStockResultDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "partial",
+                                            value =
+                                                    "{\"inserted\": 18, \"errors\": [\"Row 5: unknown medicine 'Aspirina X'\"]}")))
     @APIResponse(responseCode = "400", description = "Missing file or invalid content-type (must be text/csv)")
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")

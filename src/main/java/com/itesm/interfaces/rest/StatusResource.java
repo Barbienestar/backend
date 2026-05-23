@@ -9,7 +9,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
@@ -34,20 +33,19 @@ public class StatusResource {
     @RequireRoles({"admin"})
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
-        summary = "List all report statuses",
-        description = "Returns all available report statuses. Requires admin role."
-    )
+            summary = "List all report statuses",
+            description = "Returns all available report statuses. Requires admin role.")
     @APIResponse(
-        responseCode = "200",
-        description = "List of statuses",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            examples = @ExampleObject(
-                name = "sample",
-                value = "[{\"id\": 1, \"name\": \"Pendiente\"}, {\"id\": 2, \"name\": \"En proceso\"}, {\"id\": 3, \"name\": \"Resuelto\"}]"
-            )
-        )
-    )
+            responseCode = "200",
+            description = "List of statuses",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value =
+                                                    "[{\"id\": 1, \"name\": \"Pendiente\"}, {\"id\": 2, \"name\": \"En proceso\"}, {\"id\": 3, \"name\": \"Resuelto\"}]")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the admin role")
     public Response getStatuses() {

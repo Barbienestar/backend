@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
