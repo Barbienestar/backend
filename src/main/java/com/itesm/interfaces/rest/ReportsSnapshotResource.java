@@ -31,8 +31,8 @@ public class ReportsSnapshotResource {
     @RequireRoles({"health"})
     public Response getPeriodReports(
             @PathParam("hospital-id") Integer idHospital,
-            @QueryParam("start-date") LocalDate startDate,
-            @QueryParam("end-date") LocalDate endDate) {
+            @QueryParam("start_date") LocalDate startDate,
+            @QueryParam("end_date") LocalDate endDate) {
         if (idHospital == null || startDate == null || endDate == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"hospital-id, start-date, and end-date are required\"}")
