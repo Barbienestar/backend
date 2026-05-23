@@ -22,8 +22,7 @@ public class ReportsSnapshotResource {
     private final GetPeriodReportsByHospitalUseCase getPeriodReportsByHospitalUseCase;
 
     @Inject
-    public ReportsSnapshotResource(
-            GetPeriodReportsByHospitalUseCase getPeriodReportsByHospitalUseCase) {
+    public ReportsSnapshotResource(GetPeriodReportsByHospitalUseCase getPeriodReportsByHospitalUseCase) {
         this.getPeriodReportsByHospitalUseCase = getPeriodReportsByHospitalUseCase;
     }
 

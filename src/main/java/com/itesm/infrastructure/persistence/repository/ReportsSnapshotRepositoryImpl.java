@@ -36,9 +36,7 @@ public class ReportsSnapshotRepositoryImpl
                 .getResultList();
 
         return rows.stream()
-                .map(r -> new PeriodReportsByHospitalResponse(
-                        (LocalDate) r[0],
-                        ((Number) r[1]).intValue()))
+                .map(r -> new PeriodReportsByHospitalResponse((LocalDate) r[0], ((Number) r[1]).intValue()))
                 .collect(Collectors.toList());
     }
 }

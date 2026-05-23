@@ -16,8 +16,7 @@ public class GetPeriodReportsByHospitalUseCase {
         this.repository = repository;
     }
 
-    public List<PeriodReportsByHospitalResponse> execute(
-            Integer idHospital, LocalDate startDate, LocalDate endDate) {
+    public List<PeriodReportsByHospitalResponse> execute(Integer idHospital, LocalDate startDate, LocalDate endDate) {
         return repository.getPeriodReports(idHospital, startDate, endDate);
     }
 }

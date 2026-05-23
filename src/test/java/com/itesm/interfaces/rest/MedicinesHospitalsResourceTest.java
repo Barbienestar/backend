@@ -36,5 +36,4 @@ class MedicinesHospitalsResourceTest {
                 .then()
                 .statusCode(200);
     }
-
 }

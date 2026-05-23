@@ -5,6 +5,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ReportsSnapshotRepository {
-    List<PeriodReportsByHospitalResponse> getPeriodReports(
-            Integer idHospital, LocalDate startDate, LocalDate endDate);
+    List<PeriodReportsByHospitalResponse> getPeriodReports(Integer idHospital, LocalDate startDate, LocalDate endDate);
 }

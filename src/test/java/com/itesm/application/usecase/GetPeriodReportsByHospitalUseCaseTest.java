@@ -26,13 +26,10 @@ public class GetPeriodReportsByHospitalUseCaseTest {
     public void execute_shouldReturnReportList() {
         LocalDate start = LocalDate.of(2024, 1, 1);
         LocalDate end = LocalDate.of(2024, 1, 31);
-        PeriodReportsByHospitalResponse r1 = new PeriodReportsByHospitalResponse(
-                LocalDate.of(2024, 1, 5), 10);
-        PeriodReportsByHospitalResponse r2 = new PeriodReportsByHospitalResponse(
-                LocalDate.of(2024, 1, 12), 7);
+        PeriodReportsByHospitalResponse r1 = new PeriodReportsByHospitalResponse(LocalDate.of(2024, 1, 5), 10);
+        PeriodReportsByHospitalResponse r2 = new PeriodReportsByHospitalResponse(LocalDate.of(2024, 1, 12), 7);
 
-        when(repository.getPeriodReports(1, start, end))
-                .thenReturn(List.of(r1, r2));
+        when(repository.getPeriodReports(1, start, end)).thenReturn(List.of(r1, r2));
 
         List<PeriodReportsByHospitalResponse> result = useCase.execute(1, start, end);
 
@@ -46,8 +43,7 @@ public class GetPeriodReportsByHospitalUseCaseTest {
         LocalDate start = LocalDate.of(2024, 1, 1);
         LocalDate end = LocalDate.of(2024, 1, 31);
 
-        when(repository.getPeriodReports(1, start, end))
-                .thenReturn(List.of());
+        when(repository.getPeriodReports(1, start, end)).thenReturn(List.of());
 
         List<PeriodReportsByHospitalResponse> result = useCase.execute(1, start, end);
 
