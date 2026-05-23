@@ -5,8 +5,11 @@ import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
 import com.itesm.application.usecase.GetStockByMedicineUseCase;
+import com.itesm.application.usecase.GetPeriodReportsByHospitalUseCase;
 import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
+import com.itesm.application.dto.PeriodReportsByHospitalResponse;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
+import java.time.LocalDate;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -27,15 +30,18 @@ public class MedicinesHospitalsResource {
     private final GetStockByMedicineUseCase getStockByMedicineUseCase;
     private final GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase;
     private final GetStockReportByHospitalUseCase getStockReportByHospitalUseCase;
+    private final GetPeriodReportsByHospitalUseCase getPeriodReportsByHospitalUseCase;
 
     @Inject
     public MedicinesHospitalsResource(
             GetStockByMedicineUseCase getStockByMedicineUseCase,
             GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase,
-            GetStockReportByHospitalUseCase getStockReportByHospitalUseCase) {
+            GetStockReportByHospitalUseCase getStockReportByHospitalUseCase,
+            GetPeriodReportsByHospitalUseCase getPeriodReportsByHospitalUseCase) {
         this.getStockByMedicineUseCase = getStockByMedicineUseCase;
         this.getStockAveragesByHospitalUseCase = getStockAveragesByHospitalUseCase;
         this.getStockReportByHospitalUseCase = getStockReportByHospitalUseCase;
+        this.getPeriodReportsByHospitalUseCase = getPeriodReportsByHospitalUseCase;
     }
 
     @Path("/stock")
@@ -77,5 +83,22 @@ public class MedicinesHospitalsResource {
 
         Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(idHospital);
         return Response.ok(stockReport).build();
+    }
+
+    @Path("/period/{hospital-id}")
+    @GET
+    @RequireRoles({"health"})
+    public Response getPeriodReports(
+            @PathParam("hospital-id") Integer idHospital,
+            @QueryParam("start-date") LocalDate startDate,
+            @QueryParam("end-date") LocalDate endDate) {
+        if (idHospital == null || startDate == null || endDate == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\": \"hospital-id, start-date, and end-date are required\"}")
+                    .build();
+        }
+        List<PeriodReportsByHospitalResponse> result =
+                getPeriodReportsByHospitalUseCase.execute(idHospital, startDate, endDate);
+        return Response.ok(result).build();
     }
 }
