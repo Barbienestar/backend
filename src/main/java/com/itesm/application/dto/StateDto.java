@@ -4,10 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Mexican state")
 public class StateDto {
+
+    @Schema(description = "State identifier")
     private Byte id;
+
+    @Schema(description = "State name")
     private String name;
 }

@@ -6,12 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Suburb (colonia) belonging to a city")
 public class SuburbDto {
+
+    @Schema(description = "Suburb identifier")
     private Integer id;
+
+    @Schema(description = "Suburb name")
     private String name;
+
     @JsonProperty("zip_code")
+    @Schema(description = "Postal code")
     private String zipCode;
 }
