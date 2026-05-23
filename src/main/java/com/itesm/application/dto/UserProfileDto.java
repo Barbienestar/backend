@@ -1,10 +1,8 @@
 package com.itesm.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 @Data
@@ -18,9 +16,19 @@ public class UserProfileDto {
     @Schema(description = "First name")
     private String name;
 
-    @JsonProperty("last_name_1")
-    @Schema(description = "First surname")
+    @JsonProperty("last_name1")
+    @Schema(description = "First surname", name = "last_name1")
     private String lastName1;
+
+    @JsonProperty("last_name2")
+    @Schema(description = "Second surname", name = "last_name2")
+    private String lastName2;
+
+    @Schema(description = "User age")
+    private Integer age;
+
+    @Schema(description = "Assigned suburb or neighborhood")
+    private SuburbDto suburb;
 
     @Schema(description = "Assigned role: citizen, health or admin")
     private String role;

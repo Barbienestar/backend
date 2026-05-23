@@ -2,10 +2,8 @@ package com.itesm.application.usecase;
 
 import com.itesm.domain.models.Status;
 import com.itesm.domain.repository.StatusRepository;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 
 /** ListStatusUseCase */

@@ -5,7 +5,6 @@ import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetHospitalsUseCase;
 import com.itesm.application.usecase.GetMyHospitalsUseCase;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

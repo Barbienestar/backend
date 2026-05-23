@@ -2,7 +2,6 @@ package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.usecase.GetUserProfileUseCase;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;

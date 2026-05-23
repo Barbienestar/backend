@@ -34,14 +34,13 @@ public class HealthResource {
         )
     )
     public Response status() {
-        return Response.ok(
-                        Map.of(
-                                "status",
-                                "UP",
-                                "name",
-                                "version",
-                                "timestamp",
-                                Instant.now().toString()))
+        return Response.ok(Map.of(
+                        "status",
+                        "UP",
+                        "name",
+                        "version",
+                        "timestamp",
+                        Instant.now().toString()))
                 .build();
     }
 }

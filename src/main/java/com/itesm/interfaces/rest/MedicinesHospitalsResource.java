@@ -11,7 +11,6 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.jboss.resteasy.reactive.RestQuery;
 
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.application.security.PermitPublic;
@@ -21,11 +20,11 @@ import com.itesm.application.usecase.GetStockByMedicineUseCase;
 import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
@@ -43,10 +42,9 @@ public class MedicinesHospitalsResource {
 
     @Inject
     public MedicinesHospitalsResource(
-        GetStockByMedicineUseCase getStockByMedicineUseCase,
-        GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase,
-        GetStockReportByHospitalUseCase getStockReportByHospitalUseCase
-    ) {
+            GetStockByMedicineUseCase getStockByMedicineUseCase,
+            GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase,
+            GetStockReportByHospitalUseCase getStockReportByHospitalUseCase) {
         this.getStockByMedicineUseCase = getStockByMedicineUseCase;
         this.getStockAveragesByHospitalUseCase = getStockAveragesByHospitalUseCase;
         this.getStockReportByHospitalUseCase = getStockReportByHospitalUseCase;
@@ -90,7 +88,7 @@ public class MedicinesHospitalsResource {
         return Response.ok(result).build();
     }
 
-    @Path("/average-stock")
+    @Path("/average-stock/{idHospital}")
     @GET
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
@@ -98,7 +96,7 @@ public class MedicinesHospitalsResource {
         summary = "Get average stock by hospital",
         description = "Returns the average medicine stock for the last month and the current month for a given hospital. Requires health role."
     )
-    @Parameter(name = "id_hospital", description = "Hospital identifier", required = true)
+    @Parameter(name = "idHospital", description = "Hospital identifier", required = true)
     @APIResponse(
         responseCode = "200",
         description = "Average stock figures for the hospital",
@@ -112,26 +110,26 @@ public class MedicinesHospitalsResource {
     )
     @APIResponse(
         responseCode = "400",
-        description = "id_hospital query parameter is missing",
+        description = "idHospital path parameter is missing",
         content = @Content(
             mediaType = MediaType.APPLICATION_JSON,
-            examples = @ExampleObject(value = "{\"error\": \"id_hospital is required\"}")
+            examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")
         )
     )
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response getAvgStock(@RestQuery Integer id_hospital) {
-        if (id_hospital == null) {
+    public Response getAvgStock(@PathParam("idHospital") Integer idHospital) {
+        if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"id_hospital is required\"}")
+                    .entity("{\"error\": \"idHospital is required\"}")
                     .build();
         }
 
-        Optional<MedicinesHospitalsStockAverages> averages = getStockAveragesByHospitalUseCase.execute(id_hospital);
+        Optional<MedicinesHospitalsStockAverages> averages = getStockAveragesByHospitalUseCase.execute(idHospital);
         return Response.ok(averages).build();
     }
 
-    @Path("/stock-report")
+    @Path("/stock-report/{idHospital}")
     @GET
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
@@ -139,7 +137,7 @@ public class MedicinesHospitalsResource {
         summary = "Get stock report by hospital",
         description = "Returns the number of medicines with low stock and the names of the most critical ones for a given hospital. Requires health role."
     )
-    @Parameter(name = "id_hospital", description = "Hospital identifier", required = true)
+    @Parameter(name = "idHospital", description = "Hospital identifier", required = true)
     @APIResponse(
         responseCode = "200",
         description = "Stock report for the hospital",
@@ -153,22 +151,22 @@ public class MedicinesHospitalsResource {
     )
     @APIResponse(
         responseCode = "400",
-        description = "id_hospital query parameter is missing",
+        description = "idHospital path parameter is missing",
         content = @Content(
             mediaType = MediaType.APPLICATION_JSON,
-            examples = @ExampleObject(value = "{\"error\": \"id_hospital is required\"}")
+            examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")
         )
     )
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response getStockReport(@RestQuery Integer id_hospital) {
-        if (id_hospital == null) {
+    public Response getStockReport(@PathParam("idHospital") Integer idHospital) {
+        if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                .entity("{\"error\": \"id_hospital is required\"}")
-                .build();
+                    .entity("{\"error\": \"idHospital is required\"}")
+                    .build();
         }
 
-        Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(id_hospital);
+        Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(idHospital);
         return Response.ok(stockReport).build();
     }
 }

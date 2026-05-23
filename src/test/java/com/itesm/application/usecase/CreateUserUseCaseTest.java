@@ -14,14 +14,11 @@ import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
 import com.itesm.domain.repository.UserTokenService;
-
 import jakarta.ws.rs.ForbiddenException;
-
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-
-import java.util.List;
 
 public class CreateUserUseCaseTest {
 
@@ -38,35 +35,21 @@ public class CreateUserUseCaseTest {
         authUserContext = mock(AuthenticatedUserContext.class);
         validationStrategy = mock(CreationValidationStrategy.class);
 
-        useCase =
-                new CreateUserUseCase(
-                        userRepository, userTokenService, authUserContext, validationStrategy);
+        useCase = new CreateUserUseCase(userRepository, userTokenService, authUserContext, validationStrategy);
     }
 
     @Test
     public void execute_shouldCreateCitizenUser() {
         CreateUserDto dto =
-                new CreateUserDto(
-                        "Juan",
-                        "Perez",
-                        "Lopez",
-                        30,
-                        "juan@test.com",
-                        "password123",
-                        (byte) 3,
-                        null,
-                        null);
+                new CreateUserDto("Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, null, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
-        when(userTokenService.createUser(dto.getEmail(), dto.getPassword()))
-                .thenReturn("provider-uuid-123");
-        when(userRepository.save(any(User.class)))
-                .thenAnswer(
-                        invocation -> {
-                            User user = invocation.getArgument(0);
-                            user.setId(1L);
-                            return user;
-                        });
+        when(userTokenService.createUser(dto.getEmail(), dto.getPassword())).thenReturn("provider-uuid-123");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User user = invocation.getArgument(0);
+            user.setId(1L);
+            return user;
+        });
 
         UserProfileDto result = useCase.execute(dto);
 
@@ -76,6 +59,9 @@ public class CreateUserUseCaseTest {
         assertEquals("Perez", result.getLastName1());
         assertNull(result.getRole());
         assertEquals("juan@test.com", result.getEmail());
+        assertEquals("Lopez", result.getLastName2());
+        assertEquals(30, result.getAge());
+        assertNull(result.getSuburb());
 
         verify(validationStrategy).setValidator(any(CitizenCreationValidator.class));
         verify(validationStrategy).validate(any(CreateUserDto.class), any(CurrentUser.class));
@@ -99,28 +85,16 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldCreatePrivilegedUserWhenCurrentUserIsAdmin() {
-        CreateUserDto dto =
-                new CreateUserDto(
-                        "AdminCreated",
-                        "User",
-                        "",
-                        25,
-                        "newadmin@test.com",
-                        "pass123",
-                        (byte) 1,
-                        null,
-                        List.of(1, 2));
+        CreateUserDto dto = new CreateUserDto(
+                "AdminCreated", "User", "", 25, "newadmin@test.com", "pass123", (byte) 1, null, List.of(1, 2));
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
-        when(userTokenService.createUser(dto.getEmail(), dto.getPassword()))
-                .thenReturn("provider-uuid-456");
-        when(userRepository.save(any(User.class)))
-                .thenAnswer(
-                        invocation -> {
-                            User user = invocation.getArgument(0);
-                            user.setId(2L);
-                            return user;
-                        });
+        when(userTokenService.createUser(dto.getEmail(), dto.getPassword())).thenReturn("provider-uuid-456");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User user = invocation.getArgument(0);
+            user.setId(2L);
+            return user;
+        });
 
         UserProfileDto result = useCase.execute(dto);
 
@@ -140,16 +114,7 @@ public class CreateUserUseCaseTest {
     @Test
     public void execute_shouldThrowForbiddenWhenNonAdminCreatesPrivilegedUser() {
         CreateUserDto dto =
-                new CreateUserDto(
-                        "Hacker",
-                        "Malicious",
-                        "",
-                        20,
-                        "hacker@test.com",
-                        "hack123",
-                        (byte) 1,
-                        null,
-                        null);
+                new CreateUserDto("Hacker", "Malicious", "", 20, "hacker@test.com", "hack123", (byte) 1, null, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createCitizenUser()));
         doThrow(new ForbiddenException("Only admins can create privileged users"))
@@ -167,26 +132,15 @@ public class CreateUserUseCaseTest {
     @Test
     public void execute_shouldSetAddressWhenSuburbIdProvided() {
         CreateUserDto dto =
-                new CreateUserDto(
-                        "Juan",
-                        "Perez",
-                        "Lopez",
-                        30,
-                        "juan@test.com",
-                        "password123",
-                        (byte) 3,
-                        5,
-                        null);
+                new CreateUserDto("Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, 5, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(anyString(), anyString())).thenReturn("provider-uuid-789");
-        when(userRepository.save(any(User.class)))
-                .thenAnswer(
-                        invocation -> {
-                            User user = invocation.getArgument(0);
-                            user.setId(3L);
-                            return user;
-                        });
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User user = invocation.getArgument(0);
+            user.setId(3L);
+            return user;
+        });
 
         useCase.execute(dto);
 
@@ -199,27 +153,16 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldSetHospitalsWhenHospitalIdsProvided() {
-        CreateUserDto dto =
-                new CreateUserDto(
-                        "Juan",
-                        "Perez",
-                        "Lopez",
-                        30,
-                        "juan@test.com",
-                        "password123",
-                        (byte) 3,
-                        null,
-                        List.of(3, 4, 5));
+        CreateUserDto dto = new CreateUserDto(
+                "Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, null, List.of(3, 4, 5));
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(anyString(), anyString())).thenReturn("provider-uuid-101");
-        when(userRepository.save(any(User.class)))
-                .thenAnswer(
-                        invocation -> {
-                            User user = invocation.getArgument(0);
-                            user.setId(4L);
-                            return user;
-                        });
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User user = invocation.getArgument(0);
+            user.setId(4L);
+            return user;
+        });
 
         useCase.execute(dto);
 

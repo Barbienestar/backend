@@ -1,6 +1,7 @@
 package com.itesm.application.usecase;
 
 import com.itesm.application.dto.CreateUserDto;
+import com.itesm.application.dto.SuburbDto;
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.application.validation.CitizenCreationValidator;
@@ -12,7 +13,6 @@ import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
 import com.itesm.domain.repository.UserTokenService;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -56,18 +56,26 @@ public class CreateUserUseCase {
         user.setRole(new Role(dto.getRoleId()));
         user.setAddress(new Address(dto.getSuburbId()));
         if (dto.getHospitalIds() != null) {
-            user.setHospitals(dto.getHospitalIds().stream().map(id -> new Hospital(id)).toList());
+            user.setHospitals(
+                    dto.getHospitalIds().stream().map(id -> new Hospital(id)).toList());
         }
 
         User savedUser = userRepository.save(user);
 
-        UserProfileDto userProfile =
-                new UserProfileDto(
-                        savedUser.getId(),
-                        savedUser.getName(),
-                        savedUser.getLastName1(),
-                        savedUser.getRole().getName(),
-                        savedUser.getEmail());
+        SuburbDto suburb = null;
+        if (savedUser.getAddress() != null && savedUser.getAddress().getSuburbId() != null) {
+            suburb = new SuburbDto(
+                    savedUser.getAddress().getSuburbId(), savedUser.getAddress().getAddress(), null);
+        }
+        UserProfileDto userProfile = new UserProfileDto(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getLastName1(),
+                savedUser.getLastName2(),
+                savedUser.getAge(),
+                suburb,
+                savedUser.getRole().getName(),
+                savedUser.getEmail());
 
         return userProfile;
     }

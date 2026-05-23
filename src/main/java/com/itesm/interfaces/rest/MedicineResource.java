@@ -9,7 +9,6 @@ import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetMedicinesUseCase;
 import com.itesm.application.usecase.UploadMedicineStockUseCase;
 import com.itesm.infrastructure.csv.CsvParser;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -42,7 +41,8 @@ public class MedicineResource {
     private final UploadMedicineStockUseCase uploadMedicineStockUseCase;
 
     @Inject
-    public MedicineResource(GetMedicinesUseCase getMedicinesUseCase, UploadMedicineStockUseCase uploadMedicineStockUseCase) {
+    public MedicineResource(
+            GetMedicinesUseCase getMedicinesUseCase, UploadMedicineStockUseCase uploadMedicineStockUseCase) {
         this.getMedicinesUseCase = getMedicinesUseCase;
         this.uploadMedicineStockUseCase = uploadMedicineStockUseCase;
     }
@@ -67,9 +67,8 @@ public class MedicineResource {
         )
     )
     public Response getAll(@QueryParam("q") String q) {
-        List<MedicineDto> medicines = (q != null && !q.isBlank())
-                ? getMedicinesUseCase.search(q)
-                : getMedicinesUseCase.execute();
+        List<MedicineDto> medicines =
+                (q != null && !q.isBlank()) ? getMedicinesUseCase.search(q) : getMedicinesUseCase.execute();
         return Response.ok(medicines).build();
     }
 
@@ -104,20 +103,23 @@ public class MedicineResource {
     @APIResponse(responseCode = "400", description = "Missing file or invalid content-type (must be text/csv)")
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response uploadStock(@PathParam("idHospital") Integer idHospital,
-                                @RestForm("file") FileUpload file) throws IOException {
+    public Response uploadStock(@PathParam("idHospital") Integer idHospital, @RestForm("file") FileUpload file)
+            throws IOException {
 
         if (file == null || file.size() == 0) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("El archivo está vacío o no fue enviado").build();
+                    .entity("El archivo está vacío o no fue enviado")
+                    .build();
         }
 
         String contentType = file.contentType();
-        if (contentType == null || (!contentType.equals("text/csv")
-                && !contentType.equals("application/csv")
-                && !contentType.equals("text/plain"))) {
+        if (contentType == null
+                || (!contentType.equals("text/csv")
+                        && !contentType.equals("application/csv")
+                        && !contentType.equals("text/plain"))) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("El archivo debe ser un CSV (text/csv)").build();
+                    .entity("El archivo debe ser un CSV (text/csv)")
+                    .build();
         }
 
         try (InputStream inputStream = Files.newInputStream(file.uploadedFile())) {
