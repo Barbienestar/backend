@@ -12,5 +12,5 @@ public class PeriodReportsByHospitalResponse {
     private LocalDate date;
 
     @JsonProperty("total_accepted_reports")
-    private int totalAcceptedReturns;
+    private int totalAcceptedReports;
 }
