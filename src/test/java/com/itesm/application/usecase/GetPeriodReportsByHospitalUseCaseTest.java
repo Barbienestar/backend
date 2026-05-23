@@ -35,7 +35,7 @@ public class GetPeriodReportsByHospitalUseCaseTest {
 
         assertEquals(2, result.size());
         assertEquals(LocalDate.of(2024, 1, 5), result.get(0).getDate());
-        assertEquals(10, result.get(0).getTotalAcceptedReturns());
+        assertEquals(10, result.get(0).getTotalAcceptedReports());
     }
 
     @Test
