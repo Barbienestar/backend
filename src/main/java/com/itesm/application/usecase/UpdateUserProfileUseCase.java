@@ -1,5 +1,6 @@
 package com.itesm.application.usecase;
 
+import com.itesm.application.dto.SuburbDto;
 import com.itesm.application.dto.UpdateUserDto;
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.AuthenticatedUserContext;
@@ -29,10 +30,18 @@ public class UpdateUserProfileUseCase {
         applyUpdates(user, dto);
         User savedUser = userRepository.update(user);
 
+        SuburbDto suburb = null;
+        if (savedUser.getAddress() != null && savedUser.getAddress().getSuburbId() != null) {
+            suburb = new SuburbDto(
+                    savedUser.getAddress().getSuburbId(), savedUser.getAddress().getAddress(), null);
+        }
         return new UserProfileDto(
                 savedUser.getId(),
                 savedUser.getName(),
                 savedUser.getLastName1(),
+                savedUser.getLastName2(),
+                savedUser.getAge(),
+                suburb,
                 savedUser.getRole().getName(),
                 savedUser.getEmail());
     }

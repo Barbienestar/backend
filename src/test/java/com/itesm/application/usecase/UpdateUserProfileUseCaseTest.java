@@ -67,6 +67,9 @@ public class UpdateUserProfileUseCaseTest {
         assertEquals(1L, result.getId());
         assertEquals("NewName", result.getName());
         assertEquals("NewLastName1", result.getLastName1());
+        assertEquals("NewLastName2", result.getLastName2());
+        assertEquals(Integer.valueOf(35), result.getAge());
+        assertNotNull(result.getSuburb());
 
         verify(userRepository).findDomainById(1L);
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
@@ -102,6 +105,9 @@ public class UpdateUserProfileUseCaseTest {
 
         assertNotNull(result);
         assertEquals("OnlyName", result.getName());
+        assertEquals("Existing2", result.getLastName2());
+        assertEquals(Integer.valueOf(30), result.getAge());
+        assertNull(result.getSuburb());
 
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).update(captor.capture());
@@ -137,6 +143,9 @@ public class UpdateUserProfileUseCaseTest {
 
         assertNotNull(result);
         assertEquals("Citizen", result.getName());
+        assertEquals("Existing2", result.getLastName2());
+        assertEquals(Integer.valueOf(30), result.getAge());
+        assertNull(result.getSuburb());
 
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).update(captor.capture());
