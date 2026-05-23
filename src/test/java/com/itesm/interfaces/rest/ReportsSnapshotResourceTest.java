@@ -12,8 +12,8 @@ class ReportsSnapshotResourceTest {
     @Test
     void getPeriodReports_shouldReturn200WithHealthToken() {
         given().header("Authorization", "Bearer health-token")
-                .queryParam("start-date", "2024-01-01")
-                .queryParam("end-date", "2024-01-31")
+                .queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
                 .when()
                 .get("/reports-snapshots/period/1")
                 .then()
@@ -26,8 +26,8 @@ class ReportsSnapshotResourceTest {
 
     @Test
     void getPeriodReports_shouldReturn401WithoutToken() {
-        given().queryParam("start-date", "2024-01-01")
-                .queryParam("end-date", "2024-01-31")
+        given().queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
                 .when()
                 .get("/reports-snapshots/period/1")
                 .then()
@@ -37,8 +37,8 @@ class ReportsSnapshotResourceTest {
     @Test
     void getPeriodReports_shouldReturn403WithWrongRole() {
         given().header("Authorization", "Bearer citizen-token")
-                .queryParam("start-date", "2024-01-01")
-                .queryParam("end-date", "2024-01-31")
+                .queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
                 .when()
                 .get("/reports-snapshots/period/1")
                 .then()
