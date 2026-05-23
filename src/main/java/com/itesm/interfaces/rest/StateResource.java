@@ -1,6 +1,5 @@
 package com.itesm.interfaces.rest;
 
-
 import com.itesm.application.dto.StateDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.usecase.GetAllStatesUseCase;
@@ -12,7 +11,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
@@ -35,22 +33,19 @@ public class StateResource {
 
     @GET
     @PermitPublic
-    @Operation(
-        summary = "List all states",
-        description = "Returns all Mexican states. No authentication required."
-    )
+    @Operation(summary = "List all states", description = "Returns all Mexican states. No authentication required.")
     @APIResponse(
-        responseCode = "200",
-        description = "List of states",
-        content = @Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            schema = @Schema(implementation = StateDto.class),
-            examples = @ExampleObject(
-                name = "sample",
-                value = "[{\"id\": 1, \"name\": \"Jalisco\"}, {\"id\": 2, \"name\": \"Nuevo León\"}]"
-            )
-        )
-    )
+            responseCode = "200",
+            description = "List of states",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = StateDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value =
+                                                    "[{\"id\": 1, \"name\": \"Jalisco\"}, {\"id\": 2, \"name\": \"Nuevo León\"}]")))
     public Response getAll() {
         List<StateDto> states = getAllStatesUseCase.execute();
         return Response.ok(states).build();
