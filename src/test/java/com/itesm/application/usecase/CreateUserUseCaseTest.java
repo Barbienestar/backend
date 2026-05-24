@@ -60,7 +60,7 @@ public class CreateUserUseCaseTest {
         assertNull(result.getRole());
         assertEquals("juan@test.com", result.getEmail());
         assertEquals("Lopez", result.getLastName2());
-        assertEquals(30, result.getAge());
+        assertEquals((byte) 30, result.getAge());
         assertNull(result.getSuburb());
 
         verify(validationStrategy).setValidator(any(CitizenCreationValidator.class));
