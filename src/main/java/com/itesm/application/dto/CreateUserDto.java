@@ -29,7 +29,6 @@ public class CreateUserDto {
     @Size(min = 1, max = 64, message = "Second last name must be between 1 and 64 characters")
     private String lastName2;
 
-    @NotNull(message = "Age is required")
     @Min(value = 0, message = "Age must be at least 0")
     @Max(value = 255, message = "Age cannot exceed 255")
     private Byte age;
@@ -52,7 +51,6 @@ public class CreateUserDto {
     private Byte roleId;
 
     @JsonProperty("suburb_id")
-    @NotNull(message = "Suburb ID is required")
     @Positive(message = "Suburb ID must be a valid positive number")
     private Integer suburbId;
 
