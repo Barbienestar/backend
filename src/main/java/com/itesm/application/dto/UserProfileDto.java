@@ -16,7 +16,7 @@ public class UserProfileDto {
     @JsonProperty("last_name2")
     private String lastName2;
 
-    private Integer age;
+    private Byte age;
 
     private SuburbDto suburb;
 

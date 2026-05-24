@@ -7,6 +7,7 @@ import com.itesm.application.security.PermitPublic;
 import com.itesm.application.usecase.CreateUserUseCase;
 import com.itesm.application.usecase.UpdateUserProfileUseCase;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -30,7 +31,7 @@ public class UserResource {
 
     @POST
     @PermitPublic
-    public Response createUser(CreateUserDto createUserDto) {
+    public Response createUser(@Valid CreateUserDto createUserDto) {
         UserProfileDto user = createUserUseCase.execute(createUserDto);
         return Response.ok(user).build();
     }
