@@ -37,3 +37,9 @@ VALUES (1, 10, 1, 1, '2024-01-05'),
        (2, 7, 1, 1, '2024-01-12'),
        (3, 15, 1, 1, '2024-01-19');
 ALTER TABLE Reports_Snapshot ALTER COLUMN id RESTART WITH 4;
+
+INSERT INTO Medicines_Hospitals (id, stock, id_medicine, id_hospital, entry_date)
+VALUES (1, 100, 1, 1, '2024-01-05 08:00:00'),
+       (2, 90, 1, 1, '2024-01-12 08:00:00'),
+       (3, 80, 1, 1, '2024-01-19 08:00:00');
+ALTER TABLE Medicines_Hospitals ALTER COLUMN id RESTART WITH 4;

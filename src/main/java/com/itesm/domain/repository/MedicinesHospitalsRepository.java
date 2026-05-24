@@ -4,6 +4,7 @@ import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +18,6 @@ public interface MedicinesHospitalsRepository {
     Optional<MedicinesHospitalsStockAverages> getStockAvg(Integer idHospital);
 
     Optional<MedicinesHospitalsStockReport> getStockReport(Integer idHospital);
+
+    List<Object[]> getPeriodStock(Integer idHospital, LocalDate startDate, LocalDate endDate);
 }
