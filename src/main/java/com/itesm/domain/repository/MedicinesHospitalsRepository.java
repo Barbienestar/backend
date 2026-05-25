@@ -4,12 +4,15 @@ import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
+import com.itesm.domain.models.StateSupplyData;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface MedicinesHospitalsRepository {
     List<MedicinesHospitalsStock> findByMedicineName(String medicineName);
+
+    List<StateSupplyData> findAvgStockByState();
 
     void save(MedicinesHospitals medicineHospital);
 
