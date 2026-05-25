@@ -90,6 +90,26 @@ public class HospitalResource {
     @GET
     @Path("/critical-medicines")
     @RequireRoles({"health"})
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(
+            summary = "List hospitals with critical medicine stock",
+            description =
+                    "Returns the hospitals assigned to the authenticated user that have at least one medicine with stock ≤ 100. "
+                            + "Results within each hospital are ordered by stock ASC. Hospitals with no critical medicines are excluded. Requires health role.")
+    @APIResponse(
+            responseCode = "200",
+            description = "List of hospitals with their critical medicines",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = HospitalCriticalMedicinesDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value =
+                                                    "[{\"hospital_id\": 1, \"hospital_name\": \"Hospital General\", \"critical_medicines\": [{\"id\": 1, \"generic_name\": \"Metformina\", \"stock\": 80}]}]")))
+    @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
+    @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
     public Response getCriticalMedicines() {
         List<HospitalCriticalMedicinesDto> result = getCriticalMedicinesUseCase.execute();
         return Response.ok(result).build();
