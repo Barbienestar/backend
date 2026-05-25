@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Status {
     private Byte id;
-    
+
     private String name;
 }

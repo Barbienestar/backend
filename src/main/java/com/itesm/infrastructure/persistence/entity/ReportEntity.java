@@ -1,16 +1,22 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(
+        name = "Report.withData",
+        attributeNodes = {
+            @NamedAttributeNode("user"),
+            @NamedAttributeNode("medicine"),
+            @NamedAttributeNode("hospital"),
+            @NamedAttributeNode("statusId")
+        })
 @Entity
 @Table(name = "Reports")
 public class ReportEntity {
@@ -35,7 +41,7 @@ public class ReportEntity {
     @JoinColumn(name = "id_status", nullable = false)
     private StatusEntity statusId;
 
-    @Column(name = "decription", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "image_url", nullable = false)
@@ -47,4 +53,3 @@ public class ReportEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }
-

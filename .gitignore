@@ -44,3 +44,8 @@ nb-configuration.xml
 # TLS Certificates
 .certs/
 /**/resources/*.json
+
+# Claude context (local only)
+CLAUDE.md
+# Superpowers docs
+docs/

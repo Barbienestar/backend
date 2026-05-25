@@ -1,0 +1,99 @@
+package com.itesm.application.usecase;
+
+import com.itesm.application.dto.MedicineRowDto;
+import com.itesm.application.dto.MedicineStockInputDto;
+import com.itesm.application.dto.MedicineStockResultDto;
+import com.itesm.domain.models.Hospital;
+import com.itesm.domain.models.Medicine;
+import com.itesm.domain.models.MedicinesHospitals;
+import com.itesm.domain.repository.HospitalRepository;
+import com.itesm.domain.repository.MedicineRepository;
+import com.itesm.domain.repository.MedicinesHospitalsRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@ApplicationScoped
+public class UploadMedicineStockUseCase {
+
+    private final MedicineRepository medicineRepository;
+    private final MedicinesHospitalsRepository medicinesHospitalsRepository;
+    private final HospitalRepository hospitalRepository;
+
+    @Inject
+    public UploadMedicineStockUseCase(
+            MedicineRepository medicineRepository,
+            MedicinesHospitalsRepository medicinesHospitalsRepository,
+            HospitalRepository hospitalRepository) {
+        this.medicineRepository = medicineRepository;
+        this.medicinesHospitalsRepository = medicinesHospitalsRepository;
+        this.hospitalRepository = hospitalRepository;
+    }
+
+    public MedicineStockResultDto execute(MedicineStockInputDto input) {
+
+        int inserted = 0;
+        List<String> errors = new ArrayList<>();
+
+        Hospital hospital = hospitalRepository.findHospitalById(input.getIdHospital());
+        if (hospital == null) {
+            throw new RuntimeException("Hospital no encontrado");
+        }
+
+        List<String> genericNames =
+                input.getRows().stream().map(MedicineRowDto::getGenericName).toList();
+
+        List<Medicine> existingMedicines = medicineRepository.findByNames(genericNames);
+
+        List<Medicine> medicinesToSave = new ArrayList<>();
+
+        List<MedicinesHospitals> relationsToSave = new ArrayList<>();
+
+        for (MedicineRowDto row : input.getRows()) {
+            try {
+                if (row.getGenericName() == null || row.getGenericName().isBlank()) {
+                    throw new IllegalArgumentException("el nombre genérico no puede estar vacío");
+                }
+                if (row.getStock() < 0) {
+                    throw new IllegalArgumentException("el stock no puede ser negativo");
+                }
+
+                Medicine medicine = existingMedicines.stream()
+                        .filter(m -> m.getGenericName().equalsIgnoreCase(row.getGenericName()))
+                        .findFirst()
+                        .orElseGet(() -> {
+                            Medicine newMedicine = new Medicine(
+                                    row.getGenericName(),
+                                    row.getDosageForm(),
+                                    row.getStrength(),
+                                    row.getPresentation());
+                            medicinesToSave.add(newMedicine);
+                            return newMedicine;
+                        });
+
+                relationsToSave.add(new MedicinesHospitals(medicine, hospital, row.getStock(), LocalDateTime.now()));
+                inserted++;
+
+            } catch (Exception e) {
+                errors.add("Fila con medicamento '" + row.getGenericName() + "': " + e.getMessage());
+            }
+        }
+
+        List<Medicine> savedMedicines = medicineRepository.saveAll(medicinesToSave);
+
+        for (Medicine saved : savedMedicines) {
+
+            for (MedicinesHospitals relation : relationsToSave) {
+                if (relation.getMedicine().getGenericName().equalsIgnoreCase(saved.getGenericName())) {
+                    relation.getMedicine().setId(saved.getId());
+                }
+            }
+        }
+
+        medicinesHospitalsRepository.saveAll(relationsToSave);
+
+        return new MedicineStockResultDto(inserted, errors);
+    }
+}

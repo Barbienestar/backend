@@ -1,12 +1,10 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -28,7 +26,7 @@ public class MedicineEntity {
     @Column(name = "strength")
     private String strength;
 
-    @Column(name = "presentation")
+    @Column(name = "presentation", length = 512)
     private String presentation;
 
     @Column(name = "created_at", nullable = false)
@@ -36,5 +34,16 @@ public class MedicineEntity {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-}
 
+    @PrePersist
+    void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+}

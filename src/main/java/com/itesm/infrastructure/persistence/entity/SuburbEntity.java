@@ -1,7 +1,6 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class SuburbEntity {
     @Column(name = "zip_code", nullable = false)
     private String zipCode;
 
-    @Column(name = "id_city", nullable = false)
-    private Integer idCity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_city", nullable = false)
+    private CityEntity idCity;
 }
-

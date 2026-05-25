@@ -1,0 +1,102 @@
+package com.itesm.interfaces.rest;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
+
+@QuarkusTest
+class ReportsSnapshotResourceTest {
+
+    @Test
+    void getPeriodReports_shouldReturn200WithHealthToken() {
+        given().header("Authorization", "Bearer health-token")
+                .queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
+                .when()
+                .get("/reports-snapshots/period/1")
+                .then()
+                .statusCode(200)
+                .body("$", instanceOf(java.util.List.class))
+                .body("size()", equalTo(3))
+                .body("[0].report_date", equalTo("2024-01-05"))
+                .body("[0].total_accepted_reports", equalTo(10));
+    }
+
+    @Test
+    void getPeriodReports_shouldReturn401WithoutToken() {
+        given().queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
+                .when()
+                .get("/reports-snapshots/period/1")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    void getPeriodReports_shouldReturn403WithWrongRole() {
+        given().header("Authorization", "Bearer citizen-token")
+                .queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
+                .when()
+                .get("/reports-snapshots/period/1")
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
+    void getPeriodReports_shouldReturn400WhenParamsMissing() {
+        given().header("Authorization", "Bearer health-token")
+                .when()
+                .get("/reports-snapshots/period/1")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    void getPeriodReportsWithStock_shouldReturn200WithHealthToken() {
+        given().header("Authorization", "Bearer health-token")
+                .queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
+                .when()
+                .get("/reports-snapshots/period/1/with-stock")
+                .then()
+                .statusCode(200)
+                .body("$", instanceOf(java.util.List.class))
+                .body("size()", equalTo(3))
+                .body("[0].report_date", equalTo("2024-01-05"))
+                .body("[0].total_accepted_reports", equalTo(10))
+                .body("[0].total_stock", equalTo(100));
+    }
+
+    @Test
+    void getPeriodReportsWithStock_shouldReturn401WithoutToken() {
+        given().queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
+                .when()
+                .get("/reports-snapshots/period/1/with-stock")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    void getPeriodReportsWithStock_shouldReturn403WithWrongRole() {
+        given().header("Authorization", "Bearer citizen-token")
+                .queryParam("start_date", "2024-01-01")
+                .queryParam("end_date", "2024-01-31")
+                .when()
+                .get("/reports-snapshots/period/1/with-stock")
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
+    void getPeriodReportsWithStock_shouldReturn400WhenParamsMissing() {
+        given().header("Authorization", "Bearer health-token")
+                .when()
+                .get("/reports-snapshots/period/1/with-stock")
+                .then()
+                .statusCode(400);
+    }
+}

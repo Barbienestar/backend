@@ -1,7 +1,6 @@
 package com.itesm.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +18,8 @@ public class StreetEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
-}
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suburb", nullable = false)
+    private SuburbEntity idSuburb;
+}
