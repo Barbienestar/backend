@@ -66,15 +66,13 @@ class HospitalResourceTest {
                 .statusCode(401);
     }
 
-    // Usuario válido sin hospitales asignados obtiene 200 con lista vacía
+    // Usuario autenticado sin rol health obtiene 403
     @Test
-    void getMyHospitals_shouldReturnEmptyListWhenUserHasNoHospitals() {
+    void getMyHospitals_shouldReturn403WithCitizenToken() {
         given().header("Authorization", "Bearer citizen-token")
                 .when()
                 .get("/hospitals/my-hospitals")
                 .then()
-                .statusCode(200)
-                .body("$", instanceOf(java.util.List.class))
-                .body("$.size()", equalTo(0));
+                .statusCode(403);
     }
 }
