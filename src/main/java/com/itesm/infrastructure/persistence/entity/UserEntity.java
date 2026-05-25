@@ -26,7 +26,7 @@ public class UserEntity {
     private String lastName2;
 
     @Column(columnDefinition = "TINYINT", nullable = true)
-    private Integer age;
+    private Byte age;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;

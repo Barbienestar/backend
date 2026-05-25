@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -103,6 +104,23 @@ public class MedicinesHospitalsRepositoryImpl
                 .getResultList();
 
         return entities.stream().map(MedicinesHospitalsMapper::toDomain).toList();
+    }
+
+    public List<Object[]> getPeriodStock(Integer idHospital, LocalDate startDate, LocalDate endDate) {
+        return em.createQuery(
+                        """
+                                SELECT CAST(mh.entryDate AS date), SUM(mh.stock)
+                                FROM MedicinesHospitalsEntity mh
+                                WHERE mh.hospital.id = :idHospital
+                                  AND CAST(mh.entryDate AS date) BETWEEN :startDate AND :endDate
+                                GROUP BY CAST(mh.entryDate AS date)
+                                ORDER BY CAST(mh.entryDate AS date) ASC
+                                """,
+                        Object[].class)
+                .setParameter("idHospital", idHospital)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
     }
 
     @Override
