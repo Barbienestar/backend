@@ -25,7 +25,7 @@ public class UserProfileDto {
     private String lastName2;
 
     @Schema(description = "User age")
-    private Integer age;
+    private Byte age;
 
     @Schema(description = "Assigned suburb or neighborhood")
     private SuburbDto suburb;

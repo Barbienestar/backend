@@ -1,13 +1,24 @@
 package com.itesm.application.usecase;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.itesm.application.dto.ReportSummaryDto;
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.application.security.CurrentUser;
-import com.itesm.domain.models.*;
-import com.itesm.domain.repository.*;
+import com.itesm.domain.models.Hospital;
+import com.itesm.domain.models.Medicine;
+import com.itesm.domain.models.Report;
+import com.itesm.domain.models.Role;
+import com.itesm.domain.models.Status;
+import com.itesm.domain.models.User;
+import com.itesm.domain.repository.HospitalRepository;
+import com.itesm.domain.repository.MedicineRepository;
+import com.itesm.domain.repository.ReportRepository;
+import com.itesm.domain.repository.StatusRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

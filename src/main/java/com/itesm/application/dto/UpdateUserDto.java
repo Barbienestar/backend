@@ -13,7 +13,7 @@ public class UpdateUserDto {
     @JsonProperty("last_name_2")
     private String lastName2;
 
-    private Integer age;
+    private Byte age;
 
     @JsonProperty("suburb_id")
     private Integer suburbId;

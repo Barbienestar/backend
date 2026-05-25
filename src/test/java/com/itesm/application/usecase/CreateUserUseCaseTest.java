@@ -40,8 +40,8 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldCreateCitizenUser() {
-        CreateUserDto dto =
-                new CreateUserDto("Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, null, null);
+        CreateUserDto dto = new CreateUserDto(
+                "Juan", "Perez", "Lopez", (byte) 30, "juan@test.com", "password123", (byte) 3, null, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(dto.getEmail(), dto.getPassword())).thenReturn("provider-uuid-123");
@@ -60,7 +60,7 @@ public class CreateUserUseCaseTest {
         assertNull(result.getRole());
         assertEquals("juan@test.com", result.getEmail());
         assertEquals("Lopez", result.getLastName2());
-        assertEquals(30, result.getAge());
+        assertEquals((byte) 30, result.getAge());
         assertNull(result.getSuburb());
 
         verify(validationStrategy).setValidator(any(CitizenCreationValidator.class));
@@ -72,7 +72,7 @@ public class CreateUserUseCaseTest {
         assertEquals("Juan", savedUser.getName());
         assertEquals("Perez", savedUser.getLastName1());
         assertEquals("Lopez", savedUser.getLastName2());
-        assertEquals(30, savedUser.getAge());
+        assertEquals((byte) 30, savedUser.getAge());
         assertEquals("juan@test.com", savedUser.getEmail());
         assertEquals("provider-uuid-123", savedUser.getProviderUuid());
         assertTrue(savedUser.isActive());
@@ -86,7 +86,7 @@ public class CreateUserUseCaseTest {
     @Test
     public void execute_shouldCreatePrivilegedUserWhenCurrentUserIsAdmin() {
         CreateUserDto dto = new CreateUserDto(
-                "AdminCreated", "User", "", 25, "newadmin@test.com", "pass123", (byte) 1, null, List.of(1, 2));
+                "AdminCreated", "User", "", (byte) 25, "newadmin@test.com", "pass123", (byte) 1, null, List.of(1, 2));
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(dto.getEmail(), dto.getPassword())).thenReturn("provider-uuid-456");
@@ -113,8 +113,8 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldThrowForbiddenWhenNonAdminCreatesPrivilegedUser() {
-        CreateUserDto dto =
-                new CreateUserDto("Hacker", "Malicious", "", 20, "hacker@test.com", "hack123", (byte) 1, null, null);
+        CreateUserDto dto = new CreateUserDto(
+                "Hacker", "Malicious", "", (byte) 20, "hacker@test.com", "hack123", (byte) 1, null, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createCitizenUser()));
         doThrow(new ForbiddenException("Only admins can create privileged users"))
@@ -131,8 +131,8 @@ public class CreateUserUseCaseTest {
 
     @Test
     public void execute_shouldSetAddressWhenSuburbIdProvided() {
-        CreateUserDto dto =
-                new CreateUserDto("Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, 5, null);
+        CreateUserDto dto = new CreateUserDto(
+                "Juan", "Perez", "Lopez", (byte) 30, "juan@test.com", "password123", (byte) 3, 5, null);
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(anyString(), anyString())).thenReturn("provider-uuid-789");
@@ -154,7 +154,7 @@ public class CreateUserUseCaseTest {
     @Test
     public void execute_shouldSetHospitalsWhenHospitalIdsProvided() {
         CreateUserDto dto = new CreateUserDto(
-                "Juan", "Perez", "Lopez", 30, "juan@test.com", "password123", (byte) 3, null, List.of(3, 4, 5));
+                "Juan", "Perez", "Lopez", (byte) 30, "juan@test.com", "password123", (byte) 3, null, List.of(3, 4, 5));
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(anyString(), anyString())).thenReturn("provider-uuid-101");

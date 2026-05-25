@@ -7,6 +7,7 @@ import com.itesm.application.security.PermitPublic;
 import com.itesm.application.usecase.CreateUserUseCase;
 import com.itesm.application.usecase.UpdateUserProfileUseCase;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -69,7 +70,7 @@ public class UserResource {
                                             name = "created",
                                             value =
                                                     "{\"id\": 5, \"name\": \"Ana\", \"last_name_1\": \"García\", \"role\": \"citizen\", \"email\": \"ana@example.com\"}")))
-    public Response createUser(CreateUserDto createUserDto) {
+    public Response createUser(@Valid CreateUserDto createUserDto) {
         UserProfileDto user = createUserUseCase.execute(createUserDto);
         return Response.ok(user).build();
     }
