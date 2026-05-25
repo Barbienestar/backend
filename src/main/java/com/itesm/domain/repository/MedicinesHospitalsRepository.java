@@ -17,4 +17,6 @@ public interface MedicinesHospitalsRepository {
     Optional<MedicinesHospitalsStockAverages> getStockAvg(Integer idHospital);
 
     Optional<MedicinesHospitalsStockReport> getStockReport(Integer idHospital);
+
+    List<MedicinesHospitals> findLatestReportsByHospitalIds(List<Integer> hospitalIds);
 }
