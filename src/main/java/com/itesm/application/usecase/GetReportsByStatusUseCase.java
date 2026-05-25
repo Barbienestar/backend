@@ -5,10 +5,8 @@ import com.itesm.application.dto.PagedResult;
 import com.itesm.domain.models.Report;
 import com.itesm.domain.repository.ImageRepository;
 import com.itesm.domain.repository.ReportRepository;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -20,14 +18,12 @@ public class GetReportsByStatusUseCase {
     private final ImageRepository imageRepository;
 
     @Inject
-    public GetReportsByStatusUseCase(
-            ReportRepository reportRepository, ImageRepository imageRepository) {
+    public GetReportsByStatusUseCase(ReportRepository reportRepository, ImageRepository imageRepository) {
         this.reportRepository = reportRepository;
         this.imageRepository = imageRepository;
     }
 
-    public PagedResult<FullReportResponse> execute(
-            Integer statusId, Integer page, Integer pageSize) {
+    public PagedResult<FullReportResponse> execute(Integer statusId, Integer page, Integer pageSize) {
         List<Report> reports = reportRepository.findByStatusId(statusId, page, pageSize);
         long totalItems = reportRepository.countByStatusId(statusId);
 
@@ -39,23 +35,21 @@ public class GetReportsByStatusUseCase {
 
     private FullReportResponse toFullReportResponse(Report report) {
 
-        String signedUrl =
-                imageRepository.generateSignedUrl(report.getImageUrl(), 30, TimeUnit.MINUTES);
-        FullReportResponse response =
-                new FullReportResponse(
-                        report.getId(),
-                        report.getDescription(),
-                        signedUrl,
-                        report.getUser().getName()
-                                + " "
-                                + report.getUser().getLastName1()
-                                + " "
-                                + report.getUser().getLastName2(),
-                        report.getMedicine().getGenericName(),
-                        report.getMedicine().getPresentation(),
-                        report.getMedicine().getDosageForm(),
-                        report.getHospital().getName(),
-                        report.getCreatedAt());
+        String signedUrl = imageRepository.generateSignedUrl(report.getImageUrl(), 30, TimeUnit.MINUTES);
+        FullReportResponse response = new FullReportResponse(
+                report.getId(),
+                report.getDescription(),
+                signedUrl,
+                report.getUser().getName()
+                        + " "
+                        + report.getUser().getLastName1()
+                        + " "
+                        + report.getUser().getLastName2(),
+                report.getMedicine().getGenericName(),
+                report.getMedicine().getPresentation(),
+                report.getMedicine().getDosageForm(),
+                report.getHospital().getName(),
+                report.getCreatedAt());
         return response;
     }
 }

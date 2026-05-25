@@ -1,19 +1,19 @@
 package com.itesm.application.usecase;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import com.itesm.application.dto.MedicineRowDto;
 import com.itesm.application.dto.MedicineStockInputDto;
 import com.itesm.application.dto.MedicineStockResultDto;
 import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.Medicine;
-import com.itesm.domain.repository.HospitalRepository;
 import com.itesm.domain.models.MedicinesHospitals;
-import com.itesm.domain.repository.MedicinesHospitalsRepository;
+import com.itesm.domain.repository.HospitalRepository;
 import com.itesm.domain.repository.MedicineRepository;
+import com.itesm.domain.repository.MedicinesHospitalsRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 public class UploadMedicineStockUseCase {
@@ -23,7 +23,10 @@ public class UploadMedicineStockUseCase {
     private final HospitalRepository hospitalRepository;
 
     @Inject
-    public UploadMedicineStockUseCase(MedicineRepository medicineRepository, MedicinesHospitalsRepository medicinesHospitalsRepository, HospitalRepository hospitalRepository) {
+    public UploadMedicineStockUseCase(
+            MedicineRepository medicineRepository,
+            MedicinesHospitalsRepository medicinesHospitalsRepository,
+            HospitalRepository hospitalRepository) {
         this.medicineRepository = medicineRepository;
         this.medicinesHospitalsRepository = medicinesHospitalsRepository;
         this.hospitalRepository = hospitalRepository;
@@ -39,9 +42,8 @@ public class UploadMedicineStockUseCase {
             throw new RuntimeException("Hospital no encontrado");
         }
 
-        List<String> genericNames = input.getRows().stream()
-                .map(MedicineRowDto::getGenericName)
-                .toList();
+        List<String> genericNames =
+                input.getRows().stream().map(MedicineRowDto::getGenericName).toList();
 
         List<Medicine> existingMedicines = medicineRepository.findByNames(genericNames);
 
@@ -66,12 +68,10 @@ public class UploadMedicineStockUseCase {
                                     row.getGenericName(),
                                     row.getDosageForm(),
                                     row.getStrength(),
-                                    row.getPresentation()
-                            );
+                                    row.getPresentation());
                             medicinesToSave.add(newMedicine);
                             return newMedicine;
                         });
-
 
                 relationsToSave.add(new MedicinesHospitals(medicine, hospital, row.getStock(), LocalDateTime.now()));
                 inserted++;
@@ -82,7 +82,7 @@ public class UploadMedicineStockUseCase {
         }
 
         List<Medicine> savedMedicines = medicineRepository.saveAll(medicinesToSave);
-            
+
         for (Medicine saved : savedMedicines) {
 
             for (MedicinesHospitals relation : relationsToSave) {
@@ -91,7 +91,7 @@ public class UploadMedicineStockUseCase {
                 }
             }
         }
-        
+
         medicinesHospitalsRepository.saveAll(relationsToSave);
 
         return new MedicineStockResultDto(inserted, errors);

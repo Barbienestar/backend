@@ -7,10 +7,8 @@ import com.itesm.domain.models.Report;
 import com.itesm.domain.repository.HospitalRepository;
 import com.itesm.domain.repository.MedicineRepository;
 import com.itesm.domain.repository.ReportRepository;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.time.LocalDateTime;
 
 @ApplicationScoped
@@ -47,7 +45,8 @@ public class CreateReportUseCase {
         Report saved = reportRepository.save(report);
         String medicineName =
                 medicineRepository.findMedicineById(saved.getMedicineId()).getGenericName();
-        String hospitalName = hospitalRepository.findHospitalById(saved.getHospitalId()).getName();
+        String hospitalName =
+                hospitalRepository.findHospitalById(saved.getHospitalId()).getName();
 
         return new ReportDto(
                 saved.getId(),

@@ -7,11 +7,9 @@ import static org.mockito.Mockito.*;
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
-
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class GetStockByMedicineUseCaseTest {
 
@@ -23,19 +21,16 @@ public class GetStockByMedicineUseCaseTest {
         repository = mock(MedicinesHospitalsRepository.class);
 
         MedicinesHospitalsStock stockHigh = buildStock(1, "Hospital Norte", "Calle 1", 100, "https://maps/1");
-        MedicinesHospitalsStock stockLow  = buildStock(2, "Hospital Sur",   "Calle 2", 5,   "https://maps/2");
-        MedicinesHospitalsStock stockNone = buildStock(3, "Hospital Este",  "Calle 3", 0,   "https://maps/3");
+        MedicinesHospitalsStock stockLow = buildStock(2, "Hospital Sur", "Calle 2", 5, "https://maps/2");
+        MedicinesHospitalsStock stockNone = buildStock(3, "Hospital Este", "Calle 3", 0, "https://maps/3");
 
-        when(repository.findByMedicineName("Paracetamol"))
-                .thenReturn(List.of(stockHigh, stockLow, stockNone));
-        when(repository.findByMedicineName("Desconocido"))
-                .thenReturn(List.of());
+        when(repository.findByMedicineName("Paracetamol")).thenReturn(List.of(stockHigh, stockLow, stockNone));
+        when(repository.findByMedicineName("Desconocido")).thenReturn(List.of());
 
         getStockByMedicineUseCase = new GetStockByMedicineUseCase(repository);
     }
 
-    private MedicinesHospitalsStock buildStock(
-            int hospitalId, String name, String address, int stock, String mapsUrl) {
+    private MedicinesHospitalsStock buildStock(int hospitalId, String name, String address, int stock, String mapsUrl) {
         MedicinesHospitalsStock s = new MedicinesHospitalsStock();
         s.setHospitalId(hospitalId);
         s.setHospitalName(name);
@@ -96,5 +91,4 @@ public class GetStockByMedicineUseCaseTest {
         assertEquals("No disponible", none.getStockLabel());
         assertEquals("Agotado", none.getStatus());
     }
-
 }

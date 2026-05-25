@@ -8,10 +8,8 @@ import com.itesm.domain.repository.HospitalRepository;
 import com.itesm.domain.repository.MedicineRepository;
 import com.itesm.domain.repository.ReportRepository;
 import com.itesm.domain.repository.StatusRepository;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,22 +41,27 @@ public class GetMyReportsUseCase {
 
         List<Report> reports = reportRepository.findByUserId(userId);
 
-        return reports.stream().map(report -> {
-            String medicineName = medicineRepository.findMedicineById(report.getMedicineId()).getGenericName();
-            String hospitalName = hospitalRepository.findHospitalById(report.getHospitalId()).getName();
-            Status status = statusRepository.findStatusById(report.getStatusId());
-            String statusName = status != null ? status.getName() : "unknown";
+        return reports.stream()
+                .map(report -> {
+                    String medicineName = medicineRepository
+                            .findMedicineById(report.getMedicineId())
+                            .getGenericName();
+                    String hospitalName = hospitalRepository
+                            .findHospitalById(report.getHospitalId())
+                            .getName();
+                    Status status = statusRepository.findStatusById(report.getStatusId());
+                    String statusName = status != null ? status.getName() : "unknown";
 
-            return new ReportSummaryDto(
-                    report.getId(),
-                    medicineName,
-                    hospitalName,
-                    statusName,
-                    report.getDescription(),
-                    report.getImageUrl(),
-                    report.getCreatedAt(),
-                    report.getUpdatedAt()
-            );
-        }).collect(Collectors.toList());
+                    return new ReportSummaryDto(
+                            report.getId(),
+                            medicineName,
+                            hospitalName,
+                            statusName,
+                            report.getDescription(),
+                            report.getImageUrl(),
+                            report.getCreatedAt(),
+                            report.getUpdatedAt());
+                })
+                .collect(Collectors.toList());
     }
 }

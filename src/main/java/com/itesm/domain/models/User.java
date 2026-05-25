@@ -1,10 +1,9 @@
 package com.itesm.domain.models;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +13,7 @@ public class User {
     private String name;
     private String lastName1;
     private String lastName2;
-    private Integer age;
+    private Byte age;
     private String email;
     private String providerUuid;
     private boolean active;

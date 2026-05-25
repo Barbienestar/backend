@@ -32,14 +32,10 @@ public class UserMapper {
         user.setProviderUuid(entity.getProviderUuid());
         user.setActive(entity.isActive());
         RoleEntity roleEntity = entity.getRole();
-        user.setRole(
-                roleEntity != null ? new Role(roleEntity.getId(), roleEntity.getName()) : null);
+        user.setRole(roleEntity != null ? new Role(roleEntity.getId(), roleEntity.getName()) : null);
         SuburbEntity suburbEntity = entity.getSuburb();
         // TODO: Join all address fields to create a complete address string
-        user.setAddress(
-                suburbEntity != null
-                        ? new Address(suburbEntity.getName(), suburbEntity.getId())
-                        : null);
+        user.setAddress(suburbEntity != null ? new Address(suburbEntity.getName(), suburbEntity.getId()) : null);
         return user;
     }
 }

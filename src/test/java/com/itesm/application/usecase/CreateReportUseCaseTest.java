@@ -16,7 +16,6 @@ import com.itesm.domain.models.User;
 import com.itesm.domain.repository.HospitalRepository;
 import com.itesm.domain.repository.MedicineRepository;
 import com.itesm.domain.repository.ReportRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -43,33 +42,26 @@ public class CreateReportUseCaseTest {
         user.setLastName1("Pork");
         CurrentUser currentUser = new CurrentUser(user);
         when(authUserContext.getCurrentUser()).thenReturn(currentUser);
-        when(reportRepository.save(any(Report.class)))
-                .thenAnswer(
-                        invocation -> {
-                            Report report = invocation.getArgument(0);
-                            report.setId(1L);
-                            return report;
-                        });
+        when(reportRepository.save(any(Report.class))).thenAnswer(invocation -> {
+            Report report = invocation.getArgument(0);
+            report.setId(1L);
+            return report;
+        });
 
-        when(hospitalRepository.findHospitalById(anyInt()))
-                .thenAnswer(
-                        invocation -> {
-                            Hospital hospital = new Hospital();
-                            hospital.setId(1);
-                            hospital.setName("Hospital name");
-                            return hospital;
-                        });
-        when(medicineRepository.findMedicineById(anyInt()))
-                .thenAnswer(
-                        invocation -> {
-                            Medicine medicine = new Medicine();
-                            medicine.setId(1);
-                            medicine.setGenericName("Paracetamol");
-                            return medicine;
-                        });
+        when(hospitalRepository.findHospitalById(anyInt())).thenAnswer(invocation -> {
+            Hospital hospital = new Hospital();
+            hospital.setId(1);
+            hospital.setName("Hospital name");
+            return hospital;
+        });
+        when(medicineRepository.findMedicineById(anyInt())).thenAnswer(invocation -> {
+            Medicine medicine = new Medicine();
+            medicine.setId(1);
+            medicine.setGenericName("Paracetamol");
+            return medicine;
+        });
         createReportUseCase =
-                new CreateReportUseCase(
-                        reportRepository, authUserContext, hospitalRepository, medicineRepository);
+                new CreateReportUseCase(reportRepository, authUserContext, hospitalRepository, medicineRepository);
     }
 
     @Test

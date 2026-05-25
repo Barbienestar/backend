@@ -1,13 +1,11 @@
 package com.itesm.application.usecase;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.itesm.application.dto.CityDto;
 import com.itesm.domain.repository.CityRepository;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetCitiesByStateUseCase {
@@ -19,12 +17,8 @@ public class GetCitiesByStateUseCase {
     }
 
     public List<CityDto> execute(Byte idState) {
-        return cityRepository.getCitiesByState(idState)
-                .stream()
-                .map(m -> new CityDto(
-                    m.getId(),
-                    m.getName()
-                ))
+        return cityRepository.getCitiesByState(idState).stream()
+                .map(m -> new CityDto(m.getId(), m.getName()))
                 .collect(Collectors.toList());
     }
 }

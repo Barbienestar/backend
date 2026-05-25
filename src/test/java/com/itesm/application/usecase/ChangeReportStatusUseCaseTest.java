@@ -3,7 +3,6 @@ package com.itesm.application.usecase;
 import static org.mockito.Mockito.*;
 
 import com.itesm.domain.repository.ReportRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

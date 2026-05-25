@@ -8,7 +8,6 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.ResourceInfo;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
-
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -16,9 +15,11 @@ import java.util.Arrays;
 @Provider
 @Priority(Priorities.AUTHORIZATION)
 public class RoleAuthorizationFilter implements ContainerRequestFilter {
-    @Inject AuthenticatedUserContext authContext;
+    @Inject
+    AuthenticatedUserContext authContext;
 
-    @Inject ResourceInfo resourceInfo;
+    @Inject
+    ResourceInfo resourceInfo;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -34,7 +35,8 @@ public class RoleAuthorizationFilter implements ContainerRequestFilter {
 
         CurrentUser currentUser = authContext.getCurrentUser();
         if (currentUser == null) {
-            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            requestContext.abortWith(
+                    Response.status(Response.Status.UNAUTHORIZED).build());
             return;
         }
 

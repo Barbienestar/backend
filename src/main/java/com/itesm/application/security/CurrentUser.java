@@ -1,7 +1,6 @@
 package com.itesm.application.security;
 
 import com.itesm.domain.models.User;
-
 import lombok.Data;
 
 /** CurrentUser */

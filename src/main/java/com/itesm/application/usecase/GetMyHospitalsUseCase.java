@@ -1,11 +1,11 @@
 package com.itesm.application.usecase;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import com.itesm.application.dto.HospitalDto;
+import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.domain.models.Hospital;
 import com.itesm.domain.repository.HospitalRepository;
-import com.itesm.application.security.AuthenticatedUserContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped

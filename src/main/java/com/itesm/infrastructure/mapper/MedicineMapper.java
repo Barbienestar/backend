@@ -10,8 +10,7 @@ public class MedicineMapper {
                 entity.getGenericName(),
                 entity.getDosageForm(),
                 entity.getStrength(),
-                entity.getPresentation()
-        );
+                entity.getPresentation());
     }
 
     public static MedicineEntity toEntity(Medicine domain) {

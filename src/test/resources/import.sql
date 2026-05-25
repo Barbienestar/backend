@@ -31,3 +31,15 @@ VALUES (1, 'Hospital name', 'https://maps.test.com', 1, CURRENT_TIMESTAMP, CURRE
 ALTER TABLE Hospitals ALTER COLUMN id RESTART WITH 2;
 
 INSERT INTO Users_Hospitals (id_user, id_hospital) VALUES (2, 1);
+
+INSERT INTO Reports_Snapshot (id, daily_reports, id_hospital, id_medicine, snapshot_date)
+VALUES (1, 10, 1, 1, '2024-01-05'),
+       (2, 7, 1, 1, '2024-01-12'),
+       (3, 15, 1, 1, '2024-01-19');
+ALTER TABLE Reports_Snapshot ALTER COLUMN id RESTART WITH 4;
+
+INSERT INTO Medicines_Hospitals (id, stock, id_medicine, id_hospital, entry_date)
+VALUES (1, 100, 1, 1, '2024-01-05 08:00:00'),
+       (2, 90, 1, 1, '2024-01-12 08:00:00'),
+       (3, 80, 1, 1, '2024-01-19 08:00:00');
+ALTER TABLE Medicines_Hospitals ALTER COLUMN id RESTART WITH 4;

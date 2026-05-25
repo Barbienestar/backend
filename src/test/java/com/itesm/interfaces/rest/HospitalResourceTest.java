@@ -13,18 +13,12 @@ class HospitalResourceTest {
 
     @Test
     void getAll_shouldReturn200WithoutToken() {
-        given()
-                .when()
-                .get("/hospitals")
-                .then()
-                .statusCode(200)
-                .body("$", instanceOf(java.util.List.class));
+        given().when().get("/hospitals").then().statusCode(200).body("$", instanceOf(java.util.List.class));
     }
 
     @Test
     void getAll_shouldReturn200WithCitizenToken() {
-        given()
-                .header("Authorization", "Bearer citizen-token")
+        given().header("Authorization", "Bearer citizen-token")
                 .when()
                 .get("/hospitals")
                 .then()
@@ -34,8 +28,7 @@ class HospitalResourceTest {
 
     @Test
     void getAll_shouldReturn200WithAdminToken() {
-        given()
-                .header("Authorization", "Bearer admin-token")
+        given().header("Authorization", "Bearer admin-token")
                 .when()
                 .get("/hospitals")
                 .then()
@@ -48,8 +41,7 @@ class HospitalResourceTest {
     // Usuario autenticado con hospitales asignados obtiene 200 y lista no vacía
     @Test
     void getMyHospitals_shouldReturn200WithValidToken() {
-        given()
-                .header("Authorization", "Bearer health-token")
+        given().header("Authorization", "Bearer health-token")
                 .when()
                 .get("/hospitals/my-hospitals")
                 .then()
@@ -61,34 +53,55 @@ class HospitalResourceTest {
     // Sin header Authorization el filtro rechaza la petición con 401
     @Test
     void getMyHospitals_shouldReturn401WithNoToken() {
-        given()
-                .when()
-                .get("/hospitals/my-hospitals")
-                .then()
-                .statusCode(401);
+        given().when().get("/hospitals/my-hospitals").then().statusCode(401);
     }
 
     // Token que no corresponde a ningún usuario en BD retorna 401
     @Test
     void getMyHospitals_shouldReturn401WithInvalidToken() {
-        given()
-                .header("Authorization", "Bearer invalid-token-xyz")
+        given().header("Authorization", "Bearer invalid-token-xyz")
                 .when()
                 .get("/hospitals/my-hospitals")
                 .then()
                 .statusCode(401);
     }
 
-    // Usuario válido sin hospitales asignados obtiene 200 con lista vacía
+    // Usuario autenticado sin rol health obtiene 403
     @Test
-    void getMyHospitals_shouldReturnEmptyListWhenUserHasNoHospitals() {
-        given()
-                .header("Authorization", "Bearer citizen-token")
+    void getMyHospitals_shouldReturn403WithCitizenToken() {
+        given().header("Authorization", "Bearer citizen-token")
                 .when()
                 .get("/hospitals/my-hospitals")
                 .then()
+                .statusCode(403);
+    }
+
+    // GET /hospitals/critical-medicines
+
+    // Usuario con rol health obtiene 200 y la lista de hospitales con medicamentos críticos
+    @Test
+    void getCriticalMedicines_shouldReturn200WithHealthToken() {
+        given().header("Authorization", "Bearer health-token")
+                .when()
+                .get("/hospitals/critical-medicines")
+                .then()
                 .statusCode(200)
-                .body("$", instanceOf(java.util.List.class))
-                .body("$.size()", equalTo(0));
+                .body("$", instanceOf(java.util.List.class));
+    }
+
+    // Usuario con rol citizen no tiene permiso para este endpoint y recibe 403
+    @Test
+    void getCriticalMedicines_shouldReturn403WithCitizenToken() {
+        given().header("Authorization", "Bearer citizen-token")
+                .when()
+                .get("/hospitals/critical-medicines")
+                .then()
+                .statusCode(403);
+    }
+
+    // Sin header Authorization el filtro rechaza la petición con 401
+    @Test
+    void getCriticalMedicines_shouldReturn401WithNoToken() {
+        given().when().get("/hospitals/critical-medicines").then().statusCode(401);
     }
 }
