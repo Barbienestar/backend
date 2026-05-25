@@ -54,8 +54,8 @@ public class ImageUploadResource {
                             examples =
                                     @ExampleObject(
                                             name = "success",
-                                            value =
-                                                    "{\"imageUrl\": \"https://storage.example.com/reports/abc123.jpg\"}")))
+                                            value = "{\"imageUrl\":"
+                                                    + " \"https://storage.example.com/reports/abc123.jpg\"}")))
     @APIResponse(responseCode = "400", description = "No file provided in the request")
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the citizen role")
@@ -75,9 +75,7 @@ public class ImageUploadResource {
             return Response.ok(Map.of("imageUrl", url)).build();
 
         } catch (IOException e) {
-            return Response.serverError()
-                    .entity("Failed to read file: " + e.getMessage())
-                    .build();
+            return Response.serverError().entity("Failed to read file").build();
         }
     }
 }
