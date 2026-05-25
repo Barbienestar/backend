@@ -1,8 +1,10 @@
 package com.itesm.interfaces.rest;
 
+import com.itesm.application.dto.HospitalCriticalMedicinesDto;
 import com.itesm.application.dto.HospitalDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
+import com.itesm.application.usecase.GetCriticalMedicinesUseCase;
 import com.itesm.application.usecase.GetHospitalsUseCase;
 import com.itesm.application.usecase.GetMyHospitalsUseCase;
 import jakarta.inject.Inject;
@@ -26,11 +28,16 @@ public class HospitalResource {
 
     private final GetHospitalsUseCase getHospitalsUseCase;
     private final GetMyHospitalsUseCase getMyHospitalsUseCase;
+    private final GetCriticalMedicinesUseCase getCriticalMedicinesUseCase;
 
     @Inject
-    public HospitalResource(GetHospitalsUseCase getHospitalsUseCase, GetMyHospitalsUseCase getMyHospitalsUseCase) {
+    public HospitalResource(
+            GetHospitalsUseCase getHospitalsUseCase,
+            GetMyHospitalsUseCase getMyHospitalsUseCase,
+            GetCriticalMedicinesUseCase getCriticalMedicinesUseCase) {
         this.getHospitalsUseCase = getHospitalsUseCase;
         this.getMyHospitalsUseCase = getMyHospitalsUseCase;
+        this.getCriticalMedicinesUseCase = getCriticalMedicinesUseCase;
     }
 
     @GET
@@ -78,5 +85,33 @@ public class HospitalResource {
     public Response getMyHospitals() {
         List<HospitalDto> hospitals = getMyHospitalsUseCase.execute();
         return Response.ok(hospitals).build();
+    }
+
+    @GET
+    @Path("/critical-medicines")
+    @RequireRoles({"health"})
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(
+            summary = "List hospitals with critical medicine stock",
+            description =
+                    "Returns the hospitals assigned to the authenticated user that have at least one medicine with stock ≤ 100. "
+                            + "Results within each hospital are ordered by stock ASC. Hospitals with no critical medicines are excluded. Requires health role.")
+    @APIResponse(
+            responseCode = "200",
+            description = "List of hospitals with their critical medicines",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = HospitalCriticalMedicinesDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value =
+                                                    "[{\"hospital_id\": 1, \"hospital_name\": \"Hospital General\", \"critical_medicines\": [{\"id\": 1, \"generic_name\": \"Metformina\", \"stock\": 80}]}]")))
+    @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
+    @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
+    public Response getCriticalMedicines() {
+        List<HospitalCriticalMedicinesDto> result = getCriticalMedicinesUseCase.execute();
+        return Response.ok(result).build();
     }
 }

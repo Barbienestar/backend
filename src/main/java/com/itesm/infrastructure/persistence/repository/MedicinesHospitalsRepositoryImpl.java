@@ -83,6 +83,29 @@ public class MedicinesHospitalsRepositoryImpl
     }
 
     @Override
+    public List<MedicinesHospitals> findLatestReportsByHospitalIds(List<Integer> hospitalIds) {
+        if (hospitalIds == null || hospitalIds.isEmpty()) {
+            return List.of();
+        }
+        List<MedicinesHospitalsEntity> entities = em.createQuery(
+                        """
+                                SELECT mh FROM MedicinesHospitalsEntity mh
+                                WHERE mh.hospital.id IN :hospitalIds
+                                AND mh.entryDate = (
+                                    SELECT MAX(mh2.entryDate)
+                                    FROM MedicinesHospitalsEntity mh2
+                                    WHERE mh2.hospital.id = mh.hospital.id
+                                    AND mh2.medicine.id = mh.medicine.id
+                                )
+                                ORDER BY mh.stock ASC
+                                """,
+                        MedicinesHospitalsEntity.class)
+                .setParameter("hospitalIds", hospitalIds)
+                .getResultList();
+
+        return entities.stream().map(MedicinesHospitalsMapper::toDomain).toList();
+    }
+
     public List<Object[]> getPeriodStock(Integer idHospital, LocalDate startDate, LocalDate endDate) {
         return em.createQuery(
                         """

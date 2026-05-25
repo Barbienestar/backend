@@ -19,5 +19,7 @@ public interface MedicinesHospitalsRepository {
 
     Optional<MedicinesHospitalsStockReport> getStockReport(Integer idHospital);
 
+    List<MedicinesHospitals> findLatestReportsByHospitalIds(List<Integer> hospitalIds);
+
     List<Object[]> getPeriodStock(Integer idHospital, LocalDate startDate, LocalDate endDate);
 }
