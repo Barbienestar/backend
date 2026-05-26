@@ -6,10 +6,12 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.itesm.domain.exceptions.EmailAlreadyExistsException;
 import com.itesm.domain.repository.UserTokenService;
+import io.quarkus.arc.profile.UnlessBuildProfile;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.logging.Logger;
 
 @ApplicationScoped
+@UnlessBuildProfile("test")
 public class FirebaseUserAuthService implements UserTokenService {
     @Override
     public String createUser(String email, String password) {
