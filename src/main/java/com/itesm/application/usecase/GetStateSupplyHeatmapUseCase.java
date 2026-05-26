@@ -18,9 +18,7 @@ public class GetStateSupplyHeatmapUseCase {
     }
 
     public List<StateSupplyDto> execute() {
-        return repository.findAvgStockByState().stream()
-                .map(this::toDto)
-                .toList();
+        return repository.findAvgStockByState().stream().map(this::toDto).toList();
     }
 
     private StateSupplyDto toDto(StateSupplyData data) {

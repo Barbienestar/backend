@@ -35,8 +35,7 @@ public class GetStateSupplyHeatmapUseCaseTest {
 
     @Test
     void execute_shouldAssignCA01WhenAvgStockAbove75() {
-        when(repository.findAvgStockByState())
-                .thenReturn(List.of(new StateSupplyData((byte) 1, "Jalisco", 80.0)));
+        when(repository.findAvgStockByState()).thenReturn(List.of(new StateSupplyData((byte) 1, "Jalisco", 80.0)));
 
         StateSupplyDto dto = useCase.execute().get(0);
 
@@ -47,8 +46,7 @@ public class GetStateSupplyHeatmapUseCaseTest {
 
     @Test
     void execute_shouldAssignCA02WhenAvgStockBetween50And74() {
-        when(repository.findAvgStockByState())
-                .thenReturn(List.of(new StateSupplyData((byte) 2, "Oaxaca", 60.0)));
+        when(repository.findAvgStockByState()).thenReturn(List.of(new StateSupplyData((byte) 2, "Oaxaca", 60.0)));
 
         StateSupplyDto dto = useCase.execute().get(0);
 
@@ -57,8 +55,7 @@ public class GetStateSupplyHeatmapUseCaseTest {
 
     @Test
     void execute_shouldAssignCA03WhenAvgStockBetween25And49() {
-        when(repository.findAvgStockByState())
-                .thenReturn(List.of(new StateSupplyData((byte) 3, "Guerrero", 35.0)));
+        when(repository.findAvgStockByState()).thenReturn(List.of(new StateSupplyData((byte) 3, "Guerrero", 35.0)));
 
         StateSupplyDto dto = useCase.execute().get(0);
 
@@ -67,8 +64,7 @@ public class GetStateSupplyHeatmapUseCaseTest {
 
     @Test
     void execute_shouldAssignCA04WhenAvgStockBelow25() {
-        when(repository.findAvgStockByState())
-                .thenReturn(List.of(new StateSupplyData((byte) 4, "Chiapas", 10.0)));
+        when(repository.findAvgStockByState()).thenReturn(List.of(new StateSupplyData((byte) 4, "Chiapas", 10.0)));
 
         StateSupplyDto dto = useCase.execute().get(0);
 
@@ -77,8 +73,7 @@ public class GetStateSupplyHeatmapUseCaseTest {
 
     @Test
     void execute_shouldAssignCA04WhenAvgStockIsNull() {
-        when(repository.findAvgStockByState())
-                .thenReturn(List.of(new StateSupplyData((byte) 5, "Tabasco", null)));
+        when(repository.findAvgStockByState()).thenReturn(List.of(new StateSupplyData((byte) 5, "Tabasco", null)));
 
         StateSupplyDto dto = useCase.execute().get(0);
 
