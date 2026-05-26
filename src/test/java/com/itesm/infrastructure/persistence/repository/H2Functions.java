@@ -8,8 +8,7 @@ import java.sql.SQLException;
 public class H2Functions {
 
     public static int countReportsByStatus(Connection conn, int statusId) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(*) FROM Reports WHERE id_status = ?")) {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM Reports WHERE id_status = ?")) {
             ps.setInt(1, statusId);
             ResultSet rs = ps.executeQuery();
             rs.next();
@@ -18,8 +17,7 @@ public class H2Functions {
     }
 
     public static int countUsersByRole(Connection conn, int roleId) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(*) FROM Users WHERE id_role = ?")) {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM Users WHERE id_role = ?")) {
             ps.setInt(1, roleId);
             ResultSet rs = ps.executeQuery();
             rs.next();
