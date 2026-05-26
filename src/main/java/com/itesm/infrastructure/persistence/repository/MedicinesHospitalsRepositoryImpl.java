@@ -143,9 +143,7 @@ public class MedicinesHospitalsRepositoryImpl
         List<StateSupplyData> out = new ArrayList<>();
         for (Object[] r : rows) {
             out.add(new StateSupplyData(
-                    (Byte) r[0],
-                    (String) r[1],
-                    r[2] != null ? ((Number) r[2]).doubleValue() : 0.0));
+                    (Byte) r[0], (String) r[1], r[2] != null ? ((Number) r[2]).doubleValue() : 0.0));
         }
         return out;
     }

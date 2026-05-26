@@ -32,8 +32,7 @@ public class StateResource {
 
     @Inject
     public StateResource(
-            GetAllStatesUseCase getAllStatesUseCase,
-            GetStateSupplyHeatmapUseCase getStateSupplyHeatmapUseCase) {
+            GetAllStatesUseCase getAllStatesUseCase, GetStateSupplyHeatmapUseCase getStateSupplyHeatmapUseCase) {
         this.getAllStatesUseCase = getAllStatesUseCase;
         this.getStateSupplyHeatmapUseCase = getStateSupplyHeatmapUseCase;
     }
