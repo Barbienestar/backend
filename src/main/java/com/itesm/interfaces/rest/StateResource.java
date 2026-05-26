@@ -1,8 +1,11 @@
 package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.StateDto;
+import com.itesm.application.dto.StateSupplyDto;
 import com.itesm.application.security.PermitPublic;
+import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetAllStatesUseCase;
+import com.itesm.application.usecase.GetStateSupplyHeatmapUseCase;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -25,10 +28,14 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 public class StateResource {
 
     private final GetAllStatesUseCase getAllStatesUseCase;
+    private final GetStateSupplyHeatmapUseCase getStateSupplyHeatmapUseCase;
 
     @Inject
-    public StateResource(GetAllStatesUseCase getAllStatesUseCase) {
+    public StateResource(
+            GetAllStatesUseCase getAllStatesUseCase,
+            GetStateSupplyHeatmapUseCase getStateSupplyHeatmapUseCase) {
         this.getAllStatesUseCase = getAllStatesUseCase;
+        this.getStateSupplyHeatmapUseCase = getStateSupplyHeatmapUseCase;
     }
 
     @GET
@@ -49,5 +56,28 @@ public class StateResource {
     public Response getAll() {
         List<StateDto> states = getAllStatesUseCase.execute();
         return Response.ok(states).build();
+    }
+
+    @GET
+    @Path("/heatmap")
+    @RequireRoles({"health"})
+    @Operation(
+            summary = "State supply heatmap",
+            description = "Returns average stock level per state for choropleth map. Requires health role.")
+    @APIResponse(
+            responseCode = "200",
+            description = "List of states with their supply level",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = StateSupplyDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value =
+                                                    "[{\"stateId\": 1, \"stateName\": \"Jalisco\", \"avgStock\": 82.5, \"level\": \"CA-01\"}]")))
+    public Response getHeatmap() {
+        List<StateSupplyDto> data = getStateSupplyHeatmapUseCase.execute();
+        return Response.ok(data).build();
     }
 }
