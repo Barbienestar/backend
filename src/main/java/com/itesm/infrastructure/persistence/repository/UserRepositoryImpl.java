@@ -82,6 +82,8 @@ public class UserRepositoryImpl implements UserRepository, PanacheRepositoryBase
 
     @Override
     public long countByRoleId(byte roleId) {
-        return count("role.id", roleId);
+        return ((Number) em.createNativeQuery("SELECT count_users_by_role(:roleId)")
+                .setParameter("roleId", roleId)
+                .getSingleResult()).longValue();
     }
 }

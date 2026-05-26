@@ -79,9 +79,9 @@ public class ReportRepositoryImpl implements ReportRepository, PanacheRepository
 
     @Override
     public long countByStatusId(Integer statusId) {
-        return em.createQuery("SELECT COUNT(r) FROM ReportEntity r WHERE r.statusId.id = :statusId", Long.class)
+        return ((Number) em.createNativeQuery("SELECT count_reports_by_status(:statusId)")
                 .setParameter("statusId", statusId)
-                .getSingleResult();
+                .getSingleResult()).longValue();
     }
 
     @Override
