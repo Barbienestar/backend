@@ -19,6 +19,7 @@ VALUES (2, 'Health', 'Health', 'health@test.com', 'health-token', true, 2, 1, CU
 
 INSERT INTO Users (id, name, last_name_1, email, provider_uuid, active, id_role, id_suburb, created_at, updated_at)
 VALUES (3, 'Citizen', 'User', 'citizen@test.com', 'citizen-token', true, 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+ALTER TABLE Users ALTER COLUMN id RESTART WITH 4;
 
 INSERT INTO Streets (id, name, id_suburb) VALUES (1, 'Test Street', 1);
 
