@@ -1,5 +1,6 @@
 package com.itesm.infrastructure.persistence.repository;
 
+import com.itesm.application.dto.MonthlyReportsResponse;
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
@@ -81,6 +82,20 @@ public class MedicinesHospitalsRepositoryImpl
                 : java.util.Collections.emptyList();
 
         return Optional.of(new MedicinesHospitalsStockReport(count, medicinesList));
+    }
+
+    @Override
+    public Optional<MonthlyReportsResponse> getMonthlyReports(Integer idHospital) {
+        Query query =
+                em.createNativeQuery("CALL get_monthly_reports(:idHospital)").setParameter("idHospital", idHospital);
+        Object[] row = (Object[]) query.getSingleResult();
+
+        if (row == null) return Optional.empty();
+
+        Integer count = ((Number) row[0]).intValue();
+        BigDecimal diff = (BigDecimal) row[1];
+
+        return Optional.of(new MonthlyReportsResponse(count, diff));
     }
 
     @Override
