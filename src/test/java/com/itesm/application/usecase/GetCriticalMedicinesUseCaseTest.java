@@ -53,9 +53,9 @@ public class GetCriticalMedicinesUseCaseTest {
         nonCriticalMed.setId(2);
         nonCriticalMed.setGenericName("Ibuprofeno");
 
-        MedicinesHospitals criticalRecord = new MedicinesHospitals(criticalMed, hospital, 50, LocalDateTime.now());
+        MedicinesHospitals criticalRecord = new MedicinesHospitals(criticalMed, hospital, 5, LocalDateTime.now());
         MedicinesHospitals nonCriticalRecord =
-                new MedicinesHospitals(nonCriticalMed, hospital, 200, LocalDateTime.now());
+                new MedicinesHospitals(nonCriticalMed, hospital, 11, LocalDateTime.now());
 
         when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospital));
         when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList()))
@@ -66,7 +66,7 @@ public class GetCriticalMedicinesUseCaseTest {
         assertEquals(1, result.size());
         assertEquals(1, result.get(0).getCriticalMedicines().size());
         assertEquals("Paracetamol", result.get(0).getCriticalMedicines().get(0).getGenericName());
-        assertEquals(50, result.get(0).getCriticalMedicines().get(0).getStock());
+        assertEquals(5, result.get(0).getCriticalMedicines().get(0).getStock());
     }
 
     // El hospital consultado no tiene medicamentos críticos — debe regresar lista vacía
