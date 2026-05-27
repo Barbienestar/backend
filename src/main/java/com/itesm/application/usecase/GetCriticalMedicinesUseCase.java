@@ -30,27 +30,29 @@ public class GetCriticalMedicinesUseCase {
         this.authUserContext = authUserContext;
     }
 
-    public List<HospitalCriticalMedicinesDto> execute() {
+    public List<HospitalCriticalMedicinesDto> execute(Integer idHospital) {
         Long userId = authUserContext.getCurrentUser().getId();
 
-        List<Hospital> myHospitals = hospitalRepository.findHospitalsByUserId(userId);
+        boolean hospitalBelongsToUser = hospitalRepository.findHospitalsByUserId(userId)
+                .stream()
+                .anyMatch(h -> h.getId().equals(idHospital));
 
-        List<Integer> hospitalIds = myHospitals.stream().map(Hospital::getId).toList();
+        if (!hospitalBelongsToUser) {
+            throw new RuntimeException("Hospital no asignado al usuario");
+        }
 
         List<MedicinesHospitals> latestReports =
-                medicinesHospitalsRepository.findLatestReportsByHospitalIds(hospitalIds);
+                medicinesHospitalsRepository.findLatestReportsByHospitalIds(List.of(idHospital));
 
-        return myHospitals.stream()
-                .map(hospital -> {
-                    List<CriticalMedicineDto> criticalMedicines = latestReports.stream()
-                            .filter(r -> r.getHospital().getId().equals(hospital.getId()))
-                            .filter(r -> r.getStock() <= CRITICAL_STOCK_THRESHOLD)
-                            .map(r -> new CriticalMedicineDto(
-                                    r.getMedicine().getId(), r.getMedicine().getGenericName(), r.getStock()))
-                            .toList();
-                    return new HospitalCriticalMedicinesDto(hospital.getId(), hospital.getName(), criticalMedicines);
-                })
-                .filter(h -> !h.getCriticalMedicines().isEmpty())
+        List<CriticalMedicineDto> criticalMedicines = latestReports.stream()
+                .filter(r -> r.getStock() <= CRITICAL_STOCK_THRESHOLD)
+                .map(r -> new CriticalMedicineDto(
+                        r.getMedicine().getId(), r.getMedicine().getGenericName(), r.getStock()))
                 .toList();
+
+        if (criticalMedicines.isEmpty()) return List.of();
+
+        Hospital hospital = latestReports.get(0).getHospital();
+        return List.of(new HospitalCriticalMedicinesDto(hospital.getId(), hospital.getName(), criticalMedicines));
     }
 }
