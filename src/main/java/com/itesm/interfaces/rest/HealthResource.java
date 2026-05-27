@@ -1,5 +1,6 @@
 package com.itesm.interfaces.rest;
 
+import com.itesm.application.security.PermitPublic;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -29,8 +30,9 @@ public class HealthResource {
                             examples =
                                     @ExampleObject(
                                             name = "up",
-                                            value =
-                                                    "{\"status\": \"UP\", \"name\": \"version\", \"timestamp\": \"2024-01-01T00:00:00Z\"}")))
+                                            value = "{\"status\": \"UP\", \"name\": \"version\", \"timestamp\":"
+                                                    + " \"2024-01-01T00:00:00Z\"}")))
+    @PermitPublic
     public Response status() {
         return Response.ok(Map.of(
                         "status",

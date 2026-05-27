@@ -5,6 +5,7 @@ import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
+import com.itesm.domain.models.StateSupplyData;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import com.itesm.infrastructure.mapper.MedicinesHospitalsMapper;
 import com.itesm.infrastructure.persistence.entity.MedicinesHospitalsEntity;
@@ -136,6 +137,30 @@ public class MedicinesHospitalsRepositoryImpl
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();
+    }
+
+    @Override
+    public List<StateSupplyData> findAvgStockByState() {
+        List<Object[]> rows = em.createQuery(
+                        """
+                                SELECT c.idState.id, c.idState.name, AVG(mh.stock)
+                                FROM MedicinesHospitalsEntity mh
+                                JOIN mh.hospital h
+                                JOIN h.street s
+                                JOIN s.idSuburb sub
+                                JOIN sub.idCity c
+                                GROUP BY c.idState.id, c.idState.name
+                                ORDER BY c.idState.name ASC
+                                """,
+                        Object[].class)
+                .getResultList();
+
+        List<StateSupplyData> out = new ArrayList<>();
+        for (Object[] r : rows) {
+            out.add(new StateSupplyData(
+                    (Byte) r[0], (String) r[1], r[2] != null ? ((Number) r[2]).doubleValue() : 0.0));
+        }
+        return out;
     }
 
     @Override

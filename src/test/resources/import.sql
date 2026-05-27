@@ -1,3 +1,6 @@
+CREATE ALIAS IF NOT EXISTS count_reports_by_status FOR "com.itesm.infrastructure.persistence.repository.H2Functions.countReportsByStatus";
+CREATE ALIAS IF NOT EXISTS count_users_by_role FOR "com.itesm.infrastructure.persistence.repository.H2Functions.countUsersByRole";
+
 INSERT INTO States (id, name) VALUES (1, 'Test State');
 
 INSERT INTO Cities (id, name, id_state) VALUES (1, 'Test City', 1);
@@ -16,6 +19,7 @@ VALUES (2, 'Health', 'Health', 'health@test.com', 'health-token', true, 2, 1, CU
 
 INSERT INTO Users (id, name, last_name_1, email, provider_uuid, active, id_role, id_suburb, created_at, updated_at)
 VALUES (3, 'Citizen', 'User', 'citizen@test.com', 'citizen-token', true, 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+ALTER TABLE Users ALTER COLUMN id RESTART WITH 4;
 
 INSERT INTO Streets (id, name, id_suburb) VALUES (1, 'Test Street', 1);
 
