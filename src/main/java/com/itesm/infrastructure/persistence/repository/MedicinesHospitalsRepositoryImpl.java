@@ -86,8 +86,8 @@ public class MedicinesHospitalsRepositoryImpl
 
     @Override
     public Optional<MonthlyReportsResponse> getMonthlyReports(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL get_monthly_reports(:idHospital)")
-                .setParameter("idHospital", idHospital);
+        Query query =
+                em.createNativeQuery("CALL get_monthly_reports(:idHospital)").setParameter("idHospital", idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
         if (row == null) return Optional.empty();

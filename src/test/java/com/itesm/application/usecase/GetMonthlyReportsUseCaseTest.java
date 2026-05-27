@@ -1,18 +1,16 @@
 package com.itesm.application.usecase;
 
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
-
-import java.math.BigDecimal;
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.when;
 
 import com.itesm.application.dto.MonthlyReportsResponse;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
+import java.math.BigDecimal;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GetMonthlyReportsUseCaseTest {
     private MedicinesHospitalsRepository medicinesHospitalsRepository;
@@ -90,5 +88,4 @@ public class GetMonthlyReportsUseCaseTest {
 
         assertTrue(result.isEmpty());
     }
-
 }

@@ -36,4 +36,15 @@ class MedicinesHospitalsResourceTest {
                 .then()
                 .statusCode(200);
     }
+
+    @Test
+    void getMonthlyReports_shouldReturn200WithValidHospitalId() {
+        given()
+            .pathParam("idHospital", 62)
+            .header("Authorization", "Bearer health-token")
+            .when()
+            .get("/medicines-hospitals/monthly-reports/{idHospital}")
+            .then()
+            .statusCode(200);
+    }
 }
