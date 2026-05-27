@@ -14,7 +14,7 @@ import java.util.List;
 @ApplicationScoped
 public class GetCriticalMedicinesUseCase {
 
-    private static final int CRITICAL_STOCK_THRESHOLD = 100;
+    private static final int CRITICAL_STOCK_THRESHOLD = 9;
 
     private final MedicinesHospitalsRepository medicinesHospitalsRepository;
     private final HospitalRepository hospitalRepository;
