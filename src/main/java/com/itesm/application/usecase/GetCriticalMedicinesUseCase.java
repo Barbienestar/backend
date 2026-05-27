@@ -33,8 +33,7 @@ public class GetCriticalMedicinesUseCase {
     public List<HospitalCriticalMedicinesDto> execute(Integer idHospital) {
         Long userId = authUserContext.getCurrentUser().getId();
 
-        boolean hospitalBelongsToUser = hospitalRepository.findHospitalsByUserId(userId)
-                .stream()
+        boolean hospitalBelongsToUser = hospitalRepository.findHospitalsByUserId(userId).stream()
                 .anyMatch(h -> h.getId().equals(idHospital));
 
         if (!hospitalBelongsToUser) {

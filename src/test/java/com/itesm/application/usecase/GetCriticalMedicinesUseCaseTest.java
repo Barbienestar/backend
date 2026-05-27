@@ -54,7 +54,8 @@ public class GetCriticalMedicinesUseCaseTest {
         nonCriticalMed.setGenericName("Ibuprofeno");
 
         MedicinesHospitals criticalRecord = new MedicinesHospitals(criticalMed, hospital, 50, LocalDateTime.now());
-        MedicinesHospitals nonCriticalRecord = new MedicinesHospitals(nonCriticalMed, hospital, 200, LocalDateTime.now());
+        MedicinesHospitals nonCriticalRecord =
+                new MedicinesHospitals(nonCriticalMed, hospital, 200, LocalDateTime.now());
 
         when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospital));
         when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList()))
