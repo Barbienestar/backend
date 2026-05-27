@@ -1,8 +1,10 @@
 package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
+import com.itesm.application.dto.MonthlyReportsResponse;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
+import com.itesm.application.usecase.GetMonthlyReportsUseCase;
 import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
 import com.itesm.application.usecase.GetStockByMedicineUseCase;
 import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
@@ -37,15 +39,18 @@ public class MedicinesHospitalsResource {
     private final GetStockByMedicineUseCase getStockByMedicineUseCase;
     private final GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase;
     private final GetStockReportByHospitalUseCase getStockReportByHospitalUseCase;
+    private final GetMonthlyReportsUseCase getMonthlyReportsUseCase;
 
     @Inject
     public MedicinesHospitalsResource(
             GetStockByMedicineUseCase getStockByMedicineUseCase,
             GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase,
-            GetStockReportByHospitalUseCase getStockReportByHospitalUseCase) {
+            GetStockReportByHospitalUseCase getStockReportByHospitalUseCase,
+            GetMonthlyReportsUseCase getMonthlyReportsUseCase) {
         this.getStockByMedicineUseCase = getStockByMedicineUseCase;
         this.getStockAveragesByHospitalUseCase = getStockAveragesByHospitalUseCase;
         this.getStockReportByHospitalUseCase = getStockReportByHospitalUseCase;
+        this.getMonthlyReportsUseCase = getMonthlyReportsUseCase;
     }
 
     @Path("/stock")
@@ -161,5 +166,19 @@ public class MedicinesHospitalsResource {
 
         Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(idHospital);
         return Response.ok(stockReport).build();
+    }
+
+    @Path("/monthly-reports/{idHospital}")
+    @GET
+    @RequireRoles({"health"})
+    public Response getMonthlyReports(@PathParam("idHospital") Integer idHospital) {
+        if (idHospital == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\": \"idHospital is required\"}")
+                    .build();
+        }
+
+        Optional<MonthlyReportsResponse> monthlyReports = getMonthlyReportsUseCase.execute(idHospital);
+        return Response.ok(monthlyReports).build();
     }
 }

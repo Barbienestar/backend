@@ -1,5 +1,6 @@
 package com.itesm.domain.repository;
 
+import com.itesm.application.dto.MonthlyReportsResponse;
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
 import com.itesm.domain.models.MedicinesHospitalsStockAverages;
@@ -21,6 +22,8 @@ public interface MedicinesHospitalsRepository {
     Optional<MedicinesHospitalsStockAverages> getStockAvg(Integer idHospital);
 
     Optional<MedicinesHospitalsStockReport> getStockReport(Integer idHospital);
+
+    Optional<MonthlyReportsResponse> getMonthlyReports(Integer idHospital);
 
     List<MedicinesHospitals> findLatestReportsByHospitalIds(List<Integer> hospitalIds);
 
