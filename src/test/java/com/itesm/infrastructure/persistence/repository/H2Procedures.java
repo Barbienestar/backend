@@ -8,7 +8,8 @@ import java.sql.SQLException;
 public class H2Procedures {
 
     public static ResultSet getMonthlyReports(Connection conn, int idHospital) throws SQLException {
-        String sql = """
+        String sql =
+                """
                 WITH current_month_reports AS (
                     SELECT COALESCE(SUM(daily_reports), 0) AS total
                     FROM Reports_Snapshot
@@ -37,6 +38,6 @@ public class H2Procedures {
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, idHospital);
         stmt.setInt(2, idHospital);
-        return stmt.executeQuery(); 
+        return stmt.executeQuery();
     }
 }
