@@ -76,14 +76,14 @@ class HospitalResourceTest {
                 .statusCode(403);
     }
 
-    // GET /hospitals/critical-medicines
+    // GET /hospitals/{idHospital}/critical-medicines
 
     // Usuario con rol health obtiene 200 y la lista de hospitales con medicamentos críticos
     @Test
     void getCriticalMedicines_shouldReturn200WithHealthToken() {
         given().header("Authorization", "Bearer health-token")
                 .when()
-                .get("/hospitals/critical-medicines")
+                .get("/hospitals/1/critical-medicines")
                 .then()
                 .statusCode(200)
                 .body("$", instanceOf(java.util.List.class));
@@ -94,7 +94,7 @@ class HospitalResourceTest {
     void getCriticalMedicines_shouldReturn403WithCitizenToken() {
         given().header("Authorization", "Bearer citizen-token")
                 .when()
-                .get("/hospitals/critical-medicines")
+                .get("/hospitals/1/critical-medicines")
                 .then()
                 .statusCode(403);
     }
@@ -102,6 +102,6 @@ class HospitalResourceTest {
     // Sin header Authorization el filtro rechaza la petición con 401
     @Test
     void getCriticalMedicines_shouldReturn401WithNoToken() {
-        given().when().get("/hospitals/critical-medicines").then().statusCode(401);
+        given().when().get("/hospitals/1/critical-medicines").then().statusCode(401);
     }
 }

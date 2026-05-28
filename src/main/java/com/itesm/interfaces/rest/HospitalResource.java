@@ -88,7 +88,7 @@ public class HospitalResource {
     }
 
     @GET
-    @Path("/critical-medicines")
+    @Path("{idHospital}/critical-medicines")
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
@@ -110,8 +110,8 @@ public class HospitalResource {
                                                     "[{\"hospital_id\": 1, \"hospital_name\": \"Hospital General\", \"critical_medicines\": [{\"id\": 1, \"generic_name\": \"Metformina\", \"stock\": 80}]}]")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response getCriticalMedicines() {
-        List<HospitalCriticalMedicinesDto> result = getCriticalMedicinesUseCase.execute();
+    public Response getCriticalMedicines(@PathParam("idHospital") Integer idHospital) {
+        List<HospitalCriticalMedicinesDto> result = getCriticalMedicinesUseCase.execute(idHospital);
         return Response.ok(result).build();
     }
 }

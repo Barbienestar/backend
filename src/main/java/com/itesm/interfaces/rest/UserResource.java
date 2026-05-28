@@ -4,6 +4,7 @@ import com.itesm.application.dto.CreateUserDto;
 import com.itesm.application.dto.UpdateUserDto;
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.PermitPublic;
+import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.CreateUserUseCase;
 import com.itesm.application.usecase.UpdateUserProfileUseCase;
 import jakarta.inject.Inject;
@@ -39,11 +40,9 @@ public class UserResource {
     }
 
     @POST
+    @Path("/citizen")
     @PermitPublic
-    @Operation(
-            summary = "Register a new user",
-            description = "Creates a new user account. No authentication required. "
-                    + "Provide hospital_ids when registering a user with the health role.")
+    @Operation(summary = "Register a new user", description = "Creates a new user account. No authentication required.")
     @RequestBody(
             description = "User registration data",
             required = true,
@@ -54,12 +53,12 @@ public class UserResource {
                             examples =
                                     @ExampleObject(
                                             name = "citizen",
-                                            value =
-                                                    "{\"name\": \"Ana\", \"last_name_1\": \"García\", \"last_name_2\": \"López\", "
-                                                            + "\"age\": 30, \"email\": \"ana@example.com\", \"password\": \"secret123\", "
-                                                            + "\"role_id\": 1, \"suburb_id\": 100, \"hospital_ids\": []}")))
+                                            value = "{\"name\": \"Ana\", \"last_name_1\": \"García\", \"last_name_2\":"
+                                                    + " \"López\", \"age\": 30, \"email\": \"ana@example.com\","
+                                                    + " \"password\": \"secret123\", \"role_id\": 1,"
+                                                    + " \"suburb_id\": 100, \"hospital_ids\": []}")))
     @APIResponse(
-            responseCode = "200",
+            responseCode = "201",
             description = "User created successfully — returns the new user profile",
             content =
                     @Content(
@@ -68,14 +67,74 @@ public class UserResource {
                             examples =
                                     @ExampleObject(
                                             name = "created",
-                                            value =
-                                                    "{\"id\": 5, \"name\": \"Ana\", \"last_name_1\": \"García\", \"role\": \"citizen\", \"email\": \"ana@example.com\"}")))
-    public Response createUser(@Valid CreateUserDto createUserDto) {
+                                            value = "{\"id\": 5, \"name\": \"Ana\", \"last_name_1\": \"García\","
+                                                    + " \"role\": \"citizen\", \"email\": \"ana@example.com\"}")))
+    public Response createCitizenUser(@Valid CreateUserDto createUserDto) {
         UserProfileDto user = createUserUseCase.execute(createUserDto);
-        return Response.ok(user).build();
+        return Response.status(Response.Status.CREATED).entity(user).build();
+    }
+
+    @POST
+    @Path("/privileged")
+    @RequireRoles({"admin"})
+    @Operation(
+            summary = "Register a new privileged user",
+            description = "Creates a new privileged User account. Admin role required. "
+                    + "Provide hospital_ids when registering a user with the health role.")
+    @RequestBody(
+            description = "User registration data",
+            required = true,
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = CreateUserDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "admin",
+                                            value = "{\"name\": \"Ana\", \"last_name_1\": \"García\", \"last_name_2\":"
+                                                    + " \"López\", \"email\": \"ana@example.com\","
+                                                    + " \"password\": \"secret123\", \"role_id\": 1,")))
+    @APIResponse(
+            responseCode = "201",
+            description = "User created successfully — returns the new user profile",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = UserProfileDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "created",
+                                            value = "{\"id\": 5, \"name\": \"Ana\", \"last_name_1\": \"García\","
+                                                    + " \"role\": \"admin\", \"email\": \"ana@example.com\"}")))
+    public Response createPrivilegedUser(@Valid CreateUserDto createUserDto) {
+        UserProfileDto user = createUserUseCase.execute(createUserDto);
+        return Response.status(Response.Status.CREATED).entity(user).build();
     }
 
     @PATCH
+    @Operation(
+            summary = "Update own profile",
+            description = "Updates the authenticated user's profile fields. Only the provided fields are updated.")
+    @RequestBody(
+            description = "Profile fields to update (partial update — all fields optional)",
+            required = true,
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = UpdateUserDto.class),
+                            examples =
+                                    @ExampleObject(
+                                            name = "update",
+                                            value = "{\"name\": \"Ana\", \"last_name_1\": \"Martínez\", \"age\": 31,"
+                                                    + " \"suburb_id\": 200}")))
+    @APIResponse(
+            responseCode = "200",
+            description = "Profile updated successfully",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = UserProfileDto.class)))
+    @APIResponse(responseCode = "404", description = "User not found")
     public Response updateUser(UpdateUserDto updateUserDto) {
         UserProfileDto user = updateUserProfileUseCase.execute(updateUserDto);
         if (user == null) {

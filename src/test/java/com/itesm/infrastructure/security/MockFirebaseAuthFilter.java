@@ -38,11 +38,11 @@ public class MockFirebaseAuthFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         Method method = resourceInfo.getResourceMethod();
         Class<?> resourceClass = resourceInfo.getResourceClass();
-        boolean isPublic = method != null && method.isAnnotationPresent(PermitPublic.class)
-                || (resourceClass != null && resourceClass.isAnnotationPresent(PermitPublic.class));
+        if (method == null || resourceClass == null) {
+            return;
+        }
 
-        if (isPublic) {
-            tryOptionalAuth(requestContext);
+        if (method.isAnnotationPresent(PermitPublic.class) || resourceClass.isAnnotationPresent(PermitPublic.class)) {
             return;
         }
 
@@ -68,20 +68,5 @@ public class MockFirebaseAuthFilter implements ContainerRequestFilter {
         User user = userOptional.get();
         CurrentUser currentUser = new CurrentUser(user);
         authUserContext.setCurrentUser(currentUser);
-    }
-
-    private void tryOptionalAuth(ContainerRequestContext requestContext) {
-        String authHeader = requestContext.getHeaders().getFirst("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
-        }
-
-        String idToken = authHeader.replace("Bearer ", "");
-        Optional<User> userOptional = userRepository.findByProviderUuid(idToken);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            CurrentUser currentUser = new CurrentUser(user);
-            authUserContext.setCurrentUser(currentUser);
-        }
     }
 }

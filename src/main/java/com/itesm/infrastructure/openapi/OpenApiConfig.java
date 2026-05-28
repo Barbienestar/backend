@@ -1,4 +1,4 @@
-package com.itesm.interfaces.rest;
+package com.itesm.infrastructure.openapi;
 
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
