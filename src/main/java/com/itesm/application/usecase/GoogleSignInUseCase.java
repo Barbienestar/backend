@@ -14,6 +14,7 @@ import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import com.itesm.application.dto.SuburbDto;
 import java.util.Map;
 import java.util.Optional;
 
@@ -88,13 +89,18 @@ public class GoogleSignInUseCase {
     }
 
     private UserProfileDto toProfileDto(User user) {
+        SuburbDto suburb = null;
+        if (user.getAddress() != null && user.getAddress().getSuburbId() != null) {
+            suburb = new SuburbDto(
+                    user.getAddress().getSuburbId(), user.getAddress().getAddress(), null);
+        }
         return new UserProfileDto(
                 user.getId(),
                 user.getName(),
                 user.getLastName1(),
                 user.getLastName2(),
                 user.getAge(),
-                null,
+                suburb,
                 user.getRole().getName(),
                 user.getEmail());
     }
