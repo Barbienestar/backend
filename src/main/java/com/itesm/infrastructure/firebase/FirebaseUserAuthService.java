@@ -29,6 +29,11 @@ public class FirebaseUserAuthService implements UserTokenService {
     }
 
     @Override
+    public TokenVerification verifyIdToken(String idToken) {
+        return null;
+    }
+
+    @Override
     public void deleteUser(String providerUuid) {
         try {
             FirebaseAuth.getInstance().deleteUser(providerUuid);
