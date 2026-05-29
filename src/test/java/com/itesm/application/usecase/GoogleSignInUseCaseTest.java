@@ -15,6 +15,7 @@ import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class GoogleSignInUseCaseTest {
 
@@ -39,7 +40,6 @@ class GoogleSignInUseCaseTest {
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User user = invocation.getArgument(0);
             user.setId(10L);
-            user.setRole(new Role((byte) 3, "citizen"));
             return user;
         });
 
@@ -54,6 +54,11 @@ class GoogleSignInUseCaseTest {
         assertNull(result.getAge());
 
         verify(authUserContext).setCurrentUser(any());
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        User savedUser = captor.getValue();
+        assertEquals("citizen", savedUser.getRole().getName());
     }
 
     @Test

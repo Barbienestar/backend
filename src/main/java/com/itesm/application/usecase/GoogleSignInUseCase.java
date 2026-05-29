@@ -65,7 +65,7 @@ public class GoogleSignInUseCase {
             user.setEmail(verification.email());
             user.setProviderUuid(verification.uid());
             user.setActive(true);
-            user.setRole(new Role((byte) 3));
+            user.setRole(new Role((byte) 3, "citizen"));
 
             user = userRepository.save(user);
         }
