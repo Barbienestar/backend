@@ -2,13 +2,13 @@ package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
 import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesResponse;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetMonthlyReportsUseCase;
 import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
 import com.itesm.application.usecase.GetStockByMedicineUseCase;
 import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
-import com.itesm.domain.models.MedicinesHospitalsStockAverages;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -124,7 +124,7 @@ public class MedicinesHospitalsResource {
                     .build();
         }
 
-        Optional<MedicinesHospitalsStockAverages> averages = getStockAveragesByHospitalUseCase.execute(idHospital);
+        Optional<StockAveragesResponse> averages = getStockAveragesByHospitalUseCase.execute(idHospital);
         return Response.ok(averages).build();
     }
 

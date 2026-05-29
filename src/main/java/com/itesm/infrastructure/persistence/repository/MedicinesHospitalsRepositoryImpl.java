@@ -1,9 +1,9 @@
 package com.itesm.infrastructure.persistence.repository;
 
 import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesResponse;
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
-import com.itesm.domain.models.MedicinesHospitalsStockAverages;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
 import com.itesm.domain.models.StateSupplyData;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
@@ -58,12 +58,12 @@ public class MedicinesHospitalsRepositoryImpl
     }
 
     @Override
-    public Optional<MedicinesHospitalsStockAverages> getStockAvg(Integer idHospital) {
+    public Optional<StockAveragesResponse> getStockAvg(Integer idHospital) {
         Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:idHospital)")
                 .setParameter("idHospital", idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
-        return Optional.of(new MedicinesHospitalsStockAverages((BigDecimal) row[0], (BigDecimal) row[1]));
+        return Optional.of(new StockAveragesResponse((BigDecimal) row[0], (BigDecimal) row[1]));
     }
 
     @Override

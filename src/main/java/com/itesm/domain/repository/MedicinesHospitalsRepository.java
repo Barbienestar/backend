@@ -1,9 +1,9 @@
 package com.itesm.domain.repository;
 
 import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesResponse;
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
-import com.itesm.domain.models.MedicinesHospitalsStockAverages;
 import com.itesm.domain.models.MedicinesHospitalsStockReport;
 import com.itesm.domain.models.StateSupplyData;
 import java.time.LocalDate;
@@ -19,7 +19,7 @@ public interface MedicinesHospitalsRepository {
 
     void saveAll(List<MedicinesHospitals> records);
 
-    Optional<MedicinesHospitalsStockAverages> getStockAvg(Integer idHospital);
+    Optional<StockAveragesResponse> getStockAvg(Integer idHospital);
 
     Optional<MedicinesHospitalsStockReport> getStockReport(Integer idHospital);
 

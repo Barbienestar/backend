@@ -1,4 +1,4 @@
-package com.itesm.domain.models;
+package com.itesm.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicinesHospitalsStockAverages {
+public class StockAveragesResponse {
     @JsonProperty("last_month_avg")
     private BigDecimal lastMonthAvg;
 
