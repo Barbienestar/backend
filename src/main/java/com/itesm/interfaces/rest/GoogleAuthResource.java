@@ -48,9 +48,8 @@ public class GoogleAuthResource {
                             examples =
                                     @ExampleObject(
                                             name = "citizen",
-                                            value =
-                                                    "{\"id\": 10, \"name\": \"Ana\", \"last_name_1\": \"García\","
-                                                            + " \"role\": \"citizen\", \"email\": \"ana@gmail.com\"}")))
+                                            value = "{\"id\": 10, \"name\": \"Ana\", \"last_name_1\": \"García\","
+                                                    + " \"role\": \"citizen\", \"email\": \"ana@gmail.com\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Google token")
     @APIResponse(responseCode = "403", description = "Account is not a citizen")
     public Response googleSignIn(@jakarta.ws.rs.HeaderParam("Authorization") String authHeader) {

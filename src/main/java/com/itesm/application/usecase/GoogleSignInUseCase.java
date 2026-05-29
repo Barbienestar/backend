@@ -1,5 +1,6 @@
 package com.itesm.application.usecase;
 
+import com.itesm.application.dto.SuburbDto;
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.application.security.CurrentUser;
@@ -14,7 +15,6 @@ import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import com.itesm.application.dto.SuburbDto;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,11 +40,10 @@ public class GoogleSignInUseCase {
         try {
             verification = userTokenService.verifyIdToken(idToken);
         } catch (RuntimeException e) {
-            throw new NotAuthorizedException(
-                    Response.status(Response.Status.UNAUTHORIZED)
-                            .entity(Map.of("message", "Invalid Google token"))
-                            .type(MediaType.APPLICATION_JSON)
-                            .build());
+            throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Map.of("message", "Invalid Google token"))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build());
         }
 
         Optional<User> existing = userRepository.findByProviderUuid(verification.uid());
@@ -53,11 +52,10 @@ public class GoogleSignInUseCase {
         if (existing.isPresent()) {
             user = existing.get();
             if (!"citizen".equals(user.getRole().getName())) {
-                throw new ForbiddenException(
-                        Response.status(Response.Status.FORBIDDEN)
-                                .entity(Map.of("message", "Google sign-in is only available for citizen accounts"))
-                                .type(MediaType.APPLICATION_JSON)
-                                .build());
+                throw new ForbiddenException(Response.status(Response.Status.FORBIDDEN)
+                        .entity(Map.of("message", "Google sign-in is only available for citizen accounts"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build());
             }
         } else {
             user = new User();

@@ -43,10 +43,7 @@ class GoogleAuthResourceTest {
 
     @Test
     void googleSignIn_shouldReturn401_withoutToken() {
-        given().when()
-                .get("/auth/google")
-                .then()
-                .statusCode(401);
+        given().when().get("/auth/google").then().statusCode(401);
     }
 
     @Test
