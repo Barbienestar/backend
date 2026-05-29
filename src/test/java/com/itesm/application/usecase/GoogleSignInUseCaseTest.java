@@ -43,7 +43,7 @@ class GoogleSignInUseCaseTest {
             return user;
         });
 
-        UserProfileDto result = useCase.execute("google-token-123");
+        UserProfileDto result = useCase.execute("Bearer google-token-123");
 
         assertNotNull(result);
         assertEquals(10L, result.getId());
@@ -76,7 +76,7 @@ class GoogleSignInUseCaseTest {
                 .thenReturn(new TokenVerification("citizen-token", "citizen@test.com", "Citizen User"));
         when(userRepository.findByProviderUuid("citizen-token")).thenReturn(Optional.of(existing));
 
-        UserProfileDto result = useCase.execute("citizen-token");
+        UserProfileDto result = useCase.execute("Bearer citizen-token");
 
         assertNotNull(result);
         assertEquals(3L, result.getId());
@@ -101,7 +101,7 @@ class GoogleSignInUseCaseTest {
                 .thenReturn(new TokenVerification("admin-token", "admin@test.com", "Admin User"));
         when(userRepository.findByProviderUuid("admin-token")).thenReturn(Optional.of(admin));
 
-        assertThrows(ForbiddenException.class, () -> useCase.execute("admin-token"));
+        assertThrows(ForbiddenException.class, () -> useCase.execute("Bearer admin-token"));
 
         verify(authUserContext, never()).setCurrentUser(any());
     }
@@ -110,8 +110,26 @@ class GoogleSignInUseCaseTest {
     void execute_shouldThrow401_whenTokenInvalid() {
         when(userTokenService.verifyIdToken("bad-token")).thenThrow(new RuntimeException("Invalid token"));
 
-        assertThrows(NotAuthorizedException.class, () -> useCase.execute("bad-token"));
+        assertThrows(NotAuthorizedException.class, () -> useCase.execute("Bearer bad-token"));
 
+        verifyNoInteractions(userRepository);
+        verifyNoInteractions(authUserContext);
+    }
+
+    @Test
+    void execute_shouldThrow401_whenAuthHeaderMissing() {
+        assertThrows(NotAuthorizedException.class, () -> useCase.execute(null));
+
+        verifyNoInteractions(userTokenService);
+        verifyNoInteractions(userRepository);
+        verifyNoInteractions(authUserContext);
+    }
+
+    @Test
+    void execute_shouldThrow401_whenAuthHeaderNotBearer() {
+        assertThrows(NotAuthorizedException.class, () -> useCase.execute("Basic some-token"));
+
+        verifyNoInteractions(userTokenService);
         verifyNoInteractions(userRepository);
         verifyNoInteractions(authUserContext);
     }
@@ -128,7 +146,7 @@ class GoogleSignInUseCaseTest {
             return user;
         });
 
-        UserProfileDto result = useCase.execute("single-token");
+        UserProfileDto result = useCase.execute("Bearer single-token");
 
         assertEquals("Mono", result.getName());
         assertEquals("Mono", result.getLastName1());

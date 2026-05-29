@@ -6,11 +6,11 @@ import com.itesm.application.usecase.GoogleSignInUseCase;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.util.Map;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
@@ -52,16 +52,8 @@ public class GoogleAuthResource {
                                                     + " \"role\": \"citizen\", \"email\": \"ana@gmail.com\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Google token")
     @APIResponse(responseCode = "403", description = "Account is not a citizen")
-    public Response googleSignIn(@jakarta.ws.rs.HeaderParam("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(Map.of("message", "Token not found"))
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
-        }
-
-        String idToken = authHeader.replace("Bearer ", "");
-        UserProfileDto userProfile = googleSignInUseCase.execute(idToken);
+    public Response googleSignIn(@HeaderParam("Authorization") String authHeader) {
+        UserProfileDto userProfile = googleSignInUseCase.execute(authHeader);
         return Response.ok(userProfile).build();
     }
 }

@@ -35,7 +35,15 @@ public class GoogleSignInUseCase {
         this.authUserContext = authUserContext;
     }
 
-    public UserProfileDto execute(String idToken) {
+    public UserProfileDto execute(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Map.of("message", "Token not found"))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build());
+        }
+
+        String idToken = authHeader.replace("Bearer ", "");
         TokenVerification verification;
         try {
             verification = userTokenService.verifyIdToken(idToken);
