@@ -1,5 +1,5 @@
 package com.itesm.application.usecase;
-
+// Emi Estuvo Aqui programo y se fue
 import com.itesm.application.dto.StockReportResponse;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import jakarta.enterprise.context.ApplicationScoped;
