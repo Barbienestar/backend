@@ -1,10 +1,10 @@
 package com.itesm.infrastructure.persistence.repository;
 
 import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesResponse;
+import com.itesm.application.dto.StockReportResponse;
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
-import com.itesm.domain.models.MedicinesHospitalsStockAverages;
-import com.itesm.domain.models.MedicinesHospitalsStockReport;
 import com.itesm.domain.models.StateSupplyData;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import com.itesm.infrastructure.mapper.MedicinesHospitalsMapper;
@@ -58,16 +58,16 @@ public class MedicinesHospitalsRepositoryImpl
     }
 
     @Override
-    public Optional<MedicinesHospitalsStockAverages> getStockAvg(Integer idHospital) {
+    public Optional<StockAveragesResponse> getStockAvg(Integer idHospital) {
         Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:idHospital)")
                 .setParameter("idHospital", idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
-        return Optional.of(new MedicinesHospitalsStockAverages((BigDecimal) row[0], (BigDecimal) row[1]));
+        return Optional.of(new StockAveragesResponse((BigDecimal) row[0], (BigDecimal) row[1]));
     }
 
     @Override
-    public Optional<MedicinesHospitalsStockReport> getStockReport(Integer idHospital) {
+    public Optional<StockReportResponse> getStockReport(Integer idHospital) {
         Query query = em.createNativeQuery("CALL get_hospital_stock_report(:idHospital)")
                 .setParameter("idHospital", idHospital);
         Object[] row = (Object[]) query.getSingleResult();
@@ -81,7 +81,7 @@ public class MedicinesHospitalsRepositoryImpl
                 ? java.util.Arrays.asList(medicinesString.split(", "))
                 : java.util.Collections.emptyList();
 
-        return Optional.of(new MedicinesHospitalsStockReport(count, medicinesList));
+        return Optional.of(new StockReportResponse(count, medicinesList));
     }
 
     @Override
