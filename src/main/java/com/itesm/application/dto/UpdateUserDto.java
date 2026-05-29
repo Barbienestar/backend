@@ -7,10 +7,10 @@ import lombok.Data;
 public class UpdateUserDto {
     private String name;
 
-    @JsonProperty("last_name_1")
+    @JsonProperty("last_name1")
     private String lastName1;
 
-    @JsonProperty("last_name_2")
+    @JsonProperty("last_name2")
     private String lastName2;
 
     private Byte age;
