@@ -1,4 +1,4 @@
-package com.itesm.domain.models;
+package com.itesm.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicinesHospitalsStockReport {
+public class StockReportResponse {
     @JsonProperty("low_stock_count")
     private Integer lowStockCount;
 

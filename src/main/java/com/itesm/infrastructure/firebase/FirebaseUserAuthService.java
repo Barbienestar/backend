@@ -3,6 +3,7 @@ package com.itesm.infrastructure.firebase;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import com.itesm.domain.exceptions.EmailAlreadyExistsException;
 import com.itesm.domain.repository.UserTokenService;
@@ -25,6 +26,16 @@ public class FirebaseUserAuthService implements UserTokenService {
                 throw new EmailAlreadyExistsException(email);
             }
             throw new RuntimeException("Failed to create Firebase user: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public TokenVerification verifyIdToken(String idToken) {
+        try {
+            FirebaseToken token = FirebaseAuth.getInstance().verifyIdToken(idToken, true);
+            return new TokenVerification(token.getUid(), token.getEmail(), token.getName());
+        } catch (FirebaseAuthException e) {
+            throw new RuntimeException("Invalid Google token", e);
         }
     }
 

@@ -13,6 +13,16 @@ public class MockUserTokenService implements UserTokenService {
     }
 
     @Override
+    public TokenVerification verifyIdToken(String idToken) {
+        return switch (idToken) {
+            case "admin-token" -> new TokenVerification("admin-token", "admin@test.com", "Admin");
+            case "health-token" -> new TokenVerification("health-token", "health@test.com", "Health");
+            case "citizen-token" -> new TokenVerification("citizen-token", "citizen@test.com", "Citizen");
+            default -> throw new RuntimeException("Invalid token");
+        };
+    }
+
+    @Override
     public void deleteUser(String providerUuid) {
         return;
     }

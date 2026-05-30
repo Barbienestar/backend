@@ -96,7 +96,7 @@ class UserResourceTest {
     void updateUser_shouldReturn200WithAllFields() {
         given().contentType("application/json")
                 .header("Authorization", "Bearer citizen-token")
-                .body("{\"name\":\"NewName\",\"last_name_1\":\"NewLast1\",\"last_name_2\":\"NewLast2\",\"age\":35}")
+                .body("{\"name\":\"NewName\",\"last_name1\":\"NewLast1\",\"last_name2\":\"NewLast2\",\"age\":35}")
                 .when()
                 .patch("/user")
                 .then()
