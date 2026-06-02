@@ -38,7 +38,8 @@ public class CreateUserUseCaseTest {
         validationStrategy = mock(CreationValidationStrategy.class);
         encryptorConverter = mock(EncryptorConverter.class);
 
-        useCase = new CreateUserUseCase(userRepository, userTokenService, authUserContext, validationStrategy, encryptorConverter);
+        useCase = new CreateUserUseCase(
+                userRepository, userTokenService, authUserContext, validationStrategy, encryptorConverter);
     }
 
     @Test

@@ -3,11 +3,11 @@ package com.itesm.infrastructure.security;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.eclipse.microprofile.config.ConfigProvider; // CAMBIO AQUÍ
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
+import org.eclipse.microprofile.config.ConfigProvider; // CAMBIO AQUÍ
 
 @Converter
 @ApplicationScoped
@@ -17,8 +17,7 @@ public class EncryptorConverter implements AttributeConverter<String, String> {
     private static final String ENCRYPTED_PREFIX = "ENC:";
 
     private String getEncryptionKey() {
-        String key = ConfigProvider.getConfig()
-                .getValue("decision360.db.encryption-key", String.class);
+        String key = ConfigProvider.getConfig().getValue("decision360.db.encryption-key", String.class);
         return key != null ? key.trim() : null;
     }
 

@@ -91,10 +91,18 @@ public class CreateUserUseCase {
                         savedUser.getAddress().getAddress(),
                         null);
             }
-            String responseName = (dto.getRoleId() == 3) ? encryptorConverter.convertToEntityAttribute(savedUser.getName()) : savedUser.getName();
-            String responseLastName1 = (dto.getRoleId() == 3) ? encryptorConverter.convertToEntityAttribute(savedUser.getLastName1()) : savedUser.getLastName1();
-            String responseLastName2 = (dto.getRoleId() == 3) ? encryptorConverter.convertToEntityAttribute(savedUser.getLastName2()) : savedUser.getLastName2();
-            String responseEmail = (dto.getRoleId() == 3) ? encryptorConverter.convertToEntityAttribute(savedUser.getEmail()) : savedUser.getEmail();
+            String responseName = (dto.getRoleId() == 3)
+                    ? encryptorConverter.convertToEntityAttribute(savedUser.getName())
+                    : savedUser.getName();
+            String responseLastName1 = (dto.getRoleId() == 3)
+                    ? encryptorConverter.convertToEntityAttribute(savedUser.getLastName1())
+                    : savedUser.getLastName1();
+            String responseLastName2 = (dto.getRoleId() == 3)
+                    ? encryptorConverter.convertToEntityAttribute(savedUser.getLastName2())
+                    : savedUser.getLastName2();
+            String responseEmail = (dto.getRoleId() == 3)
+                    ? encryptorConverter.convertToEntityAttribute(savedUser.getEmail())
+                    : savedUser.getEmail();
 
             UserProfileDto userProfile = new UserProfileDto(
                     savedUser.getId(),
