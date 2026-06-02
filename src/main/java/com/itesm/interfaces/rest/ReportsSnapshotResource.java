@@ -68,7 +68,10 @@ public class ReportsSnapshotResource {
             content =
                     @Content(
                             mediaType = MediaType.APPLICATION_JSON,
-                            examples = @ExampleObject(value = "{\"error\": \"hospital-id, start_date, and end_date are required\"}")))
+                            examples =
+                                    @ExampleObject(
+                                            value =
+                                                    "{\"error\": \"hospital-id, start_date, and end_date are required\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
     public Response getPeriodReports(
@@ -113,7 +116,10 @@ public class ReportsSnapshotResource {
             content =
                     @Content(
                             mediaType = MediaType.APPLICATION_JSON,
-                            examples = @ExampleObject(value = "{\"error\": \"hospital-id, start-date, and end-date are required\"}")))
+                            examples =
+                                    @ExampleObject(
+                                            value =
+                                                    "{\"error\": \"hospital-id, start-date, and end-date are required\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
     public Response getPeriodReportsWithStock(
