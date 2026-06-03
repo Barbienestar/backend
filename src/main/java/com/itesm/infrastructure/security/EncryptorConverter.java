@@ -1,5 +1,6 @@
 package com.itesm.infrastructure.security;
 
+import com.itesm.domain.exceptions.EncryptionException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -8,7 +9,6 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
-import com.itesm.domain.exceptions.EncryptionException;
 import javax.crypto.spec.SecretKeySpec;
 import org.eclipse.microprofile.config.ConfigProvider;
 

@@ -50,7 +50,8 @@ public class FirebaseUserAuthService implements UserTokenService {
             // Log this so the orphaned Firebase user can be cleaned up manually
             Logger.getLogger(FirebaseUserAuthService.class.getName())
                     .severe("Rollback failed — orphaned Firebase user: " + providerUuid + " | " + e.getMessage());
-            throw new FirebaseUserDeletionException("Failed to delete Firebase user during rollback: " + e.getMessage(), e);
+            throw new FirebaseUserDeletionException(
+                    "Failed to delete Firebase user during rollback: " + e.getMessage(), e);
         }
     }
 }

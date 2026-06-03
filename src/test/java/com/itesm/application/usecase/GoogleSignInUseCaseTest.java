@@ -5,10 +5,10 @@ import static org.mockito.Mockito.*;
 
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.AuthenticatedUserContext;
+import com.itesm.domain.exceptions.InvalidTokenException;
 import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
-import com.itesm.domain.exceptions.InvalidTokenException;
 import com.itesm.domain.repository.UserTokenService;
 import com.itesm.domain.repository.UserTokenService.TokenVerification;
 import jakarta.ws.rs.ForbiddenException;
