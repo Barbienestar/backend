@@ -110,7 +110,9 @@ public class UserResource {
     }
 
     private Response createdUserResponse(CreateUserDto dto) {
-        return Response.status(Response.Status.CREATED).entity(createUserUseCase.execute(dto)).build();
+        return Response.status(Response.Status.CREATED)
+                .entity(createUserUseCase.execute(dto))
+                .build();
     }
 
     @PATCH
