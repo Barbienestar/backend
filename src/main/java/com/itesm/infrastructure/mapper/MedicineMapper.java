@@ -2,7 +2,9 @@ package com.itesm.infrastructure.mapper;
 
 import com.itesm.domain.models.Medicine;
 import com.itesm.infrastructure.persistence.entity.MedicineEntity;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class MedicineMapper {
     public static Medicine toDomain(MedicineEntity entity) {
         return new Medicine(

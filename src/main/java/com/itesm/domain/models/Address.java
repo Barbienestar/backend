@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
-    private String address;
+    private String addressName;
     private Integer suburbId;
 
     public Address(Integer suburbId) {

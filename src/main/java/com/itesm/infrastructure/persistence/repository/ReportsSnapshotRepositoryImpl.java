@@ -9,7 +9,6 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ReportsSnapshotRepositoryImpl
@@ -22,13 +21,13 @@ public class ReportsSnapshotRepositoryImpl
             Integer idHospital, LocalDate startDate, LocalDate endDate) {
         List<Object[]> rows = em.createQuery(
                         """
-                                SELECT rs.snapshotDate, SUM(rs.dailyReports)
-                                FROM ReportsSnapshotEntity rs
-                                WHERE rs.hospital.id = :idHospital
-                                  AND rs.snapshotDate BETWEEN :startDate AND :endDate
-                                GROUP BY rs.snapshotDate
-                                ORDER BY rs.snapshotDate ASC
-                                """,
+            SELECT rs.snapshotDate, SUM(rs.dailyReports)
+            FROM ReportsSnapshotEntity rs
+            WHERE rs.hospital.id = :idHospital
+              AND rs.snapshotDate BETWEEN :startDate AND :endDate
+            GROUP BY rs.snapshotDate
+            ORDER BY rs.snapshotDate ASC
+            """,
                         Object[].class)
                 .setParameter("idHospital", idHospital)
                 .setParameter("startDate", startDate)
@@ -37,6 +36,6 @@ public class ReportsSnapshotRepositoryImpl
 
         return rows.stream()
                 .map(r -> new PeriodReportsByHospitalResponse((LocalDate) r[0], ((Number) r[1]).intValue()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

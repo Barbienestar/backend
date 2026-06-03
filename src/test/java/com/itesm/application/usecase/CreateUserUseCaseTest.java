@@ -95,7 +95,7 @@ public class CreateUserUseCaseTest {
         assertTrue(savedUser.isActive());
         assertEquals(Byte.valueOf((byte) 3), savedUser.getRole().getId());
         assertNotNull(savedUser.getAddress());
-        assertNull(savedUser.getAddress().getAddress());
+        assertNull(savedUser.getAddress().getAddressName());
         assertNull(savedUser.getAddress().getSuburbId());
         assertNull(savedUser.getHospitals());
     }

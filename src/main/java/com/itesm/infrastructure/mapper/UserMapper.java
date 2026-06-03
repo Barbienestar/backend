@@ -6,7 +6,9 @@ import com.itesm.domain.models.User;
 import com.itesm.infrastructure.persistence.entity.RoleEntity;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
 import com.itesm.infrastructure.persistence.entity.UserEntity;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class UserMapper {
 
     public static UserEntity toEntity(User user) {
@@ -34,7 +36,6 @@ public class UserMapper {
         RoleEntity roleEntity = entity.getRole();
         user.setRole(roleEntity != null ? new Role(roleEntity.getId(), roleEntity.getName()) : null);
         SuburbEntity suburbEntity = entity.getSuburb();
-        // TODO: Join all address fields to create a complete address string
         user.setAddress(suburbEntity != null ? new Address(suburbEntity.getName(), suburbEntity.getId()) : null);
         return user;
     }

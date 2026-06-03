@@ -33,7 +33,7 @@ public class UpdateUserProfileUseCase {
         SuburbDto suburb = null;
         if (savedUser.getAddress() != null && savedUser.getAddress().getSuburbId() != null) {
             suburb = new SuburbDto(
-                    savedUser.getAddress().getSuburbId(), savedUser.getAddress().getAddress(), null);
+                    savedUser.getAddress().getSuburbId(), savedUser.getAddress().getAddressName(), null);
         }
         return new UserProfileDto(
                 savedUser.getId(),
