@@ -11,7 +11,6 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ReportRepositoryImpl implements ReportRepository, PanacheRepositoryBase<ReportEntity, Integer> {
@@ -74,7 +73,7 @@ public class ReportRepositoryImpl implements ReportRepository, PanacheRepository
                 .setMaxResults(pageSize)
                 .getResultList();
 
-        return entities.stream().map(ReportMapper::toDomainFull).collect(Collectors.toList());
+        return entities.stream().map(ReportMapper::toDomainFull).toList();
     }
 
     @Override

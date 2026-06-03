@@ -3,6 +3,7 @@ package com.itesm.application.usecase;
 import com.itesm.application.dto.MedicineRowDto;
 import com.itesm.application.dto.MedicineStockInputDto;
 import com.itesm.application.dto.MedicineStockResultDto;
+import com.itesm.domain.exceptions.HospitalNotFoundException;
 import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.Medicine;
 import com.itesm.domain.models.MedicinesHospitals;
@@ -39,7 +40,7 @@ public class UploadMedicineStockUseCase {
 
         Hospital hospital = hospitalRepository.findHospitalById(input.getIdHospital());
         if (hospital == null) {
-            throw new RuntimeException("Hospital no encontrado");
+            throw new HospitalNotFoundException(input.getIdHospital());
         }
 
         List<String> genericNames =

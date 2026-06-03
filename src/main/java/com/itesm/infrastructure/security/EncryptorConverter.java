@@ -1,5 +1,6 @@
 package com.itesm.infrastructure.security;
 
+import com.itesm.domain.exceptions.EncryptionException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -55,7 +56,7 @@ public class EncryptorConverter implements AttributeConverter<String, String> {
 
             return ENCRYPTED_PREFIX + Base64.getEncoder().encodeToString(combinedBytes);
         } catch (Exception e) {
-            throw new RuntimeException("Error al cifrar dato en BD", e);
+            throw new EncryptionException("Error al cifrar dato en BD", e);
         }
     }
 
@@ -86,7 +87,7 @@ public class EncryptorConverter implements AttributeConverter<String, String> {
             byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
             return new String(decryptedBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            throw new RuntimeException("Error al descifrar dato de BD", e);
+            throw new EncryptionException("Error al descifrar dato de BD", e);
         }
     }
 }
