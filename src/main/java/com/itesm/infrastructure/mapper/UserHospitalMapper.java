@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class UserHospitalMapper {
+    private UserHospitalMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static Hospital toDomain(UserHospitalEntity entity) {
         return HospitalMapper.toDomain(entity.getHospital());

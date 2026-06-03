@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class UserMapper {
+    private UserMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static UserEntity toEntity(User user) {
         UserEntity entity = new UserEntity();

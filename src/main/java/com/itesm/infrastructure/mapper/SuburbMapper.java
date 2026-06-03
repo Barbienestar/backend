@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class SuburbMapper {
+    private SuburbMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Suburb toDomain(SuburbEntity entity) {
         return new Suburb(
                 entity.getId(),

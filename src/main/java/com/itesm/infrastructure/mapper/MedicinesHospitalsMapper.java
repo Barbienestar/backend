@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class MedicinesHospitalsMapper {
+    private MedicinesHospitalsMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static MedicinesHospitals toDomain(MedicinesHospitalsEntity entity) {
         return new MedicinesHospitals(

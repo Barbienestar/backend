@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class MedicineMapper {
+    private MedicineMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Medicine toDomain(MedicineEntity entity) {
         return new Medicine(
                 entity.getId(),

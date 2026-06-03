@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class RoleMapper {
+    private RoleMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static Role toDomain(RoleEntity entity) {
         if (entity == null) return null;
