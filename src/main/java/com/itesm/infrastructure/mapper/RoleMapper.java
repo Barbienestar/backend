@@ -2,7 +2,9 @@ package com.itesm.infrastructure.mapper;
 
 import com.itesm.domain.models.Role;
 import com.itesm.infrastructure.persistence.entity.RoleEntity;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class RoleMapper {
 
     public static Role toDomain(RoleEntity entity) {

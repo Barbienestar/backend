@@ -2,7 +2,9 @@ package com.itesm.infrastructure.mapper;
 
 import com.itesm.domain.models.Suburb;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class SuburbMapper {
     public static Suburb toDomain(SuburbEntity entity) {
         return new Suburb(
