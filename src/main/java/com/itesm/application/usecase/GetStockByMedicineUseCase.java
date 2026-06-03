@@ -6,7 +6,6 @@ import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetStockByMedicineUseCase {
@@ -21,7 +20,7 @@ public class GetStockByMedicineUseCase {
     public List<MedicinesHospitalsStockDto> execute(String medicineName) {
         return repository.findByMedicineName(medicineName).stream()
                 .map(this::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private MedicinesHospitalsStockDto toDto(MedicinesHospitalsStock item) {
