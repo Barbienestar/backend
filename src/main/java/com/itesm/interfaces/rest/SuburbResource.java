@@ -49,10 +49,11 @@ public class SuburbResource {
                             examples =
                                     @ExampleObject(
                                             name = "sample",
-                                            value =
-                                                    "[{\"id\": 100, \"name\": \"Centro\", \"zip_code\": \"44100\"}, {\"id\": 101, \"name\": \"Chapalita\", \"zip_code\": \"44500\"}]")))
-    public Response getSuburbsByState(@RestQuery Integer id_city) {
-        List<SuburbDto> suburbs = getSuburbsByCityUseCase.execute(id_city);
+                                            value = "[{\"id\": 100, \"name\": \"Centro\", \"zip_code\": \"44100\"},"
+                                                    + " {\"id\": 101, \"name\": \"Chapalita\", \"zip_code\":"
+                                                    + " \"44500\"}]")))
+    public Response getSuburbsByState(@RestQuery("id_city") Integer idCity) {
+        List<SuburbDto> suburbs = getSuburbsByCityUseCase.execute(idCity);
         return Response.ok(suburbs).build();
     }
 }
