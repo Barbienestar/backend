@@ -1,7 +1,7 @@
 package com.itesm.interfaces.rest;
 
-import com.itesm.application.dto.HospitalCriticalMedicinesDto;
 import com.itesm.application.dto.HospitalDto;
+import com.itesm.application.dto.PagedHospitalCriticalMedicinesDto;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
 import com.itesm.application.usecase.GetCriticalMedicinesUseCase;
@@ -94,24 +94,27 @@ public class HospitalResource {
     @Operation(
             summary = "List hospitals with critical medicine stock",
             description =
-                    "Returns the hospitals assigned to the authenticated user that have at least one medicine with stock ≤ 100. "
+                    "Returns the hospitals assigned to the authenticated user that have at least one medicine with stock ≤ 9. "
                             + "Results within each hospital are ordered by stock ASC. Hospitals with no critical medicines are excluded. Requires health role.")
     @APIResponse(
             responseCode = "200",
-            description = "List of hospitals with their critical medicines",
+            description = "Paged list of critical medicines for the hospital",
             content =
                     @Content(
                             mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = HospitalCriticalMedicinesDto.class),
+                            schema = @Schema(implementation = PagedHospitalCriticalMedicinesDto.class),
                             examples =
                                     @ExampleObject(
                                             name = "sample",
                                             value =
-                                                    "[{\"hospital_id\": 1, \"hospital_name\": \"Hospital General\", \"critical_medicines\": [{\"id\": 1, \"generic_name\": \"Metformina\", \"stock\": 80}]}]")))
+                                                    "{\"hospital_id\": 1, \"hospital_name\": \"Hospital General\", \"critical_medicines\": [{\"id\": 1, \"generic_name\": \"Metformina\", \"stock\": 80}], \"total_elements\": 35, \"total_pages\": 4, \"current_page\": 0}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response getCriticalMedicines(@PathParam("idHospital") Integer idHospital) {
-        List<HospitalCriticalMedicinesDto> result = getCriticalMedicinesUseCase.execute(idHospital);
+    public Response getCriticalMedicines(
+            @PathParam("idHospital") Integer idHospital,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("10") int size) {
+        PagedHospitalCriticalMedicinesDto result = getCriticalMedicinesUseCase.execute(idHospital, page, size);
         return Response.ok(result).build();
     }
 }
