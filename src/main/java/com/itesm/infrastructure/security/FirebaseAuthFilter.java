@@ -27,6 +27,9 @@ import java.util.Optional;
 @Priority(Priorities.AUTHENTICATION)
 @UnlessBuildProfile("test")
 public class FirebaseAuthFilter implements ContainerRequestFilter {
+
+    private static final String KEY_MESSAGE = "message";
+
     private final UserRepository userRepository;
     private final AuthenticatedUserContext authUserContext;
     private final ResourceInfo resourceInfo;
@@ -54,7 +57,7 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
         String authHeader = requestContext.getHeaders().getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(Map.of("message", "Token not found"))
+                    .entity(Map.of(KEY_MESSAGE, "Token not found"))
                     .type(MediaType.APPLICATION_JSON)
                     .build());
             return;
@@ -66,7 +69,7 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
             Optional<User> userOptional = userRepository.findByProviderUuid(token.getUid());
             if (userOptional.isEmpty()) {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                        .entity(Map.of("message", "User not found"))
+                        .entity(Map.of(KEY_MESSAGE, "User not found"))
                         .type(MediaType.APPLICATION_JSON)
                         .build());
                 return;
@@ -76,7 +79,7 @@ public class FirebaseAuthFilter implements ContainerRequestFilter {
             authUserContext.setCurrentUser(currentUser);
         } catch (FirebaseAuthException e) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(Map.of("message", "Invalid token"))
+                    .entity(Map.of(KEY_MESSAGE, "Invalid token"))
                     .type(MediaType.APPLICATION_JSON)
                     .build());
         }
