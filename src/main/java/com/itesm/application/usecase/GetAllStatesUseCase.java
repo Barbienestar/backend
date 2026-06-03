@@ -5,7 +5,6 @@ import com.itesm.domain.repository.StateRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetAllStatesUseCase {
@@ -19,6 +18,6 @@ public class GetAllStatesUseCase {
     public List<StateDto> execute() {
         return stateRepository.selectAll().stream()
                 .map(s -> new StateDto(s.getId(), s.getName()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

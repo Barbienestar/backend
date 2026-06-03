@@ -12,7 +12,6 @@ public class PrivilegedCreationValidator implements UserCreationValidator {
 
     @Override
     public void validate(CreateUserDto dto, CurrentUser currentUser) throws ForbiddenException {
-        System.out.println(currentUser);
         if (currentUser == null || !currentUser.hasRole("admin")) {
             throw new ForbiddenException(Response.status(Response.Status.FORBIDDEN)
                     .entity(Map.of("message", "Only admins can create privileged users"))

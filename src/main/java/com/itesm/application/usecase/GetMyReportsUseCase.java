@@ -11,7 +11,6 @@ import com.itesm.domain.repository.StatusRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetMyReportsUseCase {
@@ -62,6 +61,6 @@ public class GetMyReportsUseCase {
                             report.getCreatedAt(),
                             report.getUpdatedAt());
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 }

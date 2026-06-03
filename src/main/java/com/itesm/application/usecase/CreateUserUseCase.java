@@ -88,7 +88,7 @@ public class CreateUserUseCase {
             if (savedUser.getAddress() != null && savedUser.getAddress().getSuburbId() != null) {
                 suburb = new SuburbDto(
                         savedUser.getAddress().getSuburbId(),
-                        savedUser.getAddress().getAddress(),
+                        savedUser.getAddress().getAddressName(),
                         null);
             }
             String responseName = (dto.getRoleId() == 3)
@@ -104,7 +104,7 @@ public class CreateUserUseCase {
                     ? encryptorConverter.convertToEntityAttribute(savedUser.getEmail())
                     : savedUser.getEmail();
 
-            UserProfileDto userProfile = new UserProfileDto(
+            return new UserProfileDto(
                     savedUser.getId(),
                     responseName,
                     responseLastName1,
@@ -113,9 +113,6 @@ public class CreateUserUseCase {
                     suburb,
                     savedUser.getRole().getName(),
                     responseEmail);
-
-            return userProfile;
-
         } catch (Exception e) {
             userTokenService.deleteUser(providerUuid);
             throw new UserCreationException("User creation failed, changes have been rolled back.", e);
