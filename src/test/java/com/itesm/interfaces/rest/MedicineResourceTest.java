@@ -11,8 +11,6 @@ class MedicineResourceTest {
 
     private static final String CSV_HEADER = "generic_name,dosage_form,strength,presentation,stock\n";
 
-    // GET /medicines
-
     @Test
     void getAll_shouldReturn200WithoutToken() {
         given().when().get("/medicines").then().statusCode(200).body("$", instanceOf(java.util.List.class));
@@ -48,8 +46,6 @@ class MedicineResourceTest {
                 .body("$", instanceOf(java.util.List.class));
     }
 
-    // POST /medicines/upload-stock/{idHospital}
-
     @Test
     void uploadStock_shouldReturn200_withNewMedicine() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet,400mg,Box,50\n";
@@ -64,7 +60,6 @@ class MedicineResourceTest {
                 .body("errors", empty());
     }
 
-    // CSV con medicamento ya existente en DB reutiliza y retorna inserted=1
     @Test
     void uploadStock_shouldReturn200_withExistingMedicine() {
         String csv = CSV_HEADER + "Paracetamol,Tablet,500mg,Box,20\n";
@@ -116,7 +111,7 @@ class MedicineResourceTest {
     }
 
     @Test
-    void uploadStock_shouldReturn500_whenRowIsIncomplete() {
+    void uploadStock_shouldReturn400_whenRowIsIncomplete() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet\n";
 
         given().header("Authorization", "Bearer health-token")
@@ -124,11 +119,11 @@ class MedicineResourceTest {
                 .when()
                 .post("/medicines/upload-stock/1")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 
     @Test
-    void uploadStock_shouldReturn500_whenStockIsNotNumeric() {
+    void uploadStock_shouldReturn400_whenStockIsNotNumeric() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet,400mg,Box,abc\n";
 
         given().header("Authorization", "Bearer health-token")
@@ -136,7 +131,7 @@ class MedicineResourceTest {
                 .when()
                 .post("/medicines/upload-stock/1")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 
     @Test

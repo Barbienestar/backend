@@ -10,6 +10,5 @@ public class CitizenCreationValidator implements UserCreationValidator {
     @Override
     public void validate(CreateUserDto dto, CurrentUser currentUser) throws ForbiddenException {
         // citizens can be created with no restrictions
-        return;
     }
 }

@@ -4,6 +4,10 @@ import com.itesm.domain.models.City;
 import com.itesm.infrastructure.persistence.entity.CityEntity;
 
 public class CityMapper {
+    private CityMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static City toDomain(CityEntity entity) {
         return new City(entity.getId(), entity.getName(), entity.getIdState().getId());
     }

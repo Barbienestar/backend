@@ -5,7 +5,6 @@ import com.itesm.domain.repository.SuburbRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetSuburbsByCityUseCase {
@@ -19,6 +18,6 @@ public class GetSuburbsByCityUseCase {
     public List<SuburbDto> execute(Integer idCity) {
         return suburbRepository.getSuburbsByCity(idCity).stream()
                 .map(m -> new SuburbDto(m.getId(), m.getName(), m.getZipCode()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

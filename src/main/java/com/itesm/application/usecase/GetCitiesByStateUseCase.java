@@ -5,7 +5,6 @@ import com.itesm.domain.repository.CityRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GetCitiesByStateUseCase {
@@ -19,6 +18,6 @@ public class GetCitiesByStateUseCase {
     public List<CityDto> execute(Byte idState) {
         return cityRepository.getCitiesByState(idState).stream()
                 .map(m -> new CityDto(m.getId(), m.getName()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -1,10 +1,10 @@
 package com.itesm.application.usecase;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import com.itesm.application.dto.HospitalCriticalMedicinesDto;
+import com.itesm.application.dto.PagedHospitalCriticalMedicinesDto;
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.application.security.CurrentUser;
 import com.itesm.domain.models.Hospital;
@@ -41,8 +41,6 @@ public class GetCriticalMedicinesUseCaseTest {
         useCase = new GetCriticalMedicinesUseCase(medicinesHospitalsRepository, hospitalRepository, authUserContext);
     }
 
-    // Un hospital con dos medicamentos — uno con stock=50 (crítico) y otro con stock=200 (ok)
-    // solo debería devolver el crítico en el resultado
     @Test
     void execute_shouldReturnOnlyCriticalMedicines() {
         Hospital hospital = new Hospital(1, "Hospital A", "https://maps/1");
@@ -55,48 +53,45 @@ public class GetCriticalMedicinesUseCaseTest {
         nonCriticalMed.setId(2);
         nonCriticalMed.setGenericName("Ibuprofeno");
 
-        MedicinesHospitals criticalRecord = new MedicinesHospitals(criticalMed, hospital, 50, LocalDateTime.now());
+        MedicinesHospitals criticalRecord = new MedicinesHospitals(criticalMed, hospital, 5, LocalDateTime.now());
         MedicinesHospitals nonCriticalRecord =
-                new MedicinesHospitals(nonCriticalMed, hospital, 200, LocalDateTime.now());
+                new MedicinesHospitals(nonCriticalMed, hospital, 11, LocalDateTime.now());
 
         when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospital));
-        when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList()))
+        when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList(), anyInt(), anyInt()))
                 .thenReturn(List.of(criticalRecord, nonCriticalRecord));
+        when(medicinesHospitalsRepository.countCriticalByHospitalIds(anyList())).thenReturn(1L);
 
-        List<HospitalCriticalMedicinesDto> result = useCase.execute();
+        PagedHospitalCriticalMedicinesDto result = useCase.execute(1, 0, 10);
 
-        assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getCriticalMedicines().size());
-        assertEquals("Paracetamol", result.get(0).getCriticalMedicines().get(0).getGenericName());
-        assertEquals(50, result.get(0).getCriticalMedicines().get(0).getStock());
+        assertEquals(1, result.getCriticalMedicines().size());
+        assertEquals("Paracetamol", result.getCriticalMedicines().get(0).getGenericName());
+        assertEquals(5, result.getCriticalMedicines().get(0).getStock());
     }
 
-    // El Hospital A tiene un medicamento crítico (stock=50), el Hospital B no (stock=200)
-    // El Hospital B debería ser excluido de la respuesta por completo
+    // El hospital consultado no tiene medicamentos críticos — debe regresar lista vacía
     @Test
-    void execute_shouldExcludeHospitalsWithNoCriticalMedicines() {
-        Hospital hospitalA = new Hospital(1, "Hospital A", "https://maps/1");
-        Hospital hospitalB = new Hospital(2, "Hospital B", "https://maps/2");
+    void execute_shouldReturnEmptyWhenNoCriticalMedicines() {
+        Hospital hospital = new Hospital(1, "Hospital A", "https://maps/1");
 
-        Medicine medA = new Medicine();
-        medA.setId(1);
-        medA.setGenericName("Paracetamol");
+        when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospital));
+        when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList(), anyInt(), anyInt()))
+                .thenReturn(List.of());
+        when(medicinesHospitalsRepository.countCriticalByHospitalIds(anyList())).thenReturn(0L);
 
-        Medicine medB = new Medicine();
-        medB.setId(2);
-        medB.setGenericName("Ibuprofeno");
+        PagedHospitalCriticalMedicinesDto result = useCase.execute(1, 0, 10);
 
-        MedicinesHospitals criticalRecord = new MedicinesHospitals(medA, hospitalA, 50, LocalDateTime.now());
-        MedicinesHospitals nonCriticalRecord = new MedicinesHospitals(medB, hospitalB, 200, LocalDateTime.now());
+        assertTrue(result.getCriticalMedicines().isEmpty());
+        assertEquals(0, result.getTotalElements());
+    }
 
-        when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospitalA, hospitalB));
-        when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList()))
-                .thenReturn(List.of(criticalRecord, nonCriticalRecord));
+    // El hospital solicitado no está asignado al usuario — debe lanzar excepción
+    @Test
+    void execute_shouldThrowWhenHospitalDoesNotBelongToUser() {
+        Hospital hospital = new Hospital(1, "Hospital A", "https://maps/1");
 
-        List<HospitalCriticalMedicinesDto> result = useCase.execute();
+        when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospital));
 
-        assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getHospitalId());
-        assertEquals("Hospital A", result.get(0).getHospitalName());
+        assertThrows(RuntimeException.class, () -> useCase.execute(99, 0, 10));
     }
 }

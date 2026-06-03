@@ -4,6 +4,10 @@ import com.itesm.domain.models.Suburb;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
 
 public class SuburbMapper {
+    private SuburbMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Suburb toDomain(SuburbEntity entity) {
         return new Suburb(
                 entity.getId(),

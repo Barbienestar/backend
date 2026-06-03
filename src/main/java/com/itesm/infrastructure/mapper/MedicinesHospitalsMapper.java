@@ -4,6 +4,9 @@ import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.infrastructure.persistence.entity.MedicinesHospitalsEntity;
 
 public class MedicinesHospitalsMapper {
+    private MedicinesHospitalsMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static MedicinesHospitals toDomain(MedicinesHospitalsEntity entity) {
         return new MedicinesHospitals(

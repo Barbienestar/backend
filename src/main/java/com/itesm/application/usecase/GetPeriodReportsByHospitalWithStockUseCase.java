@@ -6,6 +6,7 @@ import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import com.itesm.domain.repository.ReportsSnapshotRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +33,7 @@ public class GetPeriodReportsByHospitalWithStockUseCase {
 
         Map<LocalDate, Integer> stockByDate = new HashMap<>();
         for (Object[] row : stockRows) {
-            LocalDate date =
-                    row[0] instanceof java.sql.Date ? ((java.sql.Date) row[0]).toLocalDate() : (LocalDate) row[0];
+            LocalDate date = row[0] instanceof Date d ? d.toLocalDate() : (LocalDate) row[0];
             stockByDate.put(date, ((Number) row[1]).intValue());
         }
 

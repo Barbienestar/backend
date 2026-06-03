@@ -4,6 +4,10 @@ import com.itesm.domain.models.Report;
 import com.itesm.infrastructure.persistence.entity.ReportEntity;
 
 public class ReportMapper {
+    private ReportMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Report toDomain(ReportEntity entity) {
         Report report = new Report();
         report.setId(entity.getId());

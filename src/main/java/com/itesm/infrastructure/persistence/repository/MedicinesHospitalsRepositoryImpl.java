@@ -1,9 +1,11 @@
 package com.itesm.infrastructure.persistence.repository;
 
+import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesResponse;
+import com.itesm.application.dto.StockReportResponse;
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
-import com.itesm.domain.models.MedicinesHospitalsStockAverages;
-import com.itesm.domain.models.MedicinesHospitalsStockReport;
+import com.itesm.domain.models.StateSupplyData;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import com.itesm.infrastructure.mapper.MedicinesHospitalsMapper;
 import com.itesm.infrastructure.persistence.entity.MedicinesHospitalsEntity;
@@ -22,6 +24,9 @@ import java.util.Optional;
 @ApplicationScoped
 public class MedicinesHospitalsRepositoryImpl
         implements MedicinesHospitalsRepository, PanacheRepositoryBase<MedicinesHospitalsEntity, Long> {
+
+    private static final String PARAM_ID_HOSPITAL = "idHospital";
+
     @Inject
     EntityManager em;
 
@@ -56,18 +61,18 @@ public class MedicinesHospitalsRepositoryImpl
     }
 
     @Override
-    public Optional<MedicinesHospitalsStockAverages> getStockAvg(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:idHospital)")
-                .setParameter("idHospital", idHospital);
+    public Optional<StockAveragesResponse> getStockAvg(Integer idHospital) {
+        Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:" + PARAM_ID_HOSPITAL + ")")
+                .setParameter(PARAM_ID_HOSPITAL, idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
-        return Optional.of(new MedicinesHospitalsStockAverages((BigDecimal) row[0], (BigDecimal) row[1]));
+        return Optional.of(new StockAveragesResponse((BigDecimal) row[0], (BigDecimal) row[1]));
     }
 
     @Override
-    public Optional<MedicinesHospitalsStockReport> getStockReport(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL get_hospital_stock_report(:idHospital)")
-                .setParameter("idHospital", idHospital);
+    public Optional<StockReportResponse> getStockReport(Integer idHospital) {
+        Query query = em.createNativeQuery("CALL get_hospital_stock_report(:" + PARAM_ID_HOSPITAL + ")")
+                .setParameter(PARAM_ID_HOSPITAL, idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
         if (row == null) return Optional.empty();
@@ -79,11 +84,25 @@ public class MedicinesHospitalsRepositoryImpl
                 ? java.util.Arrays.asList(medicinesString.split(", "))
                 : java.util.Collections.emptyList();
 
-        return Optional.of(new MedicinesHospitalsStockReport(count, medicinesList));
+        return Optional.of(new StockReportResponse(count, medicinesList));
     }
 
     @Override
-    public List<MedicinesHospitals> findLatestReportsByHospitalIds(List<Integer> hospitalIds) {
+    public Optional<MonthlyReportsResponse> getMonthlyReports(Integer idHospital) {
+        Query query = em.createNativeQuery("CALL get_monthly_reports(:" + PARAM_ID_HOSPITAL + ")")
+                .setParameter(PARAM_ID_HOSPITAL, idHospital);
+        Object[] row = (Object[]) query.getSingleResult();
+
+        if (row == null) return Optional.empty();
+
+        Integer count = ((Number) row[0]).intValue();
+        BigDecimal diff = (BigDecimal) row[1];
+
+        return Optional.of(new MonthlyReportsResponse(count, diff));
+    }
+
+    @Override
+    public List<MedicinesHospitals> findLatestReportsByHospitalIds(List<Integer> hospitalIds, int page, int size) {
         if (hospitalIds == null || hospitalIds.isEmpty()) {
             return List.of();
         }
@@ -91,6 +110,7 @@ public class MedicinesHospitalsRepositoryImpl
                         """
                                 SELECT mh FROM MedicinesHospitalsEntity mh
                                 WHERE mh.hospital.id IN :hospitalIds
+                                AND mh.stock <= 9
                                 AND mh.entryDate = (
                                     SELECT MAX(mh2.entryDate)
                                     FROM MedicinesHospitalsEntity mh2
@@ -101,9 +121,33 @@ public class MedicinesHospitalsRepositoryImpl
                                 """,
                         MedicinesHospitalsEntity.class)
                 .setParameter("hospitalIds", hospitalIds)
+                .setFirstResult(page * size)
+                .setMaxResults(size)
                 .getResultList();
 
         return entities.stream().map(MedicinesHospitalsMapper::toDomain).toList();
+    }
+
+    @Override
+    public long countCriticalByHospitalIds(List<Integer> hospitalIds) {
+        if (hospitalIds == null || hospitalIds.isEmpty()) {
+            return 0;
+        }
+        return em.createQuery(
+                        """
+                                SELECT COUNT(mh) FROM MedicinesHospitalsEntity mh
+                                WHERE mh.hospital.id IN :hospitalIds
+                                AND mh.stock <= 9
+                                AND mh.entryDate = (
+                                    SELECT MAX(mh2.entryDate)
+                                    FROM MedicinesHospitalsEntity mh2
+                                    WHERE mh2.hospital.id = mh.hospital.id
+                                    AND mh2.medicine.id = mh.medicine.id
+                                )
+                                """,
+                        Long.class)
+                .setParameter("hospitalIds", hospitalIds)
+                .getSingleResult();
     }
 
     public List<Object[]> getPeriodStock(Integer idHospital, LocalDate startDate, LocalDate endDate) {
@@ -117,10 +161,34 @@ public class MedicinesHospitalsRepositoryImpl
                                 ORDER BY CAST(mh.entryDate AS date) ASC
                                 """,
                         Object[].class)
-                .setParameter("idHospital", idHospital)
+                .setParameter(PARAM_ID_HOSPITAL, idHospital)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();
+    }
+
+    @Override
+    public List<StateSupplyData> findAvgStockByState() {
+        List<Object[]> rows = em.createQuery(
+                        """
+                                SELECT c.idState.id, c.idState.name, AVG(mh.stock)
+                                FROM MedicinesHospitalsEntity mh
+                                JOIN mh.hospital h
+                                JOIN h.street s
+                                JOIN s.idSuburb sub
+                                JOIN sub.idCity c
+                                GROUP BY c.idState.id, c.idState.name
+                                ORDER BY c.idState.name ASC
+                                """,
+                        Object[].class)
+                .getResultList();
+
+        List<StateSupplyData> out = new ArrayList<>();
+        for (Object[] r : rows) {
+            out.add(new StateSupplyData(
+                    (Byte) r[0], (String) r[1], r[2] != null ? ((Number) r[2]).doubleValue() : 0.0));
+        }
+        return out;
     }
 
     @Override

@@ -9,7 +9,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /** GetReportsByStatusUseCase */
 @ApplicationScoped
@@ -29,14 +28,14 @@ public class GetReportsByStatusUseCase {
 
         Integer totalPages = (int) Math.ceil((double) totalItems / pageSize);
         List<FullReportResponse> fullReports =
-                reports.stream().map(this::toFullReportResponse).collect(Collectors.toList());
+                reports.stream().map(this::toFullReportResponse).toList();
         return new PagedResult<>(fullReports, page, pageSize, totalItems, totalPages);
     }
 
     private FullReportResponse toFullReportResponse(Report report) {
 
         String signedUrl = imageRepository.generateSignedUrl(report.getImageUrl(), 30, TimeUnit.MINUTES);
-        FullReportResponse response = new FullReportResponse(
+        return new FullReportResponse(
                 report.getId(),
                 report.getDescription(),
                 signedUrl,
@@ -50,6 +49,5 @@ public class GetReportsByStatusUseCase {
                 report.getMedicine().getDosageForm(),
                 report.getHospital().getName(),
                 report.getCreatedAt());
-        return response;
     }
 }

@@ -4,6 +4,9 @@ import com.itesm.domain.models.Hospital;
 import com.itesm.infrastructure.persistence.entity.UserHospitalEntity;
 
 public class UserHospitalMapper {
+    private UserHospitalMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static Hospital toDomain(UserHospitalEntity entity) {
         return HospitalMapper.toDomain(entity.getHospital());

@@ -1,13 +1,15 @@
 package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
+import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesResponse;
+import com.itesm.application.dto.StockReportResponse;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
+import com.itesm.application.usecase.GetMonthlyReportsUseCase;
 import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
 import com.itesm.application.usecase.GetStockByMedicineUseCase;
 import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
-import com.itesm.domain.models.MedicinesHospitalsStockAverages;
-import com.itesm.domain.models.MedicinesHospitalsStockReport;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -34,18 +36,23 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MedicinesHospitalsResource {
 
+    private static final String ERROR_ID_HOSPITAL_REQUIRED = "{\"error\": \"idHospital is required\"}";
+
     private final GetStockByMedicineUseCase getStockByMedicineUseCase;
     private final GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase;
     private final GetStockReportByHospitalUseCase getStockReportByHospitalUseCase;
+    private final GetMonthlyReportsUseCase getMonthlyReportsUseCase;
 
     @Inject
     public MedicinesHospitalsResource(
             GetStockByMedicineUseCase getStockByMedicineUseCase,
             GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase,
-            GetStockReportByHospitalUseCase getStockReportByHospitalUseCase) {
+            GetStockReportByHospitalUseCase getStockReportByHospitalUseCase,
+            GetMonthlyReportsUseCase getMonthlyReportsUseCase) {
         this.getStockByMedicineUseCase = getStockByMedicineUseCase;
         this.getStockAveragesByHospitalUseCase = getStockAveragesByHospitalUseCase;
         this.getStockReportByHospitalUseCase = getStockReportByHospitalUseCase;
+        this.getMonthlyReportsUseCase = getMonthlyReportsUseCase;
     }
 
     @Path("/stock")
@@ -115,11 +122,11 @@ public class MedicinesHospitalsResource {
     public Response getAvgStock(@PathParam("idHospital") Integer idHospital) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"idHospital is required\"}")
+                    .entity(ERROR_ID_HOSPITAL_REQUIRED)
                     .build();
         }
 
-        Optional<MedicinesHospitalsStockAverages> averages = getStockAveragesByHospitalUseCase.execute(idHospital);
+        Optional<StockAveragesResponse> averages = getStockAveragesByHospitalUseCase.execute(idHospital);
         return Response.ok(averages).build();
     }
 
@@ -155,11 +162,25 @@ public class MedicinesHospitalsResource {
     public Response getStockReport(@PathParam("idHospital") Integer idHospital) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"idHospital is required\"}")
+                    .entity(ERROR_ID_HOSPITAL_REQUIRED)
                     .build();
         }
 
-        Optional<MedicinesHospitalsStockReport> stockReport = getStockReportByHospitalUseCase.execute(idHospital);
+        Optional<StockReportResponse> stockReport = getStockReportByHospitalUseCase.execute(idHospital);
         return Response.ok(stockReport).build();
+    }
+
+    @Path("/monthly-reports/{idHospital}")
+    @GET
+    @RequireRoles({"health"})
+    public Response getMonthlyReports(@PathParam("idHospital") Integer idHospital) {
+        if (idHospital == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(ERROR_ID_HOSPITAL_REQUIRED)
+                    .build();
+        }
+
+        Optional<MonthlyReportsResponse> monthlyReports = getMonthlyReportsUseCase.execute(idHospital);
+        return Response.ok(monthlyReports).build();
     }
 }

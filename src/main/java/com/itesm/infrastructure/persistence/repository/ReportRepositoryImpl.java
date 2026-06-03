@@ -11,7 +11,6 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ReportRepositoryImpl implements ReportRepository, PanacheRepositoryBase<ReportEntity, Integer> {
@@ -56,7 +55,7 @@ public class ReportRepositoryImpl implements ReportRepository, PanacheRepository
 
     @Override
     public List<Report> findByUserId(Long userId) {
-        return find("user.id", userId).stream().map(ReportMapper::toDomain).collect(Collectors.toList());
+        return find("user.id", userId).stream().map(ReportMapper::toDomain).toList();
     }
 
     @Override
@@ -74,14 +73,15 @@ public class ReportRepositoryImpl implements ReportRepository, PanacheRepository
                 .setMaxResults(pageSize)
                 .getResultList();
 
-        return entities.stream().map(ReportMapper::toDomainFull).collect(Collectors.toList());
+        return entities.stream().map(ReportMapper::toDomainFull).toList();
     }
 
     @Override
     public long countByStatusId(Integer statusId) {
-        return em.createQuery("SELECT COUNT(r) FROM ReportEntity r WHERE r.statusId.id = :statusId", Long.class)
-                .setParameter("statusId", statusId)
-                .getSingleResult();
+        return ((Number) em.createNativeQuery("SELECT count_reports_by_status(:statusId)")
+                        .setParameter("statusId", statusId)
+                        .getSingleResult())
+                .longValue();
     }
 
     @Override

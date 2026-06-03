@@ -22,9 +22,6 @@ public class CityRepositoryImpl implements CityRepository, PanacheRepositoryBase
         TypedQuery<CityEntity> query =
                 em.createQuery("SELECT c FROM CityEntity c WHERE c.idState.id = :idState", CityEntity.class);
         query.setParameter("idState", idState);
-        for (CityEntity city : query.getResultList()) {
-            System.out.println(city.getName());
-        }
         return query.getResultList().stream().map(CityMapper::toDomain).collect(Collectors.toList());
     }
 }

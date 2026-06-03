@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.itesm.application.dto.MedicineRowDto;
 import com.itesm.application.dto.MedicineStockInputDto;
 import com.itesm.application.dto.MedicineStockResultDto;
+import com.itesm.domain.exceptions.HospitalNotFoundException;
 import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.Medicine;
 import com.itesm.domain.models.MedicinesHospitals;
@@ -106,9 +107,7 @@ public class UploadMedicineStockUseCaseTest {
         MedicineRowDto row = new MedicineRowDto("Paracetamol", "Tableta", "500mg", "Caja 20", 100);
         MedicineStockInputDto input = new MedicineStockInputDto(99, List.of(row));
 
-        RuntimeException exception =
-                assertThrows(RuntimeException.class, () -> uploadMedicineStockUseCase.execute(input));
-        assertEquals("Hospital no encontrado", exception.getMessage());
+        assertThrows(HospitalNotFoundException.class, () -> uploadMedicineStockUseCase.execute(input));
     }
 
     // Sad path: repositorio de relaciones lanza una excepción al guardar, debe propagarse

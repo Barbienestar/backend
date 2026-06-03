@@ -1,6 +1,6 @@
 package com.itesm.application.usecase;
-
-import com.itesm.domain.models.MedicinesHospitalsStockReport;
+// Emi Estuvo Aqui programo y se fue
+import com.itesm.application.dto.StockReportResponse;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,7 +15,7 @@ public class GetStockReportByHospitalUseCase {
         this.repository = repository;
     }
 
-    public Optional<MedicinesHospitalsStockReport> execute(Integer idHospital) {
+    public Optional<StockReportResponse> execute(Integer idHospital) {
         return repository.getStockReport(idHospital);
     }
 }
