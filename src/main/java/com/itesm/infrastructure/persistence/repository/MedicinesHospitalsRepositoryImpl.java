@@ -24,6 +24,9 @@ import java.util.Optional;
 @ApplicationScoped
 public class MedicinesHospitalsRepositoryImpl
         implements MedicinesHospitalsRepository, PanacheRepositoryBase<MedicinesHospitalsEntity, Long> {
+
+    private static final String PARAM_ID_HOSPITAL = "idHospital";
+
     @Inject
     EntityManager em;
 
@@ -59,8 +62,8 @@ public class MedicinesHospitalsRepositoryImpl
 
     @Override
     public Optional<StockAveragesResponse> getStockAvg(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:idHospital)")
-                .setParameter("idHospital", idHospital);
+        Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:" + PARAM_ID_HOSPITAL + ")")
+                .setParameter(PARAM_ID_HOSPITAL, idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
         return Optional.of(new StockAveragesResponse((BigDecimal) row[0], (BigDecimal) row[1]));
@@ -68,8 +71,8 @@ public class MedicinesHospitalsRepositoryImpl
 
     @Override
     public Optional<StockReportResponse> getStockReport(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL get_hospital_stock_report(:idHospital)")
-                .setParameter("idHospital", idHospital);
+        Query query = em.createNativeQuery("CALL get_hospital_stock_report(:" + PARAM_ID_HOSPITAL + ")")
+                .setParameter(PARAM_ID_HOSPITAL, idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
         if (row == null) return Optional.empty();
@@ -86,8 +89,8 @@ public class MedicinesHospitalsRepositoryImpl
 
     @Override
     public Optional<MonthlyReportsResponse> getMonthlyReports(Integer idHospital) {
-        Query query =
-                em.createNativeQuery("CALL get_monthly_reports(:idHospital)").setParameter("idHospital", idHospital);
+        Query query = em.createNativeQuery("CALL get_monthly_reports(:" + PARAM_ID_HOSPITAL + ")")
+                .setParameter(PARAM_ID_HOSPITAL, idHospital);
         Object[] row = (Object[]) query.getSingleResult();
 
         if (row == null) return Optional.empty();
@@ -158,7 +161,7 @@ public class MedicinesHospitalsRepositoryImpl
                                 ORDER BY CAST(mh.entryDate AS date) ASC
                                 """,
                         Object[].class)
-                .setParameter("idHospital", idHospital)
+                .setParameter(PARAM_ID_HOSPITAL, idHospital)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();
