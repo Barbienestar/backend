@@ -19,14 +19,16 @@ public class ReportsSnapshotRepositoryImpl
     @Override
     public List<PeriodReportsByHospitalResponse> getPeriodReports(
             Integer idHospital, LocalDate startDate, LocalDate endDate) {
-        List<Object[]> rows = em.createQuery("""
+        List<Object[]> rows = em.createQuery(
+                        """
             SELECT rs.snapshotDate, SUM(rs.dailyReports)
             FROM ReportsSnapshotEntity rs
             WHERE rs.hospital.id = :idHospital
               AND rs.snapshotDate BETWEEN :startDate AND :endDate
             GROUP BY rs.snapshotDate
             ORDER BY rs.snapshotDate ASC
-            """, Object[].class)
+            """,
+                        Object[].class)
                 .setParameter("idHospital", idHospital)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
