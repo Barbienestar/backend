@@ -3,6 +3,9 @@ package com.itesm.infrastructure.persistence.repository;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.StorageClient;
+import com.itesm.domain.exceptions.ImageNotFoundException;
+import com.itesm.domain.exceptions.ImageUploadException;
+import com.itesm.domain.exceptions.SignedUrlGenerationException;
 import com.itesm.domain.repository.ImageRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +19,7 @@ public class FirebaseStorageService implements ImageRepository {
             bucket.create(fileName, image, contentType);
             return fileName;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to upload image: " + e.getMessage(), e);
+            throw new ImageUploadException("Failed to upload image: " + e.getMessage(), e);
         }
     }
 
@@ -26,11 +29,11 @@ public class FirebaseStorageService implements ImageRepository {
             Bucket bucket = StorageClient.getInstance().bucket();
             Blob blob = bucket.get(fileName);
             if (blob == null) {
-                throw new RuntimeException("Image not found: " + fileName);
+                throw new ImageNotFoundException(fileName);
             }
             return blob.signUrl(duration, unit).toString();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate signed URL: " + e.getMessage(), e);
+            throw new SignedUrlGenerationException("Failed to generate signed URL: " + e.getMessage(), e);
         }
     }
 }

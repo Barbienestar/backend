@@ -8,6 +8,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
+import com.itesm.domain.exceptions.EncryptionException;
 import javax.crypto.spec.SecretKeySpec;
 import org.eclipse.microprofile.config.ConfigProvider;
 
@@ -55,7 +56,7 @@ public class EncryptorConverter implements AttributeConverter<String, String> {
 
             return ENCRYPTED_PREFIX + Base64.getEncoder().encodeToString(combinedBytes);
         } catch (Exception e) {
-            throw new RuntimeException("Error al cifrar dato en BD", e);
+            throw new EncryptionException("Error al cifrar dato en BD", e);
         }
     }
 
@@ -86,7 +87,7 @@ public class EncryptorConverter implements AttributeConverter<String, String> {
             byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
             return new String(decryptedBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            throw new RuntimeException("Error al descifrar dato de BD", e);
+            throw new EncryptionException("Error al descifrar dato de BD", e);
         }
     }
 }

@@ -3,6 +3,7 @@ package com.itesm.application.usecase;
 import com.itesm.application.dto.CriticalMedicineDto;
 import com.itesm.application.dto.PagedHospitalCriticalMedicinesDto;
 import com.itesm.application.security.AuthenticatedUserContext;
+import com.itesm.domain.exceptions.HospitalNotAssignedException;
 import com.itesm.domain.models.Hospital;
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.repository.HospitalRepository;
@@ -37,7 +38,7 @@ public class GetCriticalMedicinesUseCase {
                 .anyMatch(h -> h.getId().equals(idHospital));
 
         if (!hospitalBelongsToUser) {
-            throw new RuntimeException("Hospital no asignado al usuario");
+            throw new HospitalNotAssignedException(idHospital, userId);
         }
 
         List<MedicinesHospitals> latestReports =
