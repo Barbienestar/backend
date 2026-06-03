@@ -8,6 +8,7 @@ import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
+import com.itesm.domain.exceptions.InvalidTokenException;
 import com.itesm.domain.repository.UserTokenService;
 import com.itesm.domain.repository.UserTokenService.TokenVerification;
 import jakarta.ws.rs.ForbiddenException;
@@ -108,7 +109,7 @@ class GoogleSignInUseCaseTest {
 
     @Test
     void execute_shouldThrow401_whenTokenInvalid() {
-        when(userTokenService.verifyIdToken("bad-token")).thenThrow(new RuntimeException("Invalid token"));
+        when(userTokenService.verifyIdToken("bad-token")).thenThrow(new InvalidTokenException("Invalid token", null));
 
         assertThrows(NotAuthorizedException.class, () -> useCase.execute("Bearer bad-token"));
 
