@@ -2,9 +2,7 @@ package com.itesm.infrastructure.mapper;
 
 import com.itesm.domain.models.Suburb;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public class SuburbMapper {
     private SuburbMapper() {
         throw new IllegalStateException("Utility class");

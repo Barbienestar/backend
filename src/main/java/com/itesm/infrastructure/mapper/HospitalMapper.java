@@ -2,9 +2,7 @@ package com.itesm.infrastructure.mapper;
 
 import com.itesm.domain.models.Hospital;
 import com.itesm.infrastructure.persistence.entity.HospitalEntity;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public class HospitalMapper {
     private HospitalMapper() {
         throw new IllegalStateException("Utility class");

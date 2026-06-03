@@ -2,9 +2,7 @@ package com.itesm.infrastructure.mapper;
 
 import com.itesm.domain.models.Medicine;
 import com.itesm.infrastructure.persistence.entity.MedicineEntity;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public class MedicineMapper {
     private MedicineMapper() {
         throw new IllegalStateException("Utility class");

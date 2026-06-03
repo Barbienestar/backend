@@ -2,9 +2,7 @@ package com.itesm.infrastructure.mapper;
 
 import com.itesm.domain.models.Report;
 import com.itesm.infrastructure.persistence.entity.ReportEntity;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public class ReportMapper {
     private ReportMapper() {
         throw new IllegalStateException("Utility class");
