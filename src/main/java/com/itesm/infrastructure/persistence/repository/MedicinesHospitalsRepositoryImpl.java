@@ -99,7 +99,7 @@ public class MedicinesHospitalsRepositoryImpl
     }
 
     @Override
-    public List<MedicinesHospitals> findLatestReportsByHospitalIds(List<Integer> hospitalIds) {
+    public List<MedicinesHospitals> findLatestReportsByHospitalIds(List<Integer> hospitalIds, int page, int size) {
         if (hospitalIds == null || hospitalIds.isEmpty()) {
             return List.of();
         }
@@ -107,6 +107,7 @@ public class MedicinesHospitalsRepositoryImpl
                         """
                                 SELECT mh FROM MedicinesHospitalsEntity mh
                                 WHERE mh.hospital.id IN :hospitalIds
+                                AND mh.stock <= 9
                                 AND mh.entryDate = (
                                     SELECT MAX(mh2.entryDate)
                                     FROM MedicinesHospitalsEntity mh2
@@ -117,9 +118,33 @@ public class MedicinesHospitalsRepositoryImpl
                                 """,
                         MedicinesHospitalsEntity.class)
                 .setParameter("hospitalIds", hospitalIds)
+                .setFirstResult(page * size)
+                .setMaxResults(size)
                 .getResultList();
 
         return entities.stream().map(MedicinesHospitalsMapper::toDomain).toList();
+    }
+
+    @Override
+    public long countCriticalByHospitalIds(List<Integer> hospitalIds) {
+        if (hospitalIds == null || hospitalIds.isEmpty()) {
+            return 0;
+        }
+        return em.createQuery(
+                        """
+                                SELECT COUNT(mh) FROM MedicinesHospitalsEntity mh
+                                WHERE mh.hospital.id IN :hospitalIds
+                                AND mh.stock <= 9
+                                AND mh.entryDate = (
+                                    SELECT MAX(mh2.entryDate)
+                                    FROM MedicinesHospitalsEntity mh2
+                                    WHERE mh2.hospital.id = mh.hospital.id
+                                    AND mh2.medicine.id = mh.medicine.id
+                                )
+                                """,
+                        Long.class)
+                .setParameter("hospitalIds", hospitalIds)
+                .getSingleResult();
     }
 
     public List<Object[]> getPeriodStock(Integer idHospital, LocalDate startDate, LocalDate endDate) {

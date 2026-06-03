@@ -56,7 +56,7 @@ public class ReportRepositoryImpl implements ReportRepository, PanacheRepository
 
     @Override
     public List<Report> findByUserId(Long userId) {
-        return find("user.id", userId).stream().map(ReportMapper::toDomain).collect(Collectors.toList());
+        return find("user.id", userId).stream().map(ReportMapper::toDomain).toList();
     }
 
     @Override

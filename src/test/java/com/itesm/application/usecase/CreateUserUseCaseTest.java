@@ -14,6 +14,7 @@ import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
 import com.itesm.domain.repository.UserTokenService;
+import com.itesm.infrastructure.security.EncryptorConverter; // NUEVA IMPORTACIÓN
 import jakarta.ws.rs.ForbiddenException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,7 @@ public class CreateUserUseCaseTest {
     private UserTokenService userTokenService;
     private AuthenticatedUserContext authUserContext;
     private CreationValidationStrategy validationStrategy;
+    private EncryptorConverter encryptorConverter;
     private CreateUserUseCase useCase;
 
     @BeforeEach
@@ -34,14 +36,26 @@ public class CreateUserUseCaseTest {
         userTokenService = mock(UserTokenService.class);
         authUserContext = mock(AuthenticatedUserContext.class);
         validationStrategy = mock(CreationValidationStrategy.class);
+        encryptorConverter = mock(EncryptorConverter.class);
 
-        useCase = new CreateUserUseCase(userRepository, userTokenService, authUserContext, validationStrategy);
+        useCase = new CreateUserUseCase(
+                userRepository, userTokenService, authUserContext, validationStrategy, encryptorConverter);
     }
 
     @Test
     public void execute_shouldCreateCitizenUser() {
         CreateUserDto dto = new CreateUserDto(
                 "Juan", "Perez", "Lopez", (byte) 30, "juan@test.com", "password123", (byte) 3, null, null);
+
+        when(encryptorConverter.convertToDatabaseColumn("Juan")).thenReturn("ENC:JuanCifrado");
+        when(encryptorConverter.convertToDatabaseColumn("Perez")).thenReturn("ENC:PerezCifrado");
+        when(encryptorConverter.convertToDatabaseColumn("Lopez")).thenReturn("ENC:LopezCifrado");
+        when(encryptorConverter.convertToDatabaseColumn("juan@test.com")).thenReturn("ENC:EmailCifrado");
+
+        when(encryptorConverter.convertToEntityAttribute("ENC:JuanCifrado")).thenReturn("Juan");
+        when(encryptorConverter.convertToEntityAttribute("ENC:PerezCifrado")).thenReturn("Perez");
+        when(encryptorConverter.convertToEntityAttribute("ENC:LopezCifrado")).thenReturn("Lopez");
+        when(encryptorConverter.convertToEntityAttribute("ENC:EmailCifrado")).thenReturn("juan@test.com");
 
         when(authUserContext.getCurrentUser()).thenReturn(new CurrentUser(createAdminUser()));
         when(userTokenService.createUser(dto.getEmail(), dto.getPassword())).thenReturn("provider-uuid-123");
@@ -66,19 +80,22 @@ public class CreateUserUseCaseTest {
         verify(validationStrategy).setValidator(any(CitizenCreationValidator.class));
         verify(validationStrategy).validate(any(CreateUserDto.class), any(CurrentUser.class));
         verify(userTokenService).createUser("juan@test.com", "password123");
+
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(userCaptor.capture());
         User savedUser = userCaptor.getValue();
-        assertEquals("Juan", savedUser.getName());
-        assertEquals("Perez", savedUser.getLastName1());
-        assertEquals("Lopez", savedUser.getLastName2());
+
+        assertEquals("ENC:JuanCifrado", savedUser.getName());
+        assertEquals("ENC:PerezCifrado", savedUser.getLastName1());
+        assertEquals("ENC:LopezCifrado", savedUser.getLastName2());
+        assertEquals("ENC:EmailCifrado", savedUser.getEmail());
+
         assertEquals((byte) 30, savedUser.getAge());
-        assertEquals("juan@test.com", savedUser.getEmail());
         assertEquals("provider-uuid-123", savedUser.getProviderUuid());
         assertTrue(savedUser.isActive());
         assertEquals(Byte.valueOf((byte) 3), savedUser.getRole().getId());
         assertNotNull(savedUser.getAddress());
-        assertNull(savedUser.getAddress().getAddress());
+        assertNull(savedUser.getAddress().getAddressName());
         assertNull(savedUser.getAddress().getSuburbId());
         assertNull(savedUser.getHospitals());
     }
@@ -103,12 +120,20 @@ public class CreateUserUseCaseTest {
 
         verify(validationStrategy).setValidator(any(PrivilegedCreationValidator.class));
         verify(validationStrategy).validate(any(CreateUserDto.class), any(CurrentUser.class));
+
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(userCaptor.capture());
         User saved = userCaptor.getValue();
+
+        assertEquals("AdminCreated", saved.getName());
+        assertEquals("User", saved.getLastName1());
+        assertEquals("newadmin@test.com", saved.getEmail());
+
         assertEquals(2, saved.getHospitals().size());
         assertTrue(saved.getHospitals().stream().anyMatch(h -> h.getId() == 1));
         assertTrue(saved.getHospitals().stream().anyMatch(h -> h.getId() == 2));
+
+        verifyNoInteractions(encryptorConverter);
     }
 
     @Test
@@ -127,6 +152,7 @@ public class CreateUserUseCaseTest {
         verify(validationStrategy).validate(any(CreateUserDto.class), any(CurrentUser.class));
         verifyNoInteractions(userTokenService);
         verifyNoInteractions(userRepository);
+        verifyNoInteractions(encryptorConverter);
     }
 
     @Test
