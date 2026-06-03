@@ -111,7 +111,7 @@ class MedicineResourceTest {
     }
 
     @Test
-    void uploadStock_shouldReturn500_whenRowIsIncomplete() {
+    void uploadStock_shouldReturn400_whenRowIsIncomplete() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet\n";
 
         given().header("Authorization", "Bearer health-token")
@@ -119,11 +119,11 @@ class MedicineResourceTest {
                 .when()
                 .post("/medicines/upload-stock/1")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 
     @Test
-    void uploadStock_shouldReturn500_whenStockIsNotNumeric() {
+    void uploadStock_shouldReturn400_whenStockIsNotNumeric() {
         String csv = CSV_HEADER + "Ibuprofeno,Tablet,400mg,Box,abc\n";
 
         given().header("Authorization", "Bearer health-token")
@@ -131,7 +131,7 @@ class MedicineResourceTest {
                 .when()
                 .post("/medicines/upload-stock/1")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 
     @Test
