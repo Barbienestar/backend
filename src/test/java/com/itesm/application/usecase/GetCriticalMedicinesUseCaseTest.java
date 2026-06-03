@@ -1,10 +1,10 @@
 package com.itesm.application.usecase;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import com.itesm.application.dto.HospitalCriticalMedicinesDto;
+import com.itesm.application.dto.PagedHospitalCriticalMedicinesDto;
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.application.security.CurrentUser;
 import com.itesm.domain.models.Hospital;
@@ -58,15 +58,15 @@ public class GetCriticalMedicinesUseCaseTest {
                 new MedicinesHospitals(nonCriticalMed, hospital, 11, LocalDateTime.now());
 
         when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospital));
-        when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList()))
+        when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList(), anyInt(), anyInt()))
                 .thenReturn(List.of(criticalRecord, nonCriticalRecord));
+        when(medicinesHospitalsRepository.countCriticalByHospitalIds(anyList())).thenReturn(1L);
 
-        List<HospitalCriticalMedicinesDto> result = useCase.execute(1);
+        PagedHospitalCriticalMedicinesDto result = useCase.execute(1, 0, 10);
 
-        assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getCriticalMedicines().size());
-        assertEquals("Paracetamol", result.get(0).getCriticalMedicines().get(0).getGenericName());
-        assertEquals(5, result.get(0).getCriticalMedicines().get(0).getStock());
+        assertEquals(1, result.getCriticalMedicines().size());
+        assertEquals("Paracetamol", result.getCriticalMedicines().get(0).getGenericName());
+        assertEquals(5, result.getCriticalMedicines().get(0).getStock());
     }
 
     // El hospital consultado no tiene medicamentos críticos — debe regresar lista vacía
@@ -74,19 +74,15 @@ public class GetCriticalMedicinesUseCaseTest {
     void execute_shouldReturnEmptyWhenNoCriticalMedicines() {
         Hospital hospital = new Hospital(1, "Hospital A", "https://maps/1");
 
-        Medicine med = new Medicine();
-        med.setId(1);
-        med.setGenericName("Ibuprofeno");
-
-        MedicinesHospitals nonCriticalRecord = new MedicinesHospitals(med, hospital, 200, LocalDateTime.now());
-
         when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospital));
-        when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList()))
-                .thenReturn(List.of(nonCriticalRecord));
+        when(medicinesHospitalsRepository.findLatestReportsByHospitalIds(anyList(), anyInt(), anyInt()))
+                .thenReturn(List.of());
+        when(medicinesHospitalsRepository.countCriticalByHospitalIds(anyList())).thenReturn(0L);
 
-        List<HospitalCriticalMedicinesDto> result = useCase.execute(1);
+        PagedHospitalCriticalMedicinesDto result = useCase.execute(1, 0, 10);
 
-        assertTrue(result.isEmpty());
+        assertTrue(result.getCriticalMedicines().isEmpty());
+        assertEquals(0, result.getTotalElements());
     }
 
     // El hospital solicitado no está asignado al usuario — debe lanzar excepción
@@ -96,6 +92,6 @@ public class GetCriticalMedicinesUseCaseTest {
 
         when(hospitalRepository.findHospitalsByUserId(1L)).thenReturn(List.of(hospital));
 
-        assertThrows(RuntimeException.class, () -> useCase.execute(99));
+        assertThrows(RuntimeException.class, () -> useCase.execute(99, 0, 10));
     }
 }
