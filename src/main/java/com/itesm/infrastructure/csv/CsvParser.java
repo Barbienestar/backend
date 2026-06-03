@@ -1,6 +1,7 @@
 package com.itesm.infrastructure.csv;
 
 import com.itesm.application.dto.MedicineRowDto;
+import com.itesm.domain.exceptions.CsvParsingException;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
@@ -10,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CsvParser {
+    private CsvParser() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static List<MedicineRowDto> parse(InputStream inputStream) {
         List<MedicineRowDto> rows = new ArrayList<>();
@@ -25,7 +29,7 @@ public class CsvParser {
                 rowNumber++;
 
                 if (line.length < 5) {
-                    throw new RuntimeException("Fila " + rowNumber + " incompleta: se esperaban 5 columnas");
+                    throw new CsvParsingException("Fila " + rowNumber + " incompleta: se esperaban 5 columnas");
                 }
 
                 try {
@@ -37,13 +41,13 @@ public class CsvParser {
                             Integer.parseInt(line[4].trim()) // stock
                             ));
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException("Fila " + rowNumber + ": el campo 'stock' no es un número válido: '"
+                    throw new CsvParsingException("Fila " + rowNumber + ": el campo 'stock' no es un número válido: '"
                             + line[4].trim() + "'");
                 }
             }
 
         } catch (CsvValidationException | IOException e) {
-            throw new RuntimeException("Error al leer el archivo CSV: " + e.getMessage());
+            throw new CsvParsingException("Error al leer el archivo CSV: " + e.getMessage());
         }
 
         return rows;
