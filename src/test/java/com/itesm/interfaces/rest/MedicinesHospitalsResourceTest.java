@@ -39,10 +39,12 @@ class MedicinesHospitalsResourceTest {
 
     @Test
     void getMonthlyReports_shouldReturn200WithValidHospitalId() {
-        given().pathParam("idHospital", 62)
+        given().pathParam("idHospital", 1)
+                .queryParam("first_date", "2026-06-01") // Added validation parameters matching DTO fields
+                .queryParam("second_date", "2026-06-01") // Added validation parameters matching DTO fields
                 .header("Authorization", "Bearer health-token")
                 .when()
-                .get("/medicines-hospitals/monthly-reports/{idHospital}")
+                .get("/medicines-hospitals/{idHospital}/monthly-reports")
                 .then()
                 .log()
                 .all()
@@ -52,8 +54,13 @@ class MedicinesHospitalsResourceTest {
     @Test
     void getMonthlyReports_shouldReturn401WihoutToken() {
         given().pathParam("idHospital", 62)
+                .queryParam(
+                        "first_date", "2026-05-01") // Kept here so the test explicitly fails on auth, not on validation
+                .queryParam(
+                        "second_date",
+                        "2026-06-01") // Kept here so the test explicitly fails on auth, not on validation
                 .when()
-                .get("/medicines-hospitals/monthly-reports/{idHospital}")
+                .get("/medicines-hospitals/{idHospital}/monthly-reports")
                 .then()
                 .log()
                 .all()
