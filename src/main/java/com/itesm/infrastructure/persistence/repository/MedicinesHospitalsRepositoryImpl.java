@@ -27,6 +27,9 @@ import java.util.Optional;
 @ApplicationScoped
 public class MedicinesHospitalsRepositoryImpl
         implements MedicinesHospitalsRepository, PanacheRepositoryBase<MedicinesHospitalsEntity, Long> {
+
+    private static final String PARAM_ID_HOSPITAL = "idHospital";
+
     @Inject
     EntityManager em;
 
@@ -167,7 +170,7 @@ public class MedicinesHospitalsRepositoryImpl
                                 ORDER BY CAST(mh.entryDate AS date) ASC
                                 """,
                         Object[].class)
-                .setParameter("idHospital", idHospital)
+                .setParameter(PARAM_ID_HOSPITAL, idHospital)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();

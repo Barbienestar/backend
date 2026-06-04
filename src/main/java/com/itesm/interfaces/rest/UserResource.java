@@ -70,8 +70,7 @@ public class UserResource {
                                             value = "{\"id\": 5, \"name\": \"Ana\", \"last_name_1\": \"García\","
                                                     + " \"role\": \"citizen\", \"email\": \"ana@example.com\"}")))
     public Response createCitizenUser(@Valid CreateUserDto createUserDto) {
-        UserProfileDto user = createUserUseCase.execute(createUserDto);
-        return Response.status(Response.Status.CREATED).entity(user).build();
+        return createdUserResponse(createUserDto);
     }
 
     @POST
@@ -107,8 +106,13 @@ public class UserResource {
                                             value = "{\"id\": 5, \"name\": \"Ana\", \"last_name_1\": \"García\","
                                                     + " \"role\": \"admin\", \"email\": \"ana@example.com\"}")))
     public Response createPrivilegedUser(@Valid CreateUserDto createUserDto) {
-        UserProfileDto user = createUserUseCase.execute(createUserDto);
-        return Response.status(Response.Status.CREATED).entity(user).build();
+        return createdUserResponse(createUserDto);
+    }
+
+    private Response createdUserResponse(CreateUserDto dto) {
+        return Response.status(Response.Status.CREATED)
+                .entity(createUserUseCase.execute(dto))
+                .build();
     }
 
     @PATCH

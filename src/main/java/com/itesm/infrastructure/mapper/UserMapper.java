@@ -6,10 +6,11 @@ import com.itesm.domain.models.User;
 import com.itesm.infrastructure.persistence.entity.RoleEntity;
 import com.itesm.infrastructure.persistence.entity.SuburbEntity;
 import com.itesm.infrastructure.persistence.entity.UserEntity;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public class UserMapper {
+    private UserMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static UserEntity toEntity(User user) {
         UserEntity entity = new UserEntity();

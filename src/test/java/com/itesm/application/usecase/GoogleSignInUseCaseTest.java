@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.AuthenticatedUserContext;
+import com.itesm.domain.exceptions.InvalidTokenException;
 import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
@@ -108,7 +109,7 @@ class GoogleSignInUseCaseTest {
 
     @Test
     void execute_shouldThrow401_whenTokenInvalid() {
-        when(userTokenService.verifyIdToken("bad-token")).thenThrow(new RuntimeException("Invalid token"));
+        when(userTokenService.verifyIdToken("bad-token")).thenThrow(new InvalidTokenException("Invalid token", null));
 
         assertThrows(NotAuthorizedException.class, () -> useCase.execute("Bearer bad-token"));
 

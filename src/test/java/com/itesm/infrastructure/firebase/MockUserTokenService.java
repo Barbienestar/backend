@@ -1,5 +1,6 @@
 package com.itesm.infrastructure.firebase;
 
+import com.itesm.domain.exceptions.InvalidTokenException;
 import com.itesm.domain.repository.UserTokenService;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.UUID;
@@ -18,7 +19,7 @@ public class MockUserTokenService implements UserTokenService {
             case "admin-token" -> new TokenVerification("admin-token", "admin@test.com", "Admin");
             case "health-token" -> new TokenVerification("health-token", "health@test.com", "Health");
             case "citizen-token" -> new TokenVerification("citizen-token", "citizen@test.com", "Citizen");
-            default -> throw new RuntimeException("Invalid token");
+            default -> throw new InvalidTokenException("Invalid token", null);
         };
     }
 

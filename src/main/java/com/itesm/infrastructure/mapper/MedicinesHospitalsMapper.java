@@ -2,10 +2,11 @@ package com.itesm.infrastructure.mapper;
 
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.infrastructure.persistence.entity.MedicinesHospitalsEntity;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public class MedicinesHospitalsMapper {
+    private MedicinesHospitalsMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static MedicinesHospitals toDomain(MedicinesHospitalsEntity entity) {
         return new MedicinesHospitals(

@@ -41,6 +41,8 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MedicinesHospitalsResource {
 
+    private static final String ERROR_ID_HOSPITAL_REQUIRED = "{\"error\": \"idHospital is required\"}";
+
     private final GetStockByMedicineUseCase getStockByMedicineUseCase;
     private final GetStockAveragesByHospitalUseCase getStockAveragesByHospitalUseCase;
     private final GetStockReportByHospitalUseCase getStockReportByHospitalUseCase;
@@ -125,7 +127,7 @@ public class MedicinesHospitalsResource {
     public Response getAvgStock(@PathParam("idHospital") Integer idHospital, @Valid @BeanParam StockAveragesDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"idHospital is required\"}")
+                    .entity(ERROR_ID_HOSPITAL_REQUIRED)
                     .build();
         }
 
@@ -165,7 +167,7 @@ public class MedicinesHospitalsResource {
     public Response getStockReport(@PathParam("idHospital") Integer idHospital, @Valid @BeanParam StockReportDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"idHospital is required\"}")
+                    .entity(ERROR_ID_HOSPITAL_REQUIRED)
                     .build();
         }
 
@@ -180,7 +182,7 @@ public class MedicinesHospitalsResource {
             @PathParam("idHospital") Integer idHospital, @Valid @BeanParam MonthlyReportsDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"idHospital is required\"}")
+                    .entity(ERROR_ID_HOSPITAL_REQUIRED)
                     .build();
         }
 

@@ -4,6 +4,7 @@ import com.itesm.application.dto.SuburbDto;
 import com.itesm.application.dto.UserProfileDto;
 import com.itesm.application.security.AuthenticatedUserContext;
 import com.itesm.application.security.CurrentUser;
+import com.itesm.domain.exceptions.InvalidTokenException;
 import com.itesm.domain.models.Role;
 import com.itesm.domain.models.User;
 import com.itesm.domain.repository.UserRepository;
@@ -20,6 +21,8 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class GoogleSignInUseCase {
+
+    private static final String KEY_MESSAGE = "message";
 
     private final UserTokenService userTokenService;
     private final UserRepository userRepository;
@@ -38,7 +41,7 @@ public class GoogleSignInUseCase {
     public UserProfileDto execute(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(Map.of("message", "Token not found"))
+                    .entity(Map.of(KEY_MESSAGE, "Token not found"))
                     .type(MediaType.APPLICATION_JSON)
                     .build());
         }
@@ -47,9 +50,9 @@ public class GoogleSignInUseCase {
         TokenVerification verification;
         try {
             verification = userTokenService.verifyIdToken(idToken);
-        } catch (RuntimeException e) {
+        } catch (InvalidTokenException e) {
             throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(Map.of("message", "Invalid Google token"))
+                    .entity(Map.of(KEY_MESSAGE, "Invalid Google token"))
                     .type(MediaType.APPLICATION_JSON)
                     .build());
         }
@@ -61,7 +64,7 @@ public class GoogleSignInUseCase {
             user = existing.get();
             if (!"citizen".equals(user.getRole().getName())) {
                 throw new ForbiddenException(Response.status(Response.Status.FORBIDDEN)
-                        .entity(Map.of("message", "Google sign-in is only available for citizen accounts"))
+                        .entity(Map.of(KEY_MESSAGE, "Google sign-in is only available for citizen accounts"))
                         .type(MediaType.APPLICATION_JSON)
                         .build());
             }

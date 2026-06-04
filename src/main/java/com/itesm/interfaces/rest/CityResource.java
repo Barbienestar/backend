@@ -49,10 +49,10 @@ public class CityResource {
                             examples =
                                     @ExampleObject(
                                             name = "sample",
-                                            value =
-                                                    "[{\"id\": 10, \"name\": \"Guadalajara\"}, {\"id\": 11, \"name\": \"Zapopan\"}]")))
-    public Response getCitiesByState(@RestQuery Byte id_state) {
-        List<CityDto> cities = getCitiesByStateUseCase.execute(id_state);
+                                            value = "[{\"id\": 10, \"name\": \"Guadalajara\"}, {\"id\": 11, \"name\":"
+                                                    + " \"Zapopan\"}]")))
+    public Response getCitiesByState(@RestQuery("id_state") Byte idState) {
+        List<CityDto> cities = getCitiesByStateUseCase.execute(idState);
         return Response.ok(cities).build();
     }
 }
