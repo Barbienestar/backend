@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class H2Procedures {
 
-    public static ResultSet getMonthlyReports(Connection conn, int idHospital) throws SQLException {
+    public static ResultSet getMonthlyReports(
+            Connection conn, int idHospital, LocalDate firstDate, LocalDate secondDate) throws SQLException {
         String sql =
                 """
                 WITH current_month_reports AS (

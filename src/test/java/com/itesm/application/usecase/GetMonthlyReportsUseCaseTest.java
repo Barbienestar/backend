@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.itesm.application.dto.MonthlyReportsDto;
 import com.itesm.application.dto.MonthlyReportsResponse;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +17,15 @@ import org.junit.jupiter.api.Test;
 public class GetMonthlyReportsUseCaseTest {
     private MedicinesHospitalsRepository medicinesHospitalsRepository;
     private GetMonthlyReportsUseCase getMonthlyReportsUseCase;
+    private MonthlyReportsDto defaultReq;
 
     @BeforeEach
     void setup() {
         medicinesHospitalsRepository = mock(MedicinesHospitalsRepository.class);
         getMonthlyReportsUseCase = new GetMonthlyReportsUseCase(medicinesHospitalsRepository);
+
+        // Creating a standard test date range to pass into the use case and repository mocks
+        defaultReq = new MonthlyReportsDto(LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
     }
 
     @Test
@@ -28,9 +34,11 @@ public class GetMonthlyReportsUseCaseTest {
         reports.setCurrentMonthReportCount(150);
         reports.setComparisonToLastMonth(new BigDecimal("0.5000"));
 
-        when(medicinesHospitalsRepository.getMonthlyReports(1)).thenReturn(Optional.of(reports));
+        // Updated repository mock to expect the req object
+        when(medicinesHospitalsRepository.getMonthlyReports(1, defaultReq)).thenReturn(Optional.of(reports));
 
-        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(1);
+        // Passing the req object into the Use Case
+        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(1, defaultReq);
 
         assertTrue(result.isPresent());
         assertEquals(150, result.get().getCurrentMonthReportCount());
@@ -43,9 +51,9 @@ public class GetMonthlyReportsUseCaseTest {
         reports.setCurrentMonthReportCount(0);
         reports.setComparisonToLastMonth(new BigDecimal("0.00"));
 
-        when(medicinesHospitalsRepository.getMonthlyReports(2)).thenReturn(Optional.of(reports));
+        when(medicinesHospitalsRepository.getMonthlyReports(2, defaultReq)).thenReturn(Optional.of(reports));
 
-        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(2);
+        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(2, defaultReq);
 
         assertTrue(result.isPresent());
         assertEquals(0, result.get().getCurrentMonthReportCount());
@@ -58,9 +66,9 @@ public class GetMonthlyReportsUseCaseTest {
         reports.setCurrentMonthReportCount(50);
         reports.setComparisonToLastMonth(new BigDecimal("1.00"));
 
-        when(medicinesHospitalsRepository.getMonthlyReports(3)).thenReturn(Optional.of(reports));
+        when(medicinesHospitalsRepository.getMonthlyReports(3, defaultReq)).thenReturn(Optional.of(reports));
 
-        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(3);
+        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(3, defaultReq);
 
         assertTrue(result.isPresent());
         assertEquals(new BigDecimal("1.00"), result.get().getComparisonToLastMonth());
@@ -72,9 +80,9 @@ public class GetMonthlyReportsUseCaseTest {
         reports.setCurrentMonthReportCount(0);
         reports.setComparisonToLastMonth(new BigDecimal("-1.0000"));
 
-        when(medicinesHospitalsRepository.getMonthlyReports(4)).thenReturn(Optional.of(reports));
+        when(medicinesHospitalsRepository.getMonthlyReports(4, defaultReq)).thenReturn(Optional.of(reports));
 
-        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(4);
+        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(4, defaultReq);
 
         assertTrue(result.isPresent());
         assertEquals(new BigDecimal("-1.0000"), result.get().getComparisonToLastMonth());
@@ -82,9 +90,9 @@ public class GetMonthlyReportsUseCaseTest {
 
     @Test
     void shouldReturnEmptyOptionalWhenHospitalDoesNotExist() {
-        when(medicinesHospitalsRepository.getMonthlyReports(99999)).thenReturn(Optional.empty());
+        when(medicinesHospitalsRepository.getMonthlyReports(99999, defaultReq)).thenReturn(Optional.empty());
 
-        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(99999);
+        Optional<MonthlyReportsResponse> result = getMonthlyReportsUseCase.execute(99999, defaultReq);
 
         assertTrue(result.isEmpty());
     }

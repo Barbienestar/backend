@@ -1,5 +1,6 @@
 package com.itesm.application.usecase;
 
+import com.itesm.application.dto.MonthlyReportsDto;
 import com.itesm.application.dto.MonthlyReportsResponse;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,7 +16,7 @@ public class GetMonthlyReportsUseCase {
         this.medicinesHospitalsRepository = medicinesHospitalsRepository;
     }
 
-    public Optional<MonthlyReportsResponse> execute(Integer idHospital) {
-        return medicinesHospitalsRepository.getMonthlyReports(idHospital);
+    public Optional<MonthlyReportsResponse> execute(Integer idHospital, MonthlyReportsDto req) {
+        return medicinesHospitalsRepository.getMonthlyReports(idHospital, req);
     }
 }

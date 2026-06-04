@@ -1,8 +1,11 @@
 package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
+import com.itesm.application.dto.MonthlyReportsDto;
 import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesDto;
 import com.itesm.application.dto.StockAveragesResponse;
+import com.itesm.application.dto.StockReportDto;
 import com.itesm.application.dto.StockReportResponse;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
@@ -11,6 +14,8 @@ import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
 import com.itesm.application.usecase.GetStockByMedicineUseCase;
 import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -89,7 +94,7 @@ public class MedicinesHospitalsResource {
         return Response.ok(result).build();
     }
 
-    @Path("/average-stock/{idHospital}")
+    @Path("/{idHospital}/average-stock")
     @GET
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
@@ -117,18 +122,18 @@ public class MedicinesHospitalsResource {
                             examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response getAvgStock(@PathParam("idHospital") Integer idHospital) {
+    public Response getAvgStock(@PathParam("idHospital") Integer idHospital, @Valid @BeanParam StockAveragesDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"idHospital is required\"}")
                     .build();
         }
 
-        Optional<StockAveragesResponse> averages = getStockAveragesByHospitalUseCase.execute(idHospital);
+        Optional<StockAveragesResponse> averages = getStockAveragesByHospitalUseCase.execute(idHospital, req);
         return Response.ok(averages).build();
     }
 
-    @Path("/stock-report/{idHospital}")
+    @Path("/{idHospital}/stock-report")
     @GET
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
@@ -157,28 +162,29 @@ public class MedicinesHospitalsResource {
                             examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response getStockReport(@PathParam("idHospital") Integer idHospital) {
+    public Response getStockReport(@PathParam("idHospital") Integer idHospital, @Valid @BeanParam StockReportDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"idHospital is required\"}")
                     .build();
         }
 
-        Optional<StockReportResponse> stockReport = getStockReportByHospitalUseCase.execute(idHospital);
+        Optional<StockReportResponse> stockReport = getStockReportByHospitalUseCase.execute(idHospital, req);
         return Response.ok(stockReport).build();
     }
 
-    @Path("/monthly-reports/{idHospital}")
+    @Path("/{idHospital}/monthly-reports")
     @GET
     @RequireRoles({"health"})
-    public Response getMonthlyReports(@PathParam("idHospital") Integer idHospital) {
+    public Response getMonthlyReports(
+            @PathParam("idHospital") Integer idHospital, @Valid @BeanParam MonthlyReportsDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"idHospital is required\"}")
                     .build();
         }
 
-        Optional<MonthlyReportsResponse> monthlyReports = getMonthlyReportsUseCase.execute(idHospital);
+        Optional<MonthlyReportsResponse> monthlyReports = getMonthlyReportsUseCase.execute(idHospital, req);
         return Response.ok(monthlyReports).build();
     }
 }

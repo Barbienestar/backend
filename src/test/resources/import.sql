@@ -1,7 +1,7 @@
 CREATE ALIAS IF NOT EXISTS count_reports_by_status FOR "com.itesm.infrastructure.persistence.repository.H2Functions.countReportsByStatus";
 CREATE ALIAS IF NOT EXISTS count_users_by_role FOR "com.itesm.infrastructure.persistence.repository.H2Functions.countUsersByRole";
 
-CREATE ALIAS IF NOT EXISTS get_monthly_reports FOR "com.itesm.infrastructure.persistence.repository.H2Procedures.getMonthlyReports";
+CREATE ALIAS IF NOT EXISTS get_custom_period_reports FOR "com.itesm.infrastructure.persistence.repository.H2Procedures.getMonthlyReports";
 
 INSERT INTO States (id, name) VALUES (1, 'Test State');
 
