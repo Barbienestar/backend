@@ -46,26 +46,28 @@ infrastructure/         # Persistence, Firebase, mappers
 
 ## Auth & Roles
 
-Three auth modes determined by annotation presence:
+Three auth modes determined by annotation presence on the resource method or class:
 
 | Annotation | Behavior |
 |---|---|
-| `@PermitPublic` | Public — no token required; `tryOptionalAuth()` populates `CurrentUser` if a valid token is present, otherwise proceeds anonymously |
-| `@RequireRoles({"admin"})` | Restricted to listed roles — returns 401 if no token, 403 if role mismatch |
-| neither | Requires valid token but accepts any role |
+| `@PermitPublic` | No token required. Auth filter skips entirely — no `CurrentUser` set |
+| `@RequireRoles({"admin"})` | Listed roles only. 401 if no token, 403 if role mismatch |
+| neither | Valid token required, any role accepted |
 
-### tryOptionalAuth
+Three roles: `admin`, `health`, `citizen`.
 
-Both `FirebaseAuthFilter` (production) and `MockFirebaseAuthFilter` (test) implement `tryOptionalAuth()` for `@PermitPublic` endpoints. It extracts a Bearer token if present, validates it, and sets `CurrentUser` via `AuthenticatedUserContext`. If no token or invalid token, the request continues anonymously. This lets public endpoints detect the current user when available (e.g., for personalized responses) without requiring authentication.
-
-### Request flow (test profile)
+### Request flow
 
 ```
-MockFirebaseAuthFilter (AUTHENTICATION)
-  → checks @PermitPublic → if yes: tryOptionalAuth()
-  → validates Bearer token against provider_uuid in DB
-RoleAuthorizationFilter (AUTHORIZATION)
-  → checks @RequireRoles → 401/403 on mismatch
+FirebaseAuthFilter (AUTHENTICATION, Priority=1000)
+  → @PermitPublic? → return (skip auth entirely)
+  → no Bearer token? → 401
+  → verify Firebase token → find user by provider_uuid → setCurrentUser
+RoleAuthorizationFilter (AUTHORIZATION, Priority=2000)
+  → no @RequireRoles? → pass
+  → no CurrentUser? → 401
+  → role mismatch? → 403
+  → pass
 Resource method
 ```
 
@@ -78,7 +80,7 @@ Resource method
 | `AuthenticatedUserContext` | `application/security/AuthenticatedUserContext.java` — `@RequestScoped` holder for `CurrentUser` |
 | `RoleAuthorizationFilter` | `application/security/RoleAuthorizationFilter.java` |
 | `FirebaseAuthFilter` | `infrastructure/security/FirebaseAuthFilter.java` — production, `@UnlessBuildProfile("test")` |
-| `MockFirebaseAuthFilter` | `test/.../infrastructure/security/MockFirebaseAuthFilter.java` — test replacement, validates `provider_uuid` directly |
+| `MockFirebaseAuthFilter` | `test/.../infrastructure/security/MockFirebaseAuthFilter.java` — test replacement, validates `provider_uuid` directly as token |
 
 ## Testing
 
@@ -111,6 +113,25 @@ given().header("Authorization", "Bearer admin-token").when().post("/reports").th
 - MySQL (production) via env vars: `DB_KIND`, `DB_USERNAME`, `DB_PASSWORD`, `DB_JDBC_URL`
 - H2 in-memory (tests) configured at `%test` profile in `application.properties`
 - Schema strategy: `validate` (prod), `drop-and-create` (test)
+- `EncryptorConverter` (`infrastructure/security/`) — AES/GCM field encryption, injected manually in `CreateUserUseCase`, not used as JPA `@Convert`
+- Encryption key via `DB_ENCRYPTION_KEY` env var
+
+## Exception Handling
+
+Domain exceptions have mappers in `infrastructure/mapper/exceptions/` that convert them to HTTP responses:
+
+| Exception | HTTP | Response |
+|---|---|---|
+| `EmailAlreadyExistsException` | 409 | `{ "error": "EMAIL_ALREADY_EXISTS", "message": "..." }` |
+| `ImageUploadException` | 500 | `{ "error": "IMAGE_UPLOAD_FAILED", "message": "..." }` |
+
+Add new domain exceptions in `domain/exceptions/` with a matching `ExceptionMapper` in `infrastructure/mapper/exceptions/`.
+
+## CORS
+
+- Dev (`%dev`): allows all origins (`/.*/`)
+- Prod: restricted to `http://localhost:3000`, `:5173`, `:5175`
+- Allowed headers: `accept, authorization, content-type, x-requested-with`
 
 ## Stack
 
