@@ -13,28 +13,92 @@ Backend API for medicine shortage reporting and hospital supply tracking across 
 
 Clean Architecture — no direct imports between domain/application and infrastructure layers. Mappers in `infrastructure/mapper/` convert between them.
 
-```
-domain/models          → Domain entities (User, Hospital, Report)
-domain/repository      → Repository interfaces
-domain/exceptions      → Domain exceptions
-application/usecase    → Business logic (use cases)
-application/dto        → Data Transfer Objects
-application/security   → Auth context, role filters, annotations
-interfaces/rest        → REST endpoints (resources)
-infrastructure/        → Persistence, Firebase, mappers, security
+```mermaid
+graph TD
+    subgraph Domain
+        subgraph Models
+            User
+            Hospital
+            Report
+            Role
+        end
+        subgraph Repositories
+            UserRepository
+            HospitalRepository
+            ReportRepository
+        end
+        subgraph Exceptions
+            EmailAlreadyExistsException
+            ImageUploadException
+        end
+    end
+
+    subgraph Application
+        subgraph UseCases
+            GetHospitalsUseCase
+            CreateReportUseCase
+            UploadMedicineStockUseCase
+        end
+        subgraph DTOs
+            HospitalDto
+            ReportDto
+            CreateReportDto
+        end
+        subgraph Security_App["Security"]
+            CurrentUser
+            RequireRoles
+            PermitPublic
+        end
+    end
+
+    subgraph Interfaces
+        subgraph REST
+            HospitalResource
+            ReportResource
+            UserResource
+        end
+    end
+
+    subgraph Infrastructure
+        subgraph Persistence
+            HospitalEntity
+            ReportEntity
+            HospitalRepositoryImpl
+            ReportRepositoryImpl
+        end
+        subgraph Mappers
+            HospitalMapper
+            ReportMapper
+        end
+        subgraph Security_Infra["Security"]
+            FirebaseAuthFilter
+        end
+    end
+
+    Interfaces --> Application
+    Application --> Domain
+    Infrastructure -.->|implements repos| Domain
 ```
 
 ### High-Level System Diagram
 
-```
-┌────────────┐  REST API   ┌──────────────┐  JDBC   ┌──────────┐
-│  Frontend  │ ──────────> │  Quarkus API │ ──────> │  MySQL   │
-└────────────┘             └──────────────┘         └──────────┘
-                                                         ^
-┌────────────┐  Clean + Insert                          │
-│ Data       │ ─────────────────────────────────────────┘
-│ Pipeline   │
-└────────────┘
+```mermaid
+architecture-beta
+    group frontend(cloud)[Cloud Run]
+    group backend(cloud)[Cloud Run]
+    group database(database)[Cloud SQL]
+    group storage(cloud)[Firestore]
+
+    service webApp(server)[React Dashboard] in frontend
+    service apiService(server)[Quarkus API] in backend
+    service db(database)[Database] in database
+    service pipeline(server)[Data Pipeline]
+    service firestore(database)[Cloud Storage] in storage
+
+    webApp:R <--> L:apiService
+    apiService:R <--> L:db
+    pipeline:B --> T:db
+    apiService:B <--> T:firestore
 ```
 
 ### Auth Flow
