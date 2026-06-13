@@ -1,8 +1,11 @@
 package com.itesm.interfaces.rest;
 
 import com.itesm.application.dto.MedicinesHospitalsStockDto;
+import com.itesm.application.dto.MonthlyReportsDto;
 import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesDto;
 import com.itesm.application.dto.StockAveragesResponse;
+import com.itesm.application.dto.StockReportDto;
 import com.itesm.application.dto.StockReportResponse;
 import com.itesm.application.security.PermitPublic;
 import com.itesm.application.security.RequireRoles;
@@ -11,6 +14,8 @@ import com.itesm.application.usecase.GetStockAveragesByHospitalUseCase;
 import com.itesm.application.usecase.GetStockByMedicineUseCase;
 import com.itesm.application.usecase.GetStockReportByHospitalUseCase;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -72,8 +77,10 @@ public class MedicinesHospitalsResource {
                             examples =
                                     @ExampleObject(
                                             name = "sample",
-                                            value =
-                                                    "[{\"hospitalId\": 1, \"hospitalName\": \"Hospital Civil\", \"address\": \"Calle 5 #10\", \"stockLabel\": \"Alto\", \"status\": \"Disponible\", \"mapsUrl\": \"https://maps.google.com/?q=...\"}]")))
+                                            value = "[{\"hospitalId\": 1, \"hospitalName\": \"Hospital Civil\","
+                                                    + " \"address\": \"Calle 5 #10\", \"stockLabel\": \"Alto\","
+                                                    + " \"status\": \"Disponible\", \"mapsUrl\":"
+                                                    + " \"https://maps.google.com/?q=...\"}]")))
     @APIResponse(
             responseCode = "400",
             description = "medicine_name query parameter is missing or blank",
@@ -91,14 +98,15 @@ public class MedicinesHospitalsResource {
         return Response.ok(result).build();
     }
 
-    @Path("/average-stock/{idHospital}")
+    @Path("/{idHospital}/average-stock")
     @GET
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
             summary = "Get average stock by hospital",
             description =
-                    "Returns the average medicine stock for the last month and the current month for a given hospital. Requires health role.")
+                    "Returns the average medicine stock for the last month and the current month for a given hospital."
+                            + " Requires health role.")
     @Parameter(name = "idHospital", description = "Hospital identifier", required = true)
     @APIResponse(
             responseCode = "200",
@@ -119,25 +127,25 @@ public class MedicinesHospitalsResource {
                             examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response getAvgStock(@PathParam("idHospital") Integer idHospital) {
+    public Response getAvgStock(@PathParam("idHospital") Integer idHospital, @Valid @BeanParam StockAveragesDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(ERROR_ID_HOSPITAL_REQUIRED)
                     .build();
         }
 
-        Optional<StockAveragesResponse> averages = getStockAveragesByHospitalUseCase.execute(idHospital);
+        Optional<StockAveragesResponse> averages = getStockAveragesByHospitalUseCase.execute(idHospital, req);
         return Response.ok(averages).build();
     }
 
-    @Path("/stock-report/{idHospital}")
+    @Path("/{idHospital}/stock-report")
     @GET
     @RequireRoles({"health"})
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
             summary = "Get stock report by hospital",
-            description =
-                    "Returns the number of medicines with low stock and the names of the most critical ones for a given hospital. Requires health role.")
+            description = "Returns the number of medicines with low stock and the names of the most critical ones for a"
+                    + " given hospital. Requires health role.")
     @Parameter(name = "idHospital", description = "Hospital identifier", required = true)
     @APIResponse(
             responseCode = "200",
@@ -148,8 +156,8 @@ public class MedicinesHospitalsResource {
                             examples =
                                     @ExampleObject(
                                             name = "sample",
-                                            value =
-                                                    "{\"low_stock_count\": 5, \"bottom_medicines\": [\"Paracetamol\", \"Ibuprofeno\", \"Amoxicilina\"]}")))
+                                            value = "{\"low_stock_count\": 5, \"bottom_medicines\": [\"Paracetamol\","
+                                                    + " \"Ibuprofeno\", \"Amoxicilina\"]}")))
     @APIResponse(
             responseCode = "400",
             description = "idHospital path parameter is missing",
@@ -159,28 +167,57 @@ public class MedicinesHospitalsResource {
                             examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")))
     @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
     @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
-    public Response getStockReport(@PathParam("idHospital") Integer idHospital) {
+    public Response getStockReport(@PathParam("idHospital") Integer idHospital, @Valid @BeanParam StockReportDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(ERROR_ID_HOSPITAL_REQUIRED)
                     .build();
         }
 
-        Optional<StockReportResponse> stockReport = getStockReportByHospitalUseCase.execute(idHospital);
+        Optional<StockReportResponse> stockReport = getStockReportByHospitalUseCase.execute(idHospital, req);
         return Response.ok(stockReport).build();
     }
 
-    @Path("/monthly-reports/{idHospital}")
+    @Path("/{idHospital}/monthly-reports")
     @GET
     @RequireRoles({"health"})
-    public Response getMonthlyReports(@PathParam("idHospital") Integer idHospital) {
+    @SecurityRequirement(name = "BearerAuth")
+    @Operation(
+            summary = "Get monthly reports by hospital",
+            description = "Returns the report count for the current month and a comparison percentage to the previous"
+                    + " month for a given hospital. Requires health role.")
+    @Parameter(name = "idHospital", description = "Hospital identifier", required = true)
+    @Parameter(name = "first_date", description = "Start date of the period (yyyy-MM-dd)", required = true)
+    @Parameter(name = "second_date", description = "End date of the period (yyyy-MM-dd)", required = true)
+    @APIResponse(
+            responseCode = "200",
+            description = "Monthly report data for the hospital",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            examples =
+                                    @ExampleObject(
+                                            name = "sample",
+                                            value = "{\"current_month_report_count\": 12,"
+                                                    + " \"comparison_to_last_month\": -15.50}")))
+    @APIResponse(
+            responseCode = "400",
+            description = "idHospital, first_date, or second_date is missing",
+            content =
+                    @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            examples = @ExampleObject(value = "{\"error\": \"idHospital is required\"}")))
+    @APIResponse(responseCode = "401", description = "Missing or invalid Bearer token")
+    @APIResponse(responseCode = "403", description = "Authenticated user does not have the health role")
+    public Response getMonthlyReports(
+            @PathParam("idHospital") Integer idHospital, @Valid @BeanParam MonthlyReportsDto req) {
         if (idHospital == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(ERROR_ID_HOSPITAL_REQUIRED)
                     .build();
         }
 
-        Optional<MonthlyReportsResponse> monthlyReports = getMonthlyReportsUseCase.execute(idHospital);
+        Optional<MonthlyReportsResponse> monthlyReports = getMonthlyReportsUseCase.execute(idHospital, req);
         return Response.ok(monthlyReports).build();
     }
 }

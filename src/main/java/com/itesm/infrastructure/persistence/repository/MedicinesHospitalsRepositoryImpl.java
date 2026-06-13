@@ -1,7 +1,10 @@
 package com.itesm.infrastructure.persistence.repository;
 
+import com.itesm.application.dto.MonthlyReportsDto;
 import com.itesm.application.dto.MonthlyReportsResponse;
+import com.itesm.application.dto.StockAveragesDto;
 import com.itesm.application.dto.StockAveragesResponse;
+import com.itesm.application.dto.StockReportDto;
 import com.itesm.application.dto.StockReportResponse;
 import com.itesm.domain.models.MedicinesHospitals;
 import com.itesm.domain.models.MedicinesHospitalsStock;
@@ -61,18 +64,22 @@ public class MedicinesHospitalsRepositoryImpl
     }
 
     @Override
-    public Optional<StockAveragesResponse> getStockAvg(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:" + PARAM_ID_HOSPITAL + ")")
-                .setParameter(PARAM_ID_HOSPITAL, idHospital);
+    public Optional<StockAveragesResponse> getStockAvg(Integer idHospital, StockAveragesDto req) {
+        Query query = em.createNativeQuery("CALL get_hospital_stock_averages(:idHospital, :firstDate, :secondDate)")
+                .setParameter("idHospital", idHospital)
+                .setParameter("firstDate", req.getFirstDate())
+                .setParameter("secondDate", req.getSecondDate());
         Object[] row = (Object[]) query.getSingleResult();
 
         return Optional.of(new StockAveragesResponse((BigDecimal) row[0], (BigDecimal) row[1]));
     }
 
     @Override
-    public Optional<StockReportResponse> getStockReport(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL get_hospital_stock_report(:" + PARAM_ID_HOSPITAL + ")")
-                .setParameter(PARAM_ID_HOSPITAL, idHospital);
+    public Optional<StockReportResponse> getStockReport(Integer idHospital, StockReportDto req) {
+        Query query = em.createNativeQuery("CALL get_hospital_stock_report(:idHospital, :firstDate, :secondDate)")
+                .setParameter("idHospital", idHospital)
+                .setParameter("firstDate", req.getFirstDate())
+                .setParameter("secondDate", req.getSecondDate());
         Object[] row = (Object[]) query.getSingleResult();
 
         if (row == null) return Optional.empty();
@@ -88,9 +95,11 @@ public class MedicinesHospitalsRepositoryImpl
     }
 
     @Override
-    public Optional<MonthlyReportsResponse> getMonthlyReports(Integer idHospital) {
-        Query query = em.createNativeQuery("CALL get_monthly_reports(:" + PARAM_ID_HOSPITAL + ")")
-                .setParameter(PARAM_ID_HOSPITAL, idHospital);
+    public Optional<MonthlyReportsResponse> getMonthlyReports(Integer idHospital, MonthlyReportsDto req) {
+        Query query = em.createNativeQuery("CALL get_custom_period_reports(:idHospital, :firstDate, :secondDate)")
+                .setParameter("idHospital", idHospital)
+                .setParameter("firstDate", req.getFirstDate())
+                .setParameter("secondDate", req.getSecondDate());
         Object[] row = (Object[]) query.getSingleResult();
 
         if (row == null) return Optional.empty();

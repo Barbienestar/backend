@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class H2Procedures {
 
-    public static ResultSet getMonthlyReports(Connection conn, int idHospital) throws SQLException {
+    public static ResultSet getMonthlyReports(
+            Connection conn, int idHospital, LocalDate firstDate, LocalDate secondDate) throws SQLException {
         String sql =
                 """
                 WITH current_month_reports AS (
@@ -38,6 +40,38 @@ public class H2Procedures {
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, idHospital);
         stmt.setInt(2, idHospital);
+        return stmt.executeQuery();
+    }
+
+    public static ResultSet getHospitalStockAverages(
+            Connection conn, int idHospital, LocalDate firstDate, LocalDate secondDate) throws SQLException {
+        String sql =
+                """
+                SELECT
+                    CAST(COALESCE(AVG(mh.stock), 0) AS DECIMAL(15, 4)) AS last_month_avg,
+                    CAST(COALESCE(AVG(mh.stock), 0) AS DECIMAL(15, 4)) AS current_month_avg
+                FROM Medicines_Hospitals mh
+                WHERE mh.id_hospital = ?
+                """;
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, idHospital);
+        return stmt.executeQuery();
+    }
+
+    public static ResultSet getHospitalStockReport(
+            Connection conn, int idHospital, LocalDate firstDate, LocalDate secondDate) throws SQLException {
+        String sql =
+                """
+                SELECT
+                    CAST(COUNT(*) AS INT) AS low_stock_count,
+                    CAST(GROUP_CONCAT(m.generic_name SEPARATOR ', ') AS VARCHAR) AS bottom_medicines
+                FROM Medicines_Hospitals mh
+                JOIN Medicines m ON mh.id_medicine = m.id
+                WHERE mh.id_hospital = ?
+                  AND mh.stock <= 9
+                """;
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, idHospital);
         return stmt.executeQuery();
     }
 }

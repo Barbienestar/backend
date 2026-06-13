@@ -39,10 +39,12 @@ class MedicinesHospitalsResourceTest {
 
     @Test
     void getMonthlyReports_shouldReturn200WithValidHospitalId() {
-        given().pathParam("idHospital", 62)
+        given().pathParam("idHospital", 1)
+                .queryParam("first_date", "2026-06-01")
+                .queryParam("second_date", "2026-06-01")
                 .header("Authorization", "Bearer health-token")
                 .when()
-                .get("/medicines-hospitals/monthly-reports/{idHospital}")
+                .get("/medicines-hospitals/{idHospital}/monthly-reports")
                 .then()
                 .log()
                 .all()
@@ -52,8 +54,10 @@ class MedicinesHospitalsResourceTest {
     @Test
     void getMonthlyReports_shouldReturn401WihoutToken() {
         given().pathParam("idHospital", 62)
+                .queryParam("first_date", "2026-05-01")
+                .queryParam("second_date", "2026-06-01")
                 .when()
-                .get("/medicines-hospitals/monthly-reports/{idHospital}")
+                .get("/medicines-hospitals/{idHospital}/monthly-reports")
                 .then()
                 .log()
                 .all()

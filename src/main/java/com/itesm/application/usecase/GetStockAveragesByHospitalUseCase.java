@@ -1,5 +1,6 @@
 package com.itesm.application.usecase;
 
+import com.itesm.application.dto.StockAveragesDto;
 import com.itesm.application.dto.StockAveragesResponse;
 import com.itesm.domain.repository.MedicinesHospitalsRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,7 +16,7 @@ public class GetStockAveragesByHospitalUseCase {
         this.repository = repository;
     }
 
-    public Optional<StockAveragesResponse> execute(Integer idHospital) {
-        return repository.getStockAvg(idHospital);
+    public Optional<StockAveragesResponse> execute(Integer idHospital, StockAveragesDto req) {
+        return repository.getStockAvg(idHospital, req);
     }
 }

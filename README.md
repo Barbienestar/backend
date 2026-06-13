@@ -1,66 +1,203 @@
 # decision360
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Backend API for medicine shortage reporting and hospital supply tracking across Mexico. Citizens report shortages, admins manage data, and the system tracks stock levels over time.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## Tech Stack
 
-## Running the application in dev mode
+- **Quarkus 3.34.3** / Java 21 / Maven (`./mvnw`)
+- **Jakarta REST** (quarkus-rest), **Hibernate ORM**, **MySQL** (prod) / **H2** (test)
+- **Firebase Admin SDK** — auth + image storage
+- **Lombok**, **Mockito**, **REST Assured**
 
-You can run your application in dev mode that enables live coding using:
+## Architecture
 
-```shell script
-./mvnw quarkus:dev
+Clean Architecture — no direct imports between domain/application and infrastructure layers. Mappers in `infrastructure/mapper/` convert between them.
+
+```mermaid
+graph TD
+    subgraph Domain
+        subgraph Models
+            User
+            Hospital
+            Report
+            Role
+        end
+        subgraph Repositories
+            UserRepository
+            HospitalRepository
+            ReportRepository
+        end
+        subgraph Exceptions
+            EmailAlreadyExistsException
+            ImageUploadException
+        end
+    end
+
+    subgraph Application
+        subgraph UseCases
+            GetHospitalsUseCase
+            CreateReportUseCase
+            UploadMedicineStockUseCase
+        end
+        subgraph DTOs
+            HospitalDto
+            ReportDto
+            CreateReportDto
+        end
+        subgraph Security_App["Security"]
+            CurrentUser
+            RequireRoles
+            PermitPublic
+        end
+    end
+
+    subgraph Interfaces
+        subgraph REST
+            HospitalResource
+            ReportResource
+            UserResource
+        end
+    end
+
+    subgraph Infrastructure
+        subgraph Persistence
+            HospitalEntity
+            ReportEntity
+            HospitalRepositoryImpl
+            ReportRepositoryImpl
+        end
+        subgraph Mappers
+            HospitalMapper
+            ReportMapper
+        end
+        subgraph Security_Infra["Security"]
+            FirebaseAuthFilter
+        end
+    end
+
+    Interfaces --> Application
+    Application --> Domain
+    Infrastructure -.->|implements repos| Domain
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+### High-Level System Diagram
 
-## Packaging and running the application
+```mermaid
+architecture-beta
+    group frontend(cloud)[Cloud Run]
+    group backend(cloud)[Cloud Run]
+    group database(database)[Cloud SQL]
+    group storage(cloud)[Firestore]
 
-The application can be packaged using:
+    service webApp(server)[React Dashboard] in frontend
+    service apiService(server)[Quarkus API] in backend
+    service db(database)[Database] in database
+    service pipeline(server)[Data Pipeline]
+    service firestore(database)[Cloud Storage] in storage
 
-```shell script
-./mvnw package
+    webApp:R <--> L:apiService
+    apiService:R <--> L:db
+    pipeline:B --> T:db
+    apiService:B <--> T:firestore
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+### Auth Flow
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+```
+Request
+  │
+  ▼
+FirebaseAuthFilter (AUTHENTICATION)
+  ├── @PermitPublic? → skip auth
+  ├── no Bearer token? → 401
+  └── verify token → setCurrentUser
+  │
+  ▼
+RoleAuthorizationFilter (AUTHORIZATION)
+  ├── @RequireRoles? → check role
+  │     ├── no user → 401
+  │     ├── wrong role → 403
+  │     └── match → pass
+  └── no annotation → pass (any authenticated user)
+  │
+  ▼
+Resource Method
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+## Auth & Roles
 
-## Creating a native executable
+| Annotation | Behavior |
+|---|---|
+| `@PermitPublic` | No token required. If valid token present, populates `CurrentUser` |
+| `@RequireRoles({"admin"})` | Listed roles only. 401 if no token, 403 if wrong role |
+| neither | Valid token required, any role accepted |
 
-You can create a native executable using:
+Three roles: `admin`, `health`, `citizen`.
 
-```shell script
-./mvnw package -Dnative
+## API Endpoints
+
+| Resource | Path | Description |
+|---|---|---|
+| `AuthResource` | `/auth` | Google sign-in |
+| `UserResource` | `/users` | User management |
+| `ReportResource` | `/reports` | Medicine shortage reports |
+| `ImageUploadResource` | `/image/upload` | Report image uploads |
+| `HospitalResource` | `/hospitals` | Hospital data |
+| `MedicineResource` | `/medicines` | Medicine catalog |
+| `MedicinesHospitalsResource` | `/medicines-hospitals` | Stock tracking |
+| `StateResource` | `/states` | State listing |
+| `CityResource` | `/cities` | Cities by state |
+| `SuburbResource` | `/suburbs` | Suburbs by city |
+| `StatusResource` | `/statuses` | Report statuses |
+| `ReportsSnapshotResource` | `/reports-snapshots` | Historical snapshots |
+| `HealthResource` | `/health` | Health check |
+
+## Development
+
+```bash
+./mvnw quarkus:dev          # Dev mode with live coding
+./mvnw test                 # Unit tests
+./mvnw test -Dtest=ClassName # Single test class
+./mvnw package              # Build JAR
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+Dev UI available at `http://localhost:8080/q/dev/`.
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+## Githooks
+
+Pre-commit hook runs `./mvnw clean compile` then `./mvnw clean test`:
+
+```bash
+git config core.hooksPath .githooks
 ```
 
-You can then execute your native executable with: `./target/decision360-1.0.0-SNAPSHOT-runner`
+## Testing
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+Each use case gets both:
+1. **Unit test** — `src/test/java/.../usecase/*Test.java` with Mockito
+2. **Integration test** — `src/test/java/.../interfaces/rest/*Test.java` with `@QuarkusTest`
 
-## Related Guides
+### Test Auth Tokens
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
+Seeded via `src/test/resources/import.sql`:
 
-## Provided Code
+| Token | Role |
+|---|---|
+| `admin-token` | admin |
+| `health-token` | health |
+| `citizen-token` | citizen |
 
-### REST
+### Unit Test Note
 
-Easily start your REST Web Services
+`new CurrentUser(user)` calls `user.getRole().getName()` internally. Always set a role:
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+```java
+User user = new User();
+user.setRole(new Role((byte) 1, "citizen"));
+```
+
+## Database
+
+- **Production**: MySQL — configured via env vars (`DB_KIND`, `DB_USERNAME`, `DB_PASSWORD`, `DB_JDBC_URL`)
+- **Tests**: H2 in-memory — `%test` profile in `application.properties`
+- **Schema**: `validate` (prod), `drop-and-create` (test)
